@@ -1,0 +1,196 @@
+.simple--counter-container {
+    display: flex;
+    justify-content: space-around;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.simple--counter-container .counter-container {
+    margin-bottom: 23px;
+}
+.simple--counter-container .counter-container .counter-content {
+    width: 150px;
+    height: 150px;
+    -webkit-box-shadow: 1px 2px 12px 0 rgba(31, 45, 61, 0.1);
+    box-shadow: 1px 2px 12px 0 rgba(31, 45, 61, 0.1);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid #e0e6ed;
+}
+.simple--counter-container .s-counter {
+    font-size: 35px;
+    color: #4361ee;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+.simple--counter-container .s-counter-text {
+    color: #3b3f5c;
+    font-size: 15px;
+    margin-bottom: 0;
+    margin-top: 16px;
+}
+
+.layout-spacing {
+    padding-bottom: 25px;
+}
+
+.widget {
+    position: relative;
+    padding: 0;
+    border-radius: 6px;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 0 40px 0 rgba(94, 92, 154, 0.06);
+}
+
+.widget.widget-chart-one {
+    background: #fff;
+    padding: 0;
+}
+.widget.widget-chart-one .wellcome  h3{
+    font-weight: 800;
+}
+.detail-web p a.ajakan {
+    color: #4361ee;
+    font-weight: bold;
+}
+.widget.widget-chart-one .widget-heading {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #e0e6ed;
+    padding: 20px 20px;
+    margin-bottom: 0;
+    padding-bottom: 20px;
+}
+.widget.widget-chart-one .widget-heading h5 {
+    display: block;
+    margin-bottom: 0;
+    font-weight: 800;
+}
+.widget.widget-chart-one .widget-heading .dropdown {
+    align-self: center;
+}
+.widget.widget-chart-one .widget-heading .dropdown a svg {
+    color: #888ea8;
+    width: 19px;
+    height: 19px;
+}
+.widget.widget-chart-one .widget-heading .dropdown .dropdown-menu {
+    min-width: 10rem;
+    border-radius: 6px;
+    transform: translate3d(-142px, 0, 0px);
+}
+.widget.widget-chart-one .apexcharts-legend-marker {
+    left: -5px !important;
+}
+.widget.widget-chart-one #uniqueVisits {
+    overflow: hidden;
+}
+/* =========================================== */
+/* =========================================== */
+.rating h5 {
+    font-weight: 800;
+    padding: 30px 0 0 0;
+    margin: 0 0 20px 0;
+}
+.widget.widget-card-one {
+    background: #fff;
+    padding: 20px 0;
+    height: 100%;
+}
+.widget-card-one .widget-content .media {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 19px;
+    padding-bottom: 21px;
+    border-bottom: 1px dashed #e0e6ed;
+}
+
+.widget-card-one .widget-content .rating-stars .active {
+    margin-right: 0.4px;
+    color: #f4c150;
+}
+.widget-card-one .widget-content .rating-stars {
+    margin-right: 0.4px;
+    color: #e0e0e0;
+}
+
+.widget-card-one .widget-content .media .w-img {
+    margin-right: 10px;
+    align-self: center;
+}
+.widget-card-one .widget-content .media img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid #e0e6ed;
+}
+
+.widget-card-one .widget-content .media-body {
+    align-self: center;
+}
+.widget-card-one .widget-content .media-body h6 {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0;
+    margin-bottom: 0;
+}
+.widget-card-one .widget-content .media-body p {
+    font-size: 13px;
+    letter-spacing: 0px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #888ea8;
+    padding: 0;
+}
+
+.widget-card-one .widget-content p {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 61px;
+    padding: 0 20px;
+    display: inline-block;
+    width: 100%;
+}
+
+.widget-card-one .widget-content .w-action {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.widget-card-one .widget-content .w-action svg {
+    color: #2196f3;
+    fill: #e7f7ff;
+    margin-right: 8px;
+    stroke-width: 1.5;
+}
+.widget-card-one .widget-content .w-action span {
+    vertical-align: sub;
+    font-weight: 700;
+    color: #0e1726;
+    letter-spacing: 1px;
+}
+.widget-card-one .widget-content .w-action .read-more {
+    align-self: center;
+}
+.rating .carousel-item .row {
+    display: flex; /* Pastikan row tetap fleksibel */
+    flex-wrap: wrap; /* Biar responsif */
+}
+
+.rating .carousel-item .widget-card-one {
+    margin-bottom: 20px; /* Jarak antar slide */
+}
+
+@media (max-width: 767px) {
+    .rating .carousel-item .widget-card-one {
+        margin-bottom: 15px; /* Sesuaikan jarak di layar kecil */
+    }
+}
