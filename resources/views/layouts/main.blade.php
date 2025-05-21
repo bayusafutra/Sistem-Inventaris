@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    
+
     <!--  BEGIN NAVBAR  -->
     @include('layouts.partials.navbar')
     <!--  END NAVBAR  -->
@@ -56,6 +56,8 @@
             App.init();
         });
     </script>
+        <script src="plugins/highlight/highlight.pack.js"></script>
+
     <!-- END GLOBAL MANDATORY SCRIPTS -->
 
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->

@@ -44,3 +44,7 @@ Route::get('/profile', function() {
 Route::get('/home', function() {
     return view('general.index');
 });
+
+Route::get('/pendaftaran-toko', function() {
+    return view('general.daftarToko');
+});

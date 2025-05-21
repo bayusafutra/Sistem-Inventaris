@@ -41,7 +41,7 @@
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16">
                             </path>
                         </svg>
-                        <span>Daftar Toko</span>
+                        <span>Pendaftaran Toko</span>
                     </div>
                 </a>
             </li>
