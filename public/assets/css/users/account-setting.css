@@ -354,6 +354,7 @@
 .work-experience {
     background-color: #fff;
     border-radius: 6px;
+    padding: 0 35px;
 }
 .work-experience .work-section:not(:last-child) {
     margin-bottom: 55px;
@@ -365,7 +366,7 @@
 }
 .work-experience .info,
 .work-experience .save-info {
-    padding: 20px;
+    padding: 20px 20px 30px 0;
 }
 .work-experience .info label {
     color: #888ea8;

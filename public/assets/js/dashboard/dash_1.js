@@ -141,7 +141,7 @@ try {
       =================================
           Revenue Monthly | Options
       =================================
-  */
+    */
     var options1 = {
         chart: {
             fontFamily: "Nunito, sans-serif",

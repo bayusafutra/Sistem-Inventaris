@@ -48,3 +48,7 @@ Route::get('/home', function() {
 Route::get('/pendaftaran-toko', function() {
     return view('general.daftarToko');
 });
+
+Route::get('/admin/dashboard', function() {
+    return view('admin.index');
+});
