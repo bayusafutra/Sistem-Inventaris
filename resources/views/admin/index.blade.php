@@ -184,7 +184,7 @@
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-table-three">
                         <div class="widget-heading">
-                            <h5 class="">Toko Ter-aktif</h5>
+                            <h5 class="">Top 5 Toko Ter-Aktif</h5>
                         </div>
                         <div class="widget-content">
                             <div class="table-responsive">

@@ -52,3 +52,7 @@ Route::get('/pendaftaran-toko', function() {
 Route::get('/admin/dashboard', function() {
     return view('admin.index');
 });
+
+Route::get('/admin/verifikasi-pendaftaran', function() {
+    return view('admin.verifikasi-pendaftaran');
+});
