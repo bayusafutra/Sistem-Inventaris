@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// =========================================================================
+// =========================================================================
+
 Route::get('/masuk', function() {
     return view('auth.login');
 });
@@ -49,10 +52,28 @@ Route::get('/pendaftaran-toko', function() {
     return view('general.daftarToko');
 });
 
+// =========================================================================
+// =========================================================================
+
 Route::get('/admin/dashboard', function() {
     return view('admin.index');
 });
 
 Route::get('/admin/verifikasi-pendaftaran', function() {
     return view('admin.verifikasi-pendaftaran');
+});
+
+Route::get('/admin/master-toko', function() {
+    return view('admin.m-toko');
+});
+
+Route::get('/admin/master-users', function() {
+    return view('admin.m-users');
+});
+
+// =========================================================================
+// =========================================================================
+
+Route::get('/slugtoko/manager/dashboard', function() {
+    return view('toko.manager.index');
 });

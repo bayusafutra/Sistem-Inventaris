@@ -8,7 +8,7 @@ var options = {
         type: "donut",
         width: 397,
     },
-    colors: ["#2196f3", "#e2a03f", "#8738a7"],
+    colors: ["#2196f3", "#e2a03f", "#8738a7", "#f7dc6f", "#CB0404"],
     dataLabels: {
         enabled: false,
     },
@@ -28,7 +28,7 @@ var options = {
     plotOptions: {
         pie: {
             donut: {
-                size: "100%",
+                size: "50%",
                 background: "transparent",
                 labels: {
                     show: true,
@@ -72,8 +72,8 @@ var options = {
         show: true,
         width: 2,
     },
-    series: [20, 17, 33],
-    labels: ["Grosir Sembako", "Grosir Pakaian", "Lainnya"],
+    series: [20, 17, 33, 99, 128],
+    labels: ["Beras", "Kecap", "Gula", "Garam", "Lainnya"],
     responsive: [
         {
             breakpoint: 1599,
@@ -208,30 +208,6 @@ var options1 = {
             },
         ],
     },
-    // subtitle: {
-    //     text: "$73,098",
-    //     align: "left",
-    //     margin: 0,
-    //     offsetX: 95,
-    //     offsetY: 0,
-    //     floating: false,
-    //     style: {
-    //         fontSize: "18px",
-    //         color: "#4361ee",
-    //     },
-    // },
-    // title: {
-    //     text: "Total profit",
-    //     align: "left",
-    //     margin: 0,
-    //     offsetX: -10,
-    //     offsetY: 0,
-    //     floating: false,
-    //     style: {
-    //         fontSize: "18px",
-    //         color: "#0e1726",
-    //     },
-    // },
     stroke: {
         show: true,
         curve: "smooth",
@@ -240,11 +216,11 @@ var options1 = {
     },
     series: [
         {
-            name: "Pendaftar",
-            data: [12, 23, 52, 78, 31, 62, 105, 122, 87, 47, 115, 137],
+            name: "Produk Masuk",
+            data: [29, 43, 72, 28, 41, 92, 155, 112, 17, 97, 35, 197],
         },
         {
-            name: "Terverifikasi",
+            name: "Produk Keluar",
             data: [10, 20, 50, 70, 30, 60, 100, 120, 80, 40, 110, 130],
         },
     ],

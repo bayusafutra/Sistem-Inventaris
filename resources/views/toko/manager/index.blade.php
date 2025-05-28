@@ -19,8 +19,8 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Dashboard</span>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Manager</span>
                                 </li>
                             </ol>
                         </nav>
@@ -37,7 +37,7 @@
                 <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-chart-one">
                         <div class="widget-heading">
-                            <h5 class="">Permohonan Pendaftaran Toko</h5>
+                            <h5 class="">Tren Inflow & Outflow Produk</h5>
                         </div>
                         <div class="widget-content">
                             <div id="revenueMonthly"></div>
@@ -48,7 +48,7 @@
                 <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-chart-two">
                         <div class="widget-heading">
-                            <h5 class="">Toko Berdasarkan Jenis Usaha</h5>
+                            <h5 class="">Ringkasan Stok Produk</h5>
                         </div>
                         <div class="widget-content">
                             <div id="chart-2" class=""></div>
@@ -244,6 +244,5 @@
 @endsection
 @section('js-custom')
     <script src="{{ asset('plugins/apex/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/js/admin/custom_dashboard.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/dashboard/custom-home.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/toko/manager/custom_dashboard.js') }}"></script>
 @endsection

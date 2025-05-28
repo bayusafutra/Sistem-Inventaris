@@ -1,0 +1,39 @@
+.table-responsive > .table {
+    background: transparent;
+}
+
+table thead {
+    background-color: #f0f5ff;
+}
+
+table tbody tr td button {
+    background: none;
+    border: none;
+}
+
+strong.title {
+    font-weight: 900;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.clear-icon {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: none;
+    font-weight: bold;
+    color: #888ea8;
+}
+
+.clear-icon:hover {
+    color: #e7515a;
+}
+
+.form-control-sm.flatpickr {
+    padding-right: 30px;
+}

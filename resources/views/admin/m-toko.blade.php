@@ -1,11 +1,52 @@
 @extends('layouts.main')
 @section('css-custom')
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/custom_dt_html5.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
     <link href="{{ asset('plugins/flatpickr/flatpickr.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/css/admin/custom_verif-toko.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        table thead {
+            background-color: #f0f5ff;
+        }
+
+        table tbody tr td button {
+            background: none;
+            border: none;
+        }
+
+        strong.title {
+            font-weight: 900;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        .clear-icon {
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+            color: #888ea8;
+        }
+
+        .clear-icon:hover {
+            color: #e7515a;
+        }
+
+        .outline-badge-success {
+            padding: 2.2px 19px
+        }
+
+        .form-control-sm.flatpickr {
+            padding-right: 30px;
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -18,16 +59,19 @@
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg></a>
+
             <ul class="navbar-nav flex-row">
                 <li>
                     <div class="page-header">
+
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Verifikasi Pendaftaran
-                                        Toko</span></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Master</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Toko</span></li>
                             </ol>
                         </nav>
+
                     </div>
                 </li>
             </ul>
@@ -38,13 +82,13 @@
     <div id="content" class="main-content">
         <div class="layout-px-spacing">
             <div class="row layout-top-spacing">
-                <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+                <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
                     <div class="widget-content widget-content-area br-6">
                         <div class="table-form">
                             <div class="form-group row mr-3">
-                                <label for="min" class="col-sm-6 col-form-label col-form-label-sm">Pendaftaran
+                                <label for="min" class="col-sm-5 col-form-label col-form-label-sm">Verifikasi
                                     Awal:</label>
-                                <div class="col-sm-6 position-relative">
+                                <div class="col-sm-7 position-relative">
                                     <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                         id="min" placeholder="Pilih tanggal awal">
                                     <span class="clear-icon" id="clear-min">
@@ -58,9 +102,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="max" class="col-sm-6 col-form-label col-form-label-sm">Pendaftaran
+                                <label for="max" class="col-sm-5 col-form-label col-form-label-sm">Verifikasi
                                     Akhir:</label>
-                                <div class="col-sm-6 position-relative">
+                                <div class="col-sm-7 position-relative">
                                     <input type="text" class="form-control form-control-sm flatpickr" name="max"
                                         id="max" placeholder="Pilih tanggal akhir">
                                     <span class="clear-icon" id="clear-max">
@@ -74,13 +118,15 @@
                                 </div>
                             </div>
                         </div>
-                        <table id="range-search" class="display table table-hover table-striped" style="width:100%">
+                        <table id="html5-extension" class="display table table-hover non-hover table-striped"
+                            style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Nama Toko</th>
                                     <th>Jenis Usaha</th>
                                     <th>Pemilik</th>
-                                    <th>Tanggal Pendaftaran</th>
+                                    <th>Tanggal Aktivasi</th>
+                                    <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
@@ -90,6 +136,7 @@
                                     <td>Grosir Sembako</td>
                                     <td>Bayu Safutra</td>
                                     <td>{{ \Carbon\Carbon::parse('2025/04/25')->translatedFormat('l, d F Y') }}</td>
+                                    <td><span class="badge outline-badge-success"> Aktif </span></td>
                                     <td class="text-center">
                                         <button type="button" data-toggle="modal" data-target="#tabsModal"
                                             title="Detail Toko">
@@ -149,6 +196,11 @@
                                                             <a class="nav-link" id="profile-tab" data-toggle="tab"
                                                                 href="#profile" role="tab" aria-controls="profile"
                                                                 aria-selected="false">Penanggung Jawab</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
+                                                                href="#staff" role="tab" aria-controls="staff"
+                                                                aria-selected="false">Staff</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="nav-link" id="contact-tab" data-toggle="tab"
@@ -283,6 +335,65 @@
                                                                 </li>
                                                             </ul>
                                                         </div>
+                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
+                                                            aria-labelledby="staff-tab">
+                                                            <ol>
+                                                                <li>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Nama</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            <span class="modal-text">: Rudi Santoso</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Status</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            : <span class="badge outline-badge-warning"> Staff Gudang </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Nama</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            <span class="modal-text">: Anita Sari</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Status</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            : <span class="badge outline-badge-success"> Staff Penjualan </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Nama</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            <span class="modal-text">: Budi Hartono</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <strong class="title">Status</strong>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            : <span class="badge outline-badge-warning"> Staff Gudang </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ol>
+                                                        </div>
                                                         <div class="tab-pane fade" id="contact" role="tabpanel"
                                                             aria-labelledby="contact-tab">
                                                             <p class="modal-text">Pellentesque semper tortor id ligula
@@ -301,7 +412,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Modal Verif -->
+                                    <!-- Modal ACC -->
                                     <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
                                         role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document"
@@ -318,27 +429,17 @@
                                                             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                                                         </svg>
                                                     </div>
-                                                    <p class="modal-text">Apakah anda yakin untuk menerima permohonan
-                                                        pendaftaran Toko <strong>Badan Usaha Milik Dafa (BUMD)?</strong></p>
+                                                    <p class="modal-text">Apakah anda yakin untuk <strong style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                        status Toko <strong>Badan Usaha Milik Dafa (BUMD)?</strong></p>
                                                 </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <div class="tutup">
+                                                <form action="" method="">
+                                                    @csrf
+                                                    <div class="modal-footer justify-content-between">
                                                         <button class="btn" data-dismiss="modal"><i
                                                                 class="flaticon-cancel-12"></i> Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Yakin</button>
                                                     </div>
-                                                    <div class="verif">
-                                                        <div class="row pr-3">
-                                                            <form action="" method="">
-                                                                @csrf
-                                                                <button type="submit" class="btn btn-danger mx-3">Tolak</button>
-                                                            </form>
-                                                            <form action="" method="">
-                                                                @csrf
-                                                                <button type="submit" class="btn btn-primary">Yakin</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -348,6 +449,7 @@
                                     <td>Grosir Pakaian</td>
                                     <td>Nanang Hidayat</td>
                                     <td>{{ \Carbon\Carbon::parse('2025/05/13')->translatedFormat('l, d F Y') }}</td>
+                                    <td><span class="badge outline-badge-danger"> Non Aktif </span></td>
                                     <td class="text-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -378,7 +480,8 @@
                                     <th>Nama Toko</th>
                                     <th>Jenis Usaha</th>
                                     <th>Pemilik</th>
-                                    <th>Tanggal Pendaftaran</th>
+                                    <th>Tanggal Aktivasi</th>
+                                    <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -394,6 +497,11 @@
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
     <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
     <script src="{{ asset('plugins/flatpickr/custom-flatpickr.js') }}"></script>
+    <script src="{{ asset('plugins/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('plugins/table/datatable/button-ext/jszip.min.js') }}"></script>
+    <script src="{{ asset('plugins/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('plugins/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+
     <script>
         // Inisialisasi Flatpickr
         const minPicker = $("#min").flatpickr({
@@ -401,7 +509,7 @@
             allowInput: true,
             onChange: function(selectedDates, dateStr) {
                 $("#clear-min").toggle(!!dateStr);
-                $('#range-search').DataTable().draw();
+                $('#html5-extension').DataTable().draw();
             }
         });
 
@@ -410,7 +518,7 @@
             allowInput: true,
             onChange: function(selectedDates, dateStr) {
                 $("#clear-max").toggle(!!dateStr);
-                $('#range-search').DataTable().draw();
+                $('#html5-extension').DataTable().draw();
             }
         });
 
@@ -466,38 +574,55 @@
             return false;
         });
 
-        $(document).ready(function() {
-            var table = $("#range-search").DataTable({
-                dom: "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-                    "<'table-responsive'tr>" +
-                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-                oLanguage: {
-                    oPaginate: {
-                        sPrevious: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
-                        sNext: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
+        $('#html5-extension').DataTable({
+            "dom": "<'dt--top-section'<'row d-flex justify-content-between'<'col-sm-4 d-flex justify-content-start'l><'col-sm-4 d-flex justify-content-center'B><'col-sm-4 d-flex justify-content-end'f>>>" +
+                "<'table-responsive'tr>" +
+                "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+            buttons: {
+                buttons: [{
+                        extend: 'copy',
+                        className: 'btn btn-sm'
                     },
-                    sInfo: "Showing page _PAGE_ of _PAGES_",
-                    sSearch: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-                    sSearchPlaceholder: "Search...",
-                    sLengthMenu: "Results :  _MENU_",
+                    {
+                        extend: 'csv',
+                        className: 'btn btn-sm'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-sm'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-sm'
+                    }
+                ]
+            },
+            "oLanguage": {
+                "oPaginate": {
+                    "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
+                    "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>'
                 },
-                stripeClasses: [],
-                lengthMenu: [10, 20, 25, 50, 100],
-                pageLength: 10,
-            });
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search...",
+                "sLengthMenu": "Results :  _MENU_",
+            },
+            "stripeClasses": [],
+            "lengthMenu": [10, 20, 25, 50, 100],
+            "pageLength": 10
+        });
 
-            // Event listener untuk tombol clear
-            $("#clear-min").on("click", function() {
-                minPicker.clear();
-                $("#clear-min").hide();
-                table.draw();
-            });
+        // Event listener untuk tombol clear
+        $("#clear-min").on("click", function() {
+            minPicker.clear();
+            $("#clear-min").hide();
+            $('#html5-extension').DataTable().draw();
+        });
 
-            $("#clear-max").on("click", function() {
-                maxPicker.clear();
-                $("#clear-max").hide();
-                table.draw();
-            });
+        $("#clear-max").on("click", function() {
+            maxPicker.clear();
+            $("#clear-max").hide();
+            $('#html5-extension').DataTable().draw();
         });
     </script>
 @endsection
