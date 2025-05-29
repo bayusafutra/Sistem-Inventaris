@@ -3,9 +3,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/custom_dt_html5.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
-    <link href="{{ asset('plugins/flatpickr/flatpickr.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/flatpickr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-modal.css') }}" />
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -556,7 +556,6 @@
             return `${year}-${month}-${day.padStart(2, '0')}`;
         }
 
-        // Filter DataTable
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             var min = $("#min").val();
             var max = $("#max").val();
@@ -572,6 +571,18 @@
             if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
             if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
             return false;
+        });
+
+        $("#clear-min").on("click", function() {
+            minPicker.clear();
+            $("#clear-min").hide();
+            $('#html5-extension').DataTable().draw();
+        });
+
+        $("#clear-max").on("click", function() {
+            maxPicker.clear();
+            $("#clear-max").hide();
+            $('#html5-extension').DataTable().draw();
         });
 
         $('#html5-extension').DataTable({
@@ -610,19 +621,6 @@
             "stripeClasses": [],
             "lengthMenu": [10, 20, 25, 50, 100],
             "pageLength": 10
-        });
-
-        // Event listener untuk tombol clear
-        $("#clear-min").on("click", function() {
-            minPicker.clear();
-            $("#clear-min").hide();
-            $('#html5-extension').DataTable().draw();
-        });
-
-        $("#clear-max").on("click", function() {
-            maxPicker.clear();
-            $("#clear-max").hide();
-            $('#html5-extension').DataTable().draw();
         });
     </script>
 @endsection

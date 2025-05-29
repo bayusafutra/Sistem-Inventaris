@@ -44,18 +44,16 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-chart-two">
                         <div class="widget-heading">
-                            <h5 class="">Ringkasan Stok Produk</h5>
+                            <h5 class="">Stok Produk</h5>
                         </div>
                         <div class="widget-content">
                             <div id="chart-2" class=""></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                     <div class="widget-one widget">
                         <div class="widget-content">
@@ -73,7 +71,7 @@
                                 </div>
                                 <div class="w-content">
                                     <span class="w-values">3,192</span>
-                                    <span class="w-numeric-titles">Total Restock</span>
+                                    <span class="w-numeric-titles">Pengadaan Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
@@ -82,7 +80,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
                     <div class="widget widget-three">
                         <div class="widget-heading">
@@ -125,7 +122,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Gudang <span class="summary-count">49</span></h6>
+                                                <h6>Staff Gudang <span class="summary-count">9</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -145,7 +142,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Penjualan <span class="summary-count">25</span></h6>
+                                                <h6>Staff Penjualan <span class="summary-count">3</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -154,7 +151,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                     <div class="widget-one widget">
                         <div class="widget-content">
@@ -171,7 +167,7 @@
                                 </div>
                                 <div class="w-content">
                                     <span class="w-value">3,192</span>
-                                    <span class="w-numeric-title">Total Penjualan</span>
+                                    <span class="w-numeric-title">Penjualan Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
@@ -180,11 +176,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-table-three">
                         <div class="widget-heading">
-                            <h5 class="">Top 5 Toko Ter-Aktif</h5>
+                            <h5 class="">5 Produk dengan Stok Terendah</h5>
                         </div>
                         <div class="widget-content">
                             <div class="table-responsive">
@@ -192,19 +187,16 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                <div class="th-content">Nama Toko</div>
+                                                <div class="th-content">Nama Produk</div>
                                             </th>
                                             <th>
-                                                <div class="th-content text-center">Jumlah Staff</div>
+                                                <div class="th-content text-center">Satuan Produk</div>
                                             </th>
                                             <th>
-                                                <div class="th-content text-center">Jumlah Produk</div>
+                                                <div class="th-content text-center">Harga Satuan</div>
                                             </th>
                                             <th>
-                                                <div class="th-content text-center">Jumlah Restock</div>
-                                            </th>
-                                            <th>
-                                                <div class="th-content text-center">Jumlah Penjualan</div>
+                                                <div class="th-content text-center">Stok Produk</div>
                                             </th>
                                         </tr>
                                     </thead>
@@ -213,22 +205,90 @@
                                             <td>
                                                 <div class="td-content product-name">
                                                     <div class="align-self-center">
-                                                        <p class="prd-name">Badan Usaha Mas Dafa (BUMD)</p>
-                                                        <p class="prd-category text-primary">Grosir Sembako</p>
+                                                        <p class="prd-name">Beras 5Kg</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="td-content text-center">12</div>
+                                                <div class="td-content text-center">Karung</div>
                                             </td>
                                             <td>
-                                                <div class="td-content text-center">1.589</div>
+                                                <div class="td-content text-center">Rp75.000,00</div>
                                             </td>
                                             <td>
-                                                <div class="td-content text-center">170</div>
+                                                <div class="td-content text-center">5</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-content product-name">
+                                                    <div class="align-self-center">
+                                                        <p class="prd-name">Minyak Goreng 1L</p>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td>
-                                                <div class="td-content text-center">155</div>
+                                                <div class="td-content text-center">Botol</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Rp12.500,00</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">3</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-content product-name">
+                                                    <div class="align-self-center">
+                                                        <p class="prd-name">Gula Pasir 1Kg</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Sak</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Rp14.000,00</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">7</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-content product-name">
+                                                    <div class="align-self-center">
+                                                        <p class="prd-name">Kecap Manis 500ml</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Botol</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Rp8.500,00</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">2</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-content product-name">
+                                                    <div class="align-self-center">
+                                                        <p class="prd-name">Kopi Bubuk 250gr</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Paket</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">Rp25.000,00</div>
+                                            </td>
+                                            <td>
+                                                <div class="td-content text-center">4</div>
                                             </td>
                                         </tr>
                                     </tbody>

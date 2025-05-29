@@ -49,10 +49,10 @@
                                     <th>Email</th>
                                     <th>No Telp</th>
                                     <th>Jenis Kelamin</th>
-                                    <th>Tempat, Tanggal Lahir</th>
+                                    <th>Tanggal Lahir</th>
                                     <th>Posisi</th>
                                     <th>Toko</th>
-                                    <th class="text-center dt-no-sorting">Action</th>
+                                    <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,12 +63,14 @@
                                     <td>tigernixon@gmail.com</td>
                                     <td>08255835382861</td>
                                     <td>Pria</td>
-                                    <td>Bandung, {{ \Carbon\Carbon::parse('2002/09/02')->translatedFormat('l, d F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse('2002/09/02')->translatedFormat('l, d F Y') }}
+                                    </td>
                                     <td>Manager</td>
                                     <td>Badan Usaha Milik Dafa (BUMD)</td>
                                     <td class="text-center">
                                         <a href="javascript:void(0);" class="bs-tooltip" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><svg
+                                            data-placement="top" title="" data-original-title="Delete">
+                                            <svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
@@ -78,7 +80,8 @@
                                                 </polygon>
                                                 <line x1="15" y1="9" x2="9" y2="15"></line>
                                                 <line x1="9" y1="9" x2="15" y2="15"></line>
-                                            </svg></a>
+                                            </svg>
+                                        </a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -88,7 +91,8 @@
                                     <td>agungpambudi@gmail.com</td>
                                     <td>081237393199</td>
                                     <td>Wanita</td>
-                                    <td>Surabaya, {{ \Carbon\Carbon::parse('2001/12/22')->translatedFormat('l, d F Y') }}</td>
+                                    <td>Surabaya, {{ \Carbon\Carbon::parse('2001/12/22')->translatedFormat('l, d F Y') }}
+                                    </td>
                                     <td>Manager</td>
                                     <td>Badan Usaha Milik Nanang (BUMN)</td>
                                     <td class="text-center">
@@ -102,20 +106,24 @@
                                                     points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
                                                 </polygon>
                                                 <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                <line x1="9" y1="9" x2="15" y2="15">
+                                                </line>
                                             </svg></a>
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                    <th class="text-center">Action</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Nama Panggilan</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>No Telp</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Posisi</th>
+                                    <th>Toko</th>
+                                    <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -148,8 +156,8 @@
                     "sLengthMenu": "Results :  _MENU_",
                 },
                 "stripeClasses": [],
-                "lengthMenu": [7, 10, 20, 50],
-                "pageLength": 7
+                "lengthMenu": [10, 15, 20, 25, 50, 100],
+                "pageLength": 10
             });
         });
     </script>

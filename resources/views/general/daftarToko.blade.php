@@ -1,12 +1,12 @@
 @extends('layouts.main')
 @section('css-custom')
-    <link href="plugins/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
-    <link href="plugins/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="plugins/dropify/dropify.min.css">
-    <link href="assets/css/users/account-setting.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/apps/invoice-preview.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="plugins/select2/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="plugins/bootstrap-select/bootstrap-select.min.css">
+    <link href="{{ asset('plugins/flatpickr/flatpickr.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/dropify/dropify.min.css') }}">
+    <link href="{{ asset('assets/css/users/account-setting.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/apps/invoice-preview.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -280,14 +280,14 @@
     </div>
 @endsection
 @section('js-custom')
-    <script src="plugins/flatpickr/flatpickr.js"></script>
-    <script src="plugins/flatpickr/custom-flatpickr.js"></script>
-    <script src="plugins/dropify/dropify.min.js"></script>
-    <script src="plugins/blockui/jquery.blockUI.min.js"></script>
-    <script src="assets/js/users/account-settings.js"></script>
-    <script src="assets/js/profile/custom.js"></script>
-    <script src="assets/js/scrollspyNav.js"></script>
-    <script src="plugins/select2/select2.min.js"></script>
-    <script src="plugins/select2/custom-select2.js"></script>
-    <script src="plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>
+    <script src="{{ asset('plugins/flatpickr/custom-flatpickr.js') }}"></script>
+    <script src="{{ asset('plugins/dropify/dropify.min.js') }}"></script>
+    <script src="{{ asset('plugins/blockui/jquery.blockUI.min.js') }}"></script>
+    <script src="{{ asset('assets/js/users/account-settings.js') }}"></script>
+    <script src="{{ asset('assets/js/profile/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/scrollspyNav.js') }}"></script>
+    <script src="{{ asset('plugins/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/custom-select2.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
 @endsection

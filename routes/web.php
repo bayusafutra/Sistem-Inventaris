@@ -77,3 +77,15 @@ Route::get('/admin/master-users', function() {
 Route::get('/slugtoko/manager/dashboard', function() {
     return view('toko.manager.index');
 });
+
+Route::get('/slugtoko/manager/master/satuan-produk', function() {
+    return view('toko.manager.satuan-produk');
+});
+
+Route::get('/slugtoko/manager/master/produk', function() {
+    return view('toko.manager.produk');
+});
+
+Route::get('/slugtoko/manager/staff', function() {
+    return view('toko.manager.staff');
+});

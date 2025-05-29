@@ -152,7 +152,6 @@
                                     </div>
                                 </form>
                             </div>
-
                             <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
                                 <form id="work-platforms" class="section work-platforms" action="" method="POST">
                                     @csrf
@@ -283,7 +282,6 @@
                                     </div>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
