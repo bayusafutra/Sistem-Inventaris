@@ -28,6 +28,53 @@
         .flatpickr-calendar {
             z-index: 9999 !important;
         }
+
+        .custom-radio {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .col-md-6 {
+            padding: 0
+        }
+
+        .custom-radio {
+            display: flex;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .custom-radio input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-box {
+            display: inline-block;
+            padding: 12px 10px;
+            border: 1.4px solid #d3d3d3;
+            border-radius: 6px;
+            color: #333;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            width: 100%;
+            color: #6c757d;
+        }
+
+        .custom-radio input:checked+.radio-box {
+            background: #f4f9ff;
+            color: #11326c;
+            font-weight: bold;
+            border: 2.5px solid #007bff;
+        }
+
+        .radio-box:hover {
+            border-color: #adb5bd;
+            color: #495057;
+        }
     </style>
 @endsection
 @section('header')
@@ -109,56 +156,85 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group mb-3">
-                                                                <label for="namaSatuan">Nama Lengkap</label>
-                                                                <input type="text" class="form-control" name=""
+                                                                <label for="nama_lengkap">Nama Lengkap</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="nama_lengkap" id="nama_lengkap"
                                                                     placeholder="Nama Lengkap" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label for="namaSatuan">Nama Panggilan</label>
-                                                                <input type="text" class="form-control" name=""
+                                                                <label for="nama_panggilan">Nama Panggilan</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="nama_panggilan" id="nama_panggilan"
                                                                     placeholder="Nama Panggilan" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label for="namaSatuan">Username</label>
-                                                                <input type="text" class="form-control" name=""
-                                                                    placeholder="Username" required>
+                                                                <label for="username">Username</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="username" id="username" placeholder="Username"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label for="namaSatuan">Email</label>
-                                                                <input type="text" class="form-control" name=""
-                                                                    placeholder="Email" required>
+                                                                <label for="email">Email</label>
+                                                                <input type="email" class="form-control" name="email"
+                                                                    id="email" placeholder="Email" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label for="namaSatuan">No Telp</label>
-                                                                <input type="text" class="form-control" name=""
-                                                                    placeholder="No Telp" required>
+                                                                <label for="no_telp">No Telp</label>
+                                                                <input type="text" class="form-control" name="no_telp"
+                                                                    id="no_telp" placeholder="No Telp" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label for="satuan-produk">Jenis Kelamin</label>
-                                                                <select class="form-control" data-live-search="true">
+                                                                <label for="jenis_kelamin">Jenis Kelamin</label>
+                                                                <select class="form-control" name="jenis_kelamin"
+                                                                    id="jenis_kelamin" data-live-search="true">
                                                                     <option selected disabled>Pilih Jenis Kelamin</option>
-                                                                    <option>Pria</option>
-                                                                    <option>Wanita</option>
+                                                                    <option value="Pria">Pria</option>
+                                                                    <option value="Wanita">Wanita</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
-                                                                <label>Tanggal Lahir</label>
+                                                                <label for="basicFlatpickr">Tanggal Lahir</label>
                                                                 <div class="d-sm-flex">
-                                                                    <input id="basicFlatpickr"
+                                                                    <input id="basicFlatpickr" name="tanggal_lahir"
                                                                         class="form-control flatpickr flatpickr-input active"
                                                                         type="text" placeholder="Pilih Tanggal Lahir">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group mb-3">
+                                                                <label>Posisi</label>
+                                                                <div class="d-flex">
+                                                                    <div class="col-md-6">
+                                                                        <label class="custom-radio flex-fill">
+                                                                            <input type="radio"name="posisi"
+                                                                                value="Staff Gudang" required>
+                                                                            <span class="radio-box"
+                                                                                style="margin-right: 15px">Staff
+                                                                                Gudang</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="custom-radio flex-fill">
+                                                                            <input type="radio" name="posisi"
+                                                                                value="Staff Penjualan" required>
+                                                                            <span class="radio-box"
+                                                                                style="margin-left: 15px">Staff
+                                                                                Penjualan</span>
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -198,8 +274,8 @@
                                     <td>tigernixon@gmail.com</td>
                                     <td>08255835382861</td>
                                     <td>Pria</td>
-                                    <td>{{ \Carbon\Carbon::parse('2002/09/02')->diffInYears(\Carbon\Carbon::now()) }} tahun</td>
-                                    </td>
+                                    <td>{{ floor(\Carbon\Carbon::parse('2002/05/30')->diffInYears(\Carbon\Carbon::now())) }}
+                                        tahun</td>
                                     <td>Staff Gudang</td>
                                     <td><span class="badge outline-badge-success"> Aktif </span></td>
                                     <td class="text-center">
@@ -260,61 +336,87 @@
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="namaSatuan">Nama Lengkap</label>
+                                                                    <label for="nama_lengkap">Nama Lengkap</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="Nama Lengkap"
-                                                                        value="Tiger Nixon" required>
+                                                                        name="nama_lengkap" id="nama_lengkap"
+                                                                        placeholder="Nama Lengkap" value="Tiger Nixon" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="namaSatuan">Nama Panggilan</label>
+                                                                    <label for="nama_panggilan">Nama Panggilan</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="Nama Panggilan"
-                                                                        value="Tiger" required>
+                                                                        name="nama_panggilan" id="nama_panggilan"
+                                                                        placeholder="Nama Panggilan" value="Tiger" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="namaSatuan">Username</label>
+                                                                    <label for="username">Username</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="Username"
-                                                                        value="tigernixon" required>
+                                                                        name="username" id="username"
+                                                                        placeholder="Username" value="tigernixon" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="namaSatuan">Email</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="" placeholder="Email"
+                                                                    <label for="email">Email</label>
+                                                                    <input type="email" class="form-control"
+                                                                        name="email" id="email" placeholder="Email"
                                                                         value="tigernixon@gmail.com" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="namaSatuan">No Telp</label>
+                                                                    <label for="no_telp">No Telp</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="No Telp"
-                                                                        value="08255835382861	" required>
+                                                                        name="no_telp" id="no_telp"
+                                                                        placeholder="No Telp" value="08255835382861" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label for="satuan-produk">Jenis Kelamin</label>
-                                                                    <select class="form-control" data-live-search="true">
-                                                                        <option selected>Pria</option>
-                                                                        <option>Wanita</option>
+                                                                    <label for="jenis_kelamin">Jenis Kelamin</label>
+                                                                    <select class="form-control" name="jenis_kelamin"
+                                                                        id="jenis_kelamin" data-live-search="true">
+                                                                        <option value="Pria" selected>Pria</option>
+                                                                        <option value="Wanita">Wanita</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-3">
-                                                                    <label>Tanggal Lahir</label>
+                                                                    <label for="basicFlatpickr">Tanggal Lahir</label>
                                                                     <div class="d-sm-flex">
-                                                                        <input id="basicFlatpickr"
+                                                                        <input id="basicFlatpickr" name="tanggal_lahir"
                                                                             class="form-control flatpickr flatpickr-input active"
-                                                                            type="text"
+                                                                            type="text" value="2002/05/30"
                                                                             placeholder="Pilih Tanggal Lahir">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="form-group mb-3">
+                                                                    <label>Posisi</label>
+                                                                    <div class="d-flex">
+                                                                        <div class="col-md-6">
+                                                                            <label class="custom-radio flex-fill">
+                                                                                <input type="radio"name="posisi"
+                                                                                    value="Staff Gudang" checked required>
+                                                                                <span class="radio-box"
+                                                                                    style="margin-right: 15px">Staff
+                                                                                    Gudang</span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label class="custom-radio flex-fill">
+                                                                                <input type="radio" name="posisi"
+                                                                                    value="Staff Penjualan" required>
+                                                                                <span class="radio-box"
+                                                                                    style="margin-left: 15px">Staff
+                                                                                    Penjualan</span>
+                                                                            </label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -442,7 +544,7 @@
                 $(this).find('.flatpickr-input').flatpickr({
                     dateFormat: "Y-m-d",
                     appendTo: $(this).find('.modal-body')[
-                    0], // Memastikan kalender dirender di dalam modal
+                        0], // Memastikan kalender dirender di dalam modal
                     static: true, // Membuat kalender tetap di posisi relatif terhadap input
                     position: "autoAbove"
                 });
