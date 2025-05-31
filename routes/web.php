@@ -93,3 +93,4 @@ Route::get('/slugtoko/manager/staff', function() {
 Route::get('/slugtoko/manager/pengadaan-restock', function() {
     return view('toko.manager.pengadaan-restock');
 });
+
