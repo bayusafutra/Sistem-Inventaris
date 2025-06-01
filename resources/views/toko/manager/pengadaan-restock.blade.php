@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-modal.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -182,6 +183,72 @@
             height: 20px;
             vertical-align: text-top;
         }
+
+        .row.px-3 {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Pastikan kolom sejajar */
+        .col-lg-1,
+        .col-lg-5 {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            max-width: 100%;
+            /* Sesuaikan padding default Bootstrap */
+        }
+
+        /* Atur no-list */
+        .no-list {
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Atur form-group */
+        .form-group.mb-3 {
+            margin-bottom: 0 !important;
+            width: 100%;
+        }
+
+        /* Atur icon-delete */
+        .icon-delete {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Atur lebar selectpicker */
+        .selectpicker,
+        .bootstrap-select {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        /* Atur lebar dropdown selectpicker */
+        .bootstrap-select .dropdown-menu {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+
+        /* Pastikan tombol delete rapi */
+        .icon-delete button {
+            padding: 0;
+            background: none;
+            border: none;
+            width: 100%;
+            height: 44px;
+            /* Sesuaikan dengan tinggi SVG */
+        }
+
+        /* Pastikan kolom tidak overflow */
+        [class*="col-lg-"]>* {
+            box-sizing: border-box;
+        }
     </style>
 @endsection
 @section('header')
@@ -295,7 +362,7 @@
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <form action="" method="">
+                                                <form id="addForm" action="#" method="">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
@@ -331,8 +398,8 @@
                                                             <div class="col-lg-5">
                                                                 <div class="form-group mb-3">
                                                                     <select class="selectpicker form-control"
-                                                                        data-live-search="true">
-                                                                        <option selected disabled>Pilih Nama Produk
+                                                                        data-live-search="true" required>
+                                                                        <option selected disabled>Pilih Produk
                                                                         </option>
                                                                         <option>Beras 10Kg</option>
                                                                         <option>Gula 1Kg</option>
@@ -344,7 +411,7 @@
                                                                     <div class="input-group">
                                                                         <input id="ga" type="number"
                                                                             class="form-control list-item"
-                                                                            placeholder="Jumlah Satuan">
+                                                                            placeholder="Jumlah Satuan" required>
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text"
                                                                                 id="basic-addon6">Karung</span>
@@ -536,6 +603,8 @@
     <script src="{{ asset('plugins/table/datatable/button-ext/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/select2/custom-select2.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
+    <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
     <script>
         const minPicker = $("#min").flatpickr({
             dateFormat: "Y-m-d",
@@ -660,70 +729,68 @@
             // Variabel counter untuk ID unik
             let listCounter = 1;
 
-            // Langkah 1: Simpan HTML mentah dari elemen <select class="selectpicker"> asli
-            // Ini diambil sebelum Selectpicker mengubahnya (sebelum event load.bs.select.data-api jalan)
+            // Pastikan container ada, jika tidak, tambah secara dinamis
+            let $listContainer = $('#list-container');
+            if ($listContainer.length === 0) {
+                $listContainer = $('<div id="list-container"></div>');
+                $('#list-item-produk').wrap($listContainer);
+            }
+
+            // Simpan HTML mentah dari elemen <select class="selectpicker"> asli
             const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
 
-            // Langkah 2: Simpan template statis tanpa selectpicker yang sudah diubah
-            // Kita hapus elemen selectpicker dari template ini, nanti akan diganti dengan selectPickerHtml
+            // Simpan template statis tanpa selectpicker yang sudah diubah
             const initialTemplate = $('#list-item-produk.row.px-3').clone();
             initialTemplate.find('.selectpicker').remove();
+            initialTemplate.find('.bootstrap-select').remove();
 
             // Fungsi untuk update nomor list
             function updateListNumbers() {
-                $('#list-item-produk.row.px-3, #list-item-produk > .row.px-3').each(function(index) {
+                $('.row.px-3').each(function(index) {
                     $(this).find('.no-list span').text((index + 1) + '.');
                 });
             }
 
-            // Tambah Produk (binding sekali di luar modal event)
+            // Tambah Produk
             $('.addProduk').off('click').one('click', function handleAddProduct() {
-                console.log('Tombol Tambah Produk diklik'); // Debugging
-                console.log('Jumlah list sebelum tambah:', $(
-                    '#list-item-produk.row.px-3, #list-item-produk > .row.px-3').length);
-
-                // Langkah 3: Buat template baru dari template statis
+                // Buat template baru dari template statis
                 var template = initialTemplate.clone();
 
-                // Hapus ID lama dari template
+                // Hapus ID lama dan tambah ID unik
                 template.removeAttr('id');
-
-                // Tambah ID unik berdasarkan counter
                 var uniqueId = 'list-produk-' + (++listCounter);
                 template.attr('id', uniqueId);
 
-                // Langkah 4: Ganti elemen selectpicker dengan HTML asli yang kita simpan tadi
-                // Kita masukkan ke dalam .form-group.mb-3 (sesuai struktur HTML-mu)
-                template.find('.form-group.mb-3').first().html(selectPickerHtml);
+                // Pastikan class row dan px-3 ada
+                template.addClass('row px-3');
 
-                // Reset input di list baru
-                template.find('select').val(''); // Reset selectpicker
-                template.find('input[type="number"]').val(''); // Reset input satuan
+                // Ganti elemen selectpicker dengan HTML asli
+                template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
 
-                // Tambahkan list baru ke container
-                $('#list-item-produk').append(template);
+                // Reset input di list baru dan disable input satuan
+                template.find('select').val('');
+                template.find('input[type="number"]').val('').prop('disabled', true);
+
+                // Tambahkan list baru ke container parent di akhir
+                $('#list-container').append(template);
 
                 // Update nomor list
                 updateListNumbers();
 
-                // Langkah 5: Inisialisasi ulang Selectpicker untuk elemen baru
+                // Inisialisasi ulang Selectpicker untuk elemen baru
                 try {
                     var newSelectpicker = template.find('.selectpicker');
-                    console.log('Elemen selectpicker baru ditemukan:', newSelectpicker.length);
-                    console.log('HTML selectpicker:', newSelectpicker.prop('outerHTML')); // Debug struktur
                     newSelectpicker.selectpicker({
-                        liveSearch: true // Pastikan search berfungsi
+                        liveSearch: true
                     });
-                    console.log('Selectpicker diinisialisasi untuk ID:', uniqueId);
                     newSelectpicker.on('changed.bs.select', function() {
-                        console.log('Opsi dipilih:', $(this).val());
+                        // Enable input satuan saat opsi dipilih
+                        $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
+                            false);
                     });
                 } catch (e) {
-                    console.error('Error inisialisasi Selectpicker:', e);
+                    // Error ditangani tanpa logging
                 }
-
-                console.log('Jumlah list setelah tambah:', $(
-                    '#list-item-produk.row.px-3, #list-item-produk > .row.px-3').length);
 
                 // Re-bind event untuk klik berikutnya
                 $('.addProduk').one('click', handleAddProduct);
@@ -736,28 +803,54 @@
                     liveSearch: true
                 });
 
-                // Hapus List Produk
-                $('#list-item-produk').off('click', '.icon-delete button').on('click',
-                    '.icon-delete button',
-                    function() {
-                        var listCount = $('#list-item-produk.row.px-3, #list-item-produk > .row.px-3')
-                            .length;
-                        console.log('Jumlah list sebelum hapus:', listCount); // Debugging
-                        if (listCount <= 1) {
-                            alert('Minimal harus ada 1 list produk!');
-                            return;
-                        }
-                        $(this).closest('.row.px-3').remove();
-                        updateListNumbers(); // Update nomor setelah hapus
-                        console.log('Jumlah list setelah hapus:', $(
-                            '#list-item-produk.row.px-3, #list-item-produk > .row.px-3')
-                        .length); // Debugging
+                // Disable input satuan di list awal kecuali sudah dipilih
+                var initialSelectpicker = $('#list-item-produk .selectpicker');
+                var initialInput = $('#list-item-produk input[type="number"]');
+                if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
+                    initialInput.prop('disabled', true);
+                }
+                initialSelectpicker.on('changed.bs.select', function() {
+                    initialInput.prop('disabled', false);
+                });
+
+                // Hapus List Produk dengan event delegation
+                $('#list-container').on('click', '.icon-delete button', function() {
+                    var listCount = $('.row.px-3').length;
+                    if (listCount <= 1) {
+                        Snackbar.show({
+                            text: 'Minimal harus ada 1 list produk!',
+                            pos: 'bottom-left'
+                        });
+                        return;
+                    }
+                    $(this).closest('.row.px-3').remove();
+                    updateListNumbers();
+                });
+            });
+
+            // Validasi form sebelum submit
+            $('#addForm').on('submit', function(e) {
+                var isValid = true;
+                $('.row.px-3 .selectpicker').each(function() {
+                    var $select = $(this);
+                    if ($select.val() === '' || $select.val() === null) {
+                        isValid = false;
+                        return false; // Hentikan loop jika ada yang invalid
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault(); // Hentikan submit
+                    Snackbar.show({
+                        text: 'Silakan pilih produk untuk semua list sebelum simpan!',
+                        pos: 'bottom-left'
                     });
+                }
             });
 
             // Reset counter saat modal ditutup
             $('#add').on('hidden.bs.modal', function() {
-                listCounter = 1; // Reset counter
+                listCounter = 1;
             });
         });
     </script>
