@@ -103,15 +103,26 @@
                                                         <input type="text" class="form-control" name=""
                                                             placeholder="Nama Produk" required>
                                                     </div>
-                                                    <div class="form-group mb-3">
-                                                        <label for="satuan-produk">Satuan Produk</label>
-                                                        <select class="selectpicker form-control" data-live-search="true">
-                                                            <option selected disabled>Pilih Satuan Produk
-                                                            </option>
-                                                            <option>Pcs</option>
-                                                            <option>Kardus</option>
-                                                            <option>Pack</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+                                                                <label for="namaSatuan">Stok</label>
+                                                                <input type="number" min="0" class="form-control" name=""
+                                                                    placeholder="Stok Produk" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group mb-3">
+                                                                <label for="satuan-produk">Satuan</label>
+                                                                <select class="selectpicker form-control" data-live-search="true">
+                                                                    <option selected disabled>Pilih Satuan Produk
+                                                                    </option>
+                                                                    <option>Pcs</option>
+                                                                    <option>Kardus</option>
+                                                                    <option>Pack</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="harga-produk">Harga Satuan</label>
@@ -266,7 +277,7 @@
                                                     </div>
                                                     <p class="modal-text">Apakah anda yakin untuk <strong
                                                             style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                        produk <strong>Gula 5Kg?</strong></p>
+                                                        Produk <strong>Gula 5Kg?</strong></p>
                                                 </div>
                                                 <form action="" method="">
                                                     @csrf

@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/file-upload/file-upload-with-preview.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -184,6 +186,66 @@
             vertical-align: text-top;
         }
 
+        .flatpickr-calendar {
+            z-index: 1060 !important;
+        }
+
+        .custom-file-container__custom-file__custom-file-control__button {
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 6;
+            display: block;
+            height: auto;
+            padding: 10px 16px;
+            line-height: 1.25;
+            background-color: rgba(27, 85, 226, 0.239216);
+            color: black;
+            border-left: 1px solid #e0e6ed;
+            box-sizing: border-box;
+        }
+
+        .custom-file-container__image-preview {
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            margin-top: 34px;
+            margin-bottom: 25px;
+            height: 250px;
+            width: 100%;
+            border-radius: 4px;
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #fff;
+            overflow: auto;
+            padding: 15px;
+        }
+
+        .col-lg-3,
+        .col-lg-9 {
+            min-height: 40px;
+        }
+
+        h5 {
+            margin-bottom: 0;
+        }
+
+        .via-pr,
+        .switch {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .via-pr strong {
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .switch {
+            margin-bottom: 0;
+        }
+
         .row.px-3 {
             display: flex;
             align-items: center;
@@ -191,14 +253,12 @@
             width: 100%;
         }
 
-        /* Pastikan kolom sejajar */
         .col-lg-1,
         .col-lg-5 {
             display: flex;
             align-items: center;
             padding: 0 15px;
             max-width: 100%;
-            /* Sesuaikan padding default Bootstrap */
         }
 
         /* Atur no-list */
@@ -242,10 +302,8 @@
             border: none;
             width: 100%;
             height: 44px;
-            /* Sesuaikan dengan tinggi SVG */
         }
 
-        /* Pastikan kolom tidak overflow */
         [class*="col-lg-"]>* {
             box-sizing: border-box;
         }
@@ -271,7 +329,7 @@
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Pengadaan Restock</span></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Restock</span></li>
                             </ol>
                         </nav>
                     </div>
@@ -290,7 +348,7 @@
                             <div class="col-lg-8">
                                 <div class="form-group row">
                                     <label for="min" class="col-sm-3 col-form-label col-form-label-sm">Tanggal
-                                        Pengadaan:</label>
+                                        Restock:</label>
                                     <div class="col-sm-4 position-relative">
                                         <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                             id="min" placeholder="Pilih tanggal awal">
@@ -298,8 +356,10 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
                                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                <line x1="18" y1="6" x2="6" y2="18">
+                                                </line>
+                                                <line x1="6" y1="6" x2="18" y2="18">
+                                                </line>
                                             </svg>
                                         </span>
                                     </div>
@@ -343,7 +403,6 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Data
-                                                        Pengadaan
                                                         Restock
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
@@ -367,7 +426,7 @@
                                                     <div class="modal-body">
                                                         <div class="row">
                                                             <div class="col-6">
-                                                                <div class="form-group mb-3">
+                                                                <div class="form-group mb-4">
                                                                     <label>No Series</label>
                                                                     <input type="text" class="form-control"
                                                                         name="no_series" placeholder="No Series" required
@@ -375,22 +434,62 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label>Penanggung Jawab</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="" placeholder="Penanggung Jawab"
-                                                                        readonly required>
+                                                                <div class="form-group mb-4">
+                                                                    <label>Tanggal dan Waktu</label>
+                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
+                                                                        class="form-control flatpickr flatpickr-input active"
+                                                                        type="text" placeholder="Select Date..">
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
-                                                                <label for="">Catatan Pengadaan</label>
-                                                                <div class="form-group mb-2">
-                                                                    <textarea class="form-control" name="" rows="4" placeholder="Catatan Pengadaan"></textarea>
+                                                                <div class="custom-file-container"
+                                                                    data-upload-id="mySecondImage">
+                                                                    <label>Foto Bukti Restock (bisa lebih dari 1) <a
+                                                                            href="javascript:void(0)"
+                                                                            class="custom-file-container__image-clear"
+                                                                            title="Clear Image">x</a></label>
+                                                                    <label class="custom-file-container__custom-file">
+                                                                        <input type="file"
+                                                                            class="custom-file-container__custom-file__custom-file-input"
+                                                                            multiple>
+                                                                        <input type="hidden" name="MAX_FILE_SIZE"
+                                                                            value="10485760" />
+                                                                        <span
+                                                                            class="custom-file-container__custom-file__custom-file-control"></span>
+                                                                    </label>
+                                                                    <div class="custom-file-container__image-preview">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <hr class="line">
-                                                        <h5 class="mb-3">List Produk</h5>
+                                                        <div class="row align-items-center">
+                                                            <div class="col-lg-3 d-flex align-items-center">
+                                                                <h5>List Produk</h5>
+                                                            </div>
+                                                            <div
+                                                                class="col-lg-9 d-flex justify-content-end align-items-center">
+                                                                <div class="via-pr mr-3">
+                                                                    <strong>Melalui Pengadaan Restock?</strong>
+                                                                </div>
+                                                                <label
+                                                                    class="switch s-icons s-outline s-outline-dark mr-2">
+                                                                    <input type="checkbox" id="restockCheckbox">
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-4 my-3 mr-3" id="pengadaanSelect"
+                                                                style="display: none; margin-left: auto;">
+                                                                <select class="selectpicker form-control"
+                                                                    data-live-search="true" required>
+                                                                    <option selected disabled>Pilih No Series Pengadaan
+                                                                    </option>
+                                                                    <option>PGDRST30052025-1107</option>
+                                                                    <option>PGDRST30052025-1108</option>
+                                                                    <option>PGDRST30052025-1109</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                         <div id="list-item-produk" class="row px-3">
                                                             <div class="col-lg-1 no-list">
                                                                 <span>1.</span>
@@ -410,7 +509,7 @@
                                                                 <div class="form-group mb-3">
                                                                     <div class="input-group">
                                                                         <input id="ga" type="number"
-                                                                            class="form-control list-item"
+                                                                            min="1" class="form-control list-item"
                                                                             placeholder="Jumlah Satuan" required>
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text"
@@ -475,20 +574,20 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Pengadaan</th>
-                                    <th>Status</th>
+                                    <th>Tanggal Restock</th>
+                                    <th>Pengadaan Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>PGDRST30052025-11</td>
+                                    <td>RST02062025-1102</td>
                                     <td>Bayu Safutra</td>
                                     <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y') }}</td>
-                                    <td><span class="badge outline-badge-success"> Selesai </span></td>
+                                    <td>PGDRST30052025-1107</td>
                                     <td class="text-center">
                                         <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Toko">
+                                            title="Detail Pengadaan Restock">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -581,7 +680,7 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal Pengadaan</th>
-                                    <th>Status</th>
+                                    <th>Pengadaan Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -605,7 +704,9 @@
     <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    <script src="{{ asset('plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
     <script>
+        var secondUpload = new FileUploadWithPreview('mySecondImage')
         const minPicker = $("#min").flatpickr({
             dateFormat: "Y-m-d",
             allowInput: true,
@@ -723,6 +824,66 @@
             "stripeClasses": [],
             "lengthMenu": [10, 20, 25, 50, 100],
             "pageLength": 10
+        });
+
+        var f2 = flatpickr(document.getElementById('dateTimeFlatpickr'), {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            defaultDate: new Date(),
+            time_24hr: true,
+            allowInput: true,
+            position: 'auto end',
+            maxDate: new Date(),
+            onReady: function(selectedDates, dateStr, instance) {
+                var now = new Date();
+                if (selectedDates[0] && selectedDates[0].toDateString() === now.toDateString()) {
+                    var maxTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString()
+                        .padStart(2, '0');
+                    instance.set('maxTime', maxTime); // Misalnya: "03:49" kalau hari ini
+                }
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                var now = new Date();
+                if (selectedDates[0] && selectedDates[0].toDateString() === now.toDateString()) {
+                    var maxTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString()
+                        .padStart(2, '0');
+                    instance.set('maxTime', maxTime); // Set maxTime kalau hari ini
+                } else {
+                    instance.set('maxTime', null); // Hapus maxTime kalau bukan hari ini
+                }
+            }
+        });
+
+        // Event manual untuk tutup
+        document.addEventListener('click', function(event) {
+            var flatpickrInput = document.getElementById('dateTimeFlatpickr');
+            var flatpickrCalendar = document.querySelector('.flatpickr-calendar.open');
+            if (flatpickrCalendar && !flatpickrInput.contains(event.target) && !flatpickrCalendar.contains(event
+                    .target)) {
+                f2.close();
+            }
+        });
+
+        $(document).ready(function() {
+            // Inisialisasi Selectpicker saat checkbox di-check
+            $('#restockCheckbox').on('change', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                if ($(this).is(':checked')) {
+                    $pengadaanSelect.show();
+                    $pengadaanSelect.find('.selectpicker').selectpicker({
+                        liveSearch: true
+                    });
+                } else {
+                    $pengadaanSelect.hide();
+                    $pengadaanSelect.find('.selectpicker').selectpicker('destroy'); // Hapus inisialisasi
+                }
+            });
+
+            // Pastikan selectpicker di-destroy saat modal ditutup
+            $('#add').on('hidden.bs.modal', function() {
+                $('#pengadaanSelect').hide();
+                $('#pengadaanSelect .selectpicker').selectpicker('destroy');
+            });
         });
 
         $(document).ready(function() {
