@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/file-upload/file-upload-with-preview.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -307,9 +308,51 @@
         [class*="col-lg-"]>* {
             box-sizing: border-box;
         }
+
+        #load_screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* z-index: 1000; */
+            /* Pastikan di atas elemen lain */
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader.dual-loader.mx-auto {
+            /* Pastikan CSS dari templatemu udah terload */
+            display: inline-block !important;
+            /* Override kalau ada hide */
+        }
+
+        #list-produk-pengadaan input[readonly] {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
     </style>
 @endsection
 @section('header')
+    <div id="load_screen">
+        <div class="loader">
+            <div class="loader-content">
+                <div class="spinner-border spinner-border-reverse align-self-center loader-lg text-primary">Loading...</div>
+            </div>
+        </div>
+    </div>
     <div class="sub-header-container">
         <header class="header navbar navbar-expand-sm">
             <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg
@@ -354,8 +397,9 @@
                                             id="min" placeholder="Pilih tanggal awal">
                                         <span class="clear-icon" id="clear-min">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
-                                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18">
                                                 </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -482,79 +526,100 @@
                                                                 style="display: none; margin-left: auto;">
                                                                 <select class="selectpicker form-control"
                                                                     data-live-search="true" required>
-                                                                    <option selected disabled>Pilih No Series Pengadaan
+                                                                    <option value="" selected disabled>Pilih No
+                                                                        Series Pengadaan</option>
+                                                                    <option value="PGDRST30052025-1107">PGDRST30052025-1107
                                                                     </option>
-                                                                    <option>PGDRST30052025-1107</option>
-                                                                    <option>PGDRST30052025-1108</option>
-                                                                    <option>PGDRST30052025-1109</option>
+                                                                    <option value="PGDRST30052025-1108">PGDRST30052025-1108
+                                                                    </option>
+                                                                    <option value="PGDRST30052025-1109">PGDRST30052025-1109
+                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div id="list-item-produk" class="row px-3">
-                                                            <div class="col-lg-1 no-list">
-                                                                <span>1.</span>
-                                                            </div>
-                                                            <div class="col-lg-5">
-                                                                <div class="form-group mb-3">
-                                                                    <select class="selectpicker form-control"
-                                                                        data-live-search="true" required>
-                                                                        <option selected disabled>Pilih Produk
-                                                                        </option>
-                                                                        <option>Beras 10Kg</option>
-                                                                        <option>Gula 1Kg</option>
-                                                                    </select>
+
+                                                        <!-- Container untuk list produk manual dan tombol tambah -->
+                                                        <div id="list-container">
+                                                            <div id="list-item-produk" class="row px-3">
+                                                                <div class="col-lg-1 no-list">
+                                                                    <span>1.</span>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-lg-5">
-                                                                <div class="form-group mb-3">
-                                                                    <div class="input-group">
-                                                                        <input id="ga" type="number"
-                                                                            min="1" class="form-control list-item"
-                                                                            placeholder="Jumlah Satuan" required>
-                                                                        <div class="input-group-append">
-                                                                            <span class="input-group-text"
-                                                                                id="basic-addon6">Karung</span>
+                                                                <div class="col-lg-5">
+                                                                    <div class="form-group mb-3">
+                                                                        <select class="selectpicker form-control"
+                                                                            data-live-search="true" required>
+                                                                            <option selected disabled>Pilih Produk</option>
+                                                                            <option>Beras 10Kg</option>
+                                                                            <option>Gula 1Kg</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-5">
+                                                                    <div class="form-group mb-3">
+                                                                        <div class="input-group">
+                                                                            <input id="ga" type="number"
+                                                                                min="1"
+                                                                                class="form-control list-item"
+                                                                                placeholder="Jumlah Satuan" required>
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text"
+                                                                                    id="basic-addon6">Karung</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-lg-1">
+                                                                    <div class="icon-delete">
+                                                                        <button class="" type="button">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="44" height="44"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="feather feather-trash-2 delete-list">
+                                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                                <path
+                                                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                                                </path>
+                                                                                <line x1="10" y1="11"
+                                                                                    x2="10" y2="17"></line>
+                                                                                <line x1="14" y1="11"
+                                                                                    x2="14" y2="17"></line>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-lg-1">
-                                                                <div class="icon-delete">
-                                                                    <button class="" type="button">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            width="44" height="44"
-                                                                            viewBox="0 0 24 24" fill="none"
-                                                                            stroke="currentColor" stroke-width="2"
-                                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                                            class="feather feather-trash-2 delete-list">
-                                                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                                                            <path
-                                                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                                                            </path>
-                                                                            <line x1="10" y1="11"
-                                                                                x2="10" y2="17"></line>
-                                                                            <line x1="14" y1="11"
-                                                                                x2="14" y2="17"></line>
-                                                                        </svg>
-                                                                    </button>
+                                                            <div class="add-s-produk mt-3">
+                                                                <button class="addProduk" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="feather feather-plus-circle">
+                                                                        <circle cx="12" cy="12" r="10">
+                                                                        </circle>
+                                                                        <line x1="12" y1="8"
+                                                                            x2="12" y2="16"></line>
+                                                                        <line x1="8" y1="12"
+                                                                            x2="16" y2="12"></line>
+                                                                    </svg> Tambah Produk
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Spinner loading -->
+                                                        <div id="load_screen" style="display: none;">
+                                                            <div class="loader">
+                                                                <div class="loader-content">
+                                                                    <div class="loader dual-loader mx-auto"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="add-s-produk mt-3">
-                                                            <button class="addProduk" type="button">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                    height="24" viewBox="0 0 24 24" fill="none"
-                                                                    stroke="currentColor" stroke-width="2"
-                                                                    stroke-linecap="round" stroke-linejoin="round"
-                                                                    class="feather feather-plus-circle">
-                                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                                    <line x1="12" y1="8" x2="12"
-                                                                        y2="16"></line>
-                                                                    <line x1="8" y1="12" x2="16"
-                                                                        y2="12"></line>
-                                                                </svg> Tambah Produk
-                                                            </button>
-                                                        </div>
+
+                                                        <!-- Container untuk list produk dari pengadaan -->
+                                                        <div id="list-produk-pengadaan" style="display: none;"></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn" data-dismiss="modal"><i
@@ -854,7 +919,6 @@
             }
         });
 
-        // Event manual untuk tutup
         document.addEventListener('click', function(event) {
             var flatpickrInput = document.getElementById('dateTimeFlatpickr');
             var flatpickrCalendar = document.querySelector('.flatpickr-calendar.open');
@@ -865,106 +929,239 @@
         });
 
         $(document).ready(function() {
-            // Inisialisasi Selectpicker saat checkbox di-check
-            $('#restockCheckbox').on('change', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                if ($(this).is(':checked')) {
-                    $pengadaanSelect.show();
-                    $pengadaanSelect.find('.selectpicker').selectpicker({
-                        liveSearch: true
-                    });
-                } else {
-                    $pengadaanSelect.hide();
-                    $pengadaanSelect.find('.selectpicker').selectpicker('destroy'); // Hapus inisialisasi
-                }
-            });
+            // Variabel untuk menyimpan value selectpicker
+            let selectedPengadaanValue = '';
 
-            // Pastikan selectpicker di-destroy saat modal ditutup
-            $('#add').on('hidden.bs.modal', function() {
-                $('#pengadaanSelect').hide();
-                $('#pengadaanSelect .selectpicker').selectpicker('destroy');
-            });
-        });
+            // Dummy data untuk simulasi list produk dari pengadaan
+            const dummyPengadaanData = {
+                "PGDRST30052025-1107": [{
+                        produk: "Beras 10Kg",
+                        satuan: 5,
+                        satuanType: "Karung"
+                    },
+                    {
+                        produk: "Gula 1Kg",
+                        satuan: 10,
+                        satuanType: "Sak"
+                    }
+                ],
+                "PGDRST30052025-1108": [{
+                    produk: "Minyak 2L",
+                    satuan: 3,
+                    satuanType: "Botol"
+                }],
+                "PGDRST30052025-1109": [{
+                        produk: "Tepung 5Kg",
+                        satuan: 2,
+                        satuanType: "Karung"
+                    },
+                    {
+                        produk: "Garam 500g",
+                        satuan: 8,
+                        satuanType: "Pack"
+                    }
+                ]
+            };
 
-        $(document).ready(function() {
-            // Variabel counter untuk ID unik
-            let listCounter = 1;
+            // Template list produk pengadaan (statis, akan di-loop)
+            const pengadaanTemplate = `
+        <div class="row px-3">
+            <div class="col-lg-1 no-list">
+                <span></span>
+            </div>
+            <div class="col-lg-5">
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="form-group mb-3">
+                    <div class="input-group">
+                        <input type="number" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <span class="input-group-text"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
-            // Pastikan container ada, jika tidak, tambah secara dinamis
-            let $listContainer = $('#list-container');
-            if ($listContainer.length === 0) {
-                $listContainer = $('<div id="list-container"></div>');
-                $('#list-item-produk').wrap($listContainer);
-            }
-
-            // Simpan HTML mentah dari elemen <select class="selectpicker"> asli
-            const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
-
-            // Simpan template statis tanpa selectpicker yang sudah diubah
-            const initialTemplate = $('#list-item-produk.row.px-3').clone();
-            initialTemplate.find('.selectpicker').remove();
-            initialTemplate.find('.bootstrap-select').remove();
-
-            // Fungsi untuk update nomor list
-            function updateListNumbers() {
-                $('.row.px-3').each(function(index) {
+            // Fungsi untuk update nomor list (manual dan pengadaan)
+            function updateListNumbers(container) {
+                $(container).find('.row.px-3').each(function(index) {
                     $(this).find('.no-list span').text((index + 1) + '.');
                 });
             }
 
-            // Tambah Produk
-            $('.addProduk').off('click').one('click', function handleAddProduct() {
-                // Buat template baru dari template statis
-                var template = initialTemplate.clone();
+            // Event saat checkbox berubah
+            $('#restockCheckbox').on('change', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
 
-                // Hapus ID lama dan tambah ID unik
+                if ($(this).is(':checked')) {
+                    $pengadaanSelect.show();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
+                    });
+                    $select.selectpicker('refresh');
+
+                    // Sembunyikan list manual dan tombol tambah
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                } else {
+                    selectedPengadaanValue = '';
+                    $select.selectpicker('destroy');
+                    $select.val('');
+                    $pengadaanSelect.hide();
+
+                    // Kembalikan list manual
+                    $listContainer.show();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                }
+            });
+
+            // Event saat selectpicker pengadaan dipilih
+            $('#pengadaanSelect select').on('change', function() {
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listContainer = $('#list-container');
+                var selectedValue = $(this).val();
+
+                if (selectedValue && selectedValue !== '') {
+                    // Tampilkan spinner
+                    $listContainer.hide();
+                    $listProdukPengadaan.hide();
+                    $loadScreen.show();
+                    console.log('Showing load_screen:', $loadScreen.css('display'));
+                    // Simulasi loading data (1 detik delay)
+                    setTimeout(function() {
+                        $loadScreen.hide();
+
+                        // Ambil dummy data berdasarkan nomor series
+                        const data = dummyPengadaanData[selectedValue] || [];
+                        $listProdukPengadaan.empty();
+
+                        // Loop data ke template
+                        data.forEach(function(item, index) {
+                            var $template = $(pengadaanTemplate);
+                            $template.find('.no-list span').text((index + 1) + '.');
+                            $template.find('.col-lg-5 input[type="text"]').val(item.produk);
+                            $template.find('.col-lg-5 input[type="number"]').val(item
+                                .satuan);
+                            $template.find('.col-lg-5 .input-group-text').text(item
+                                .satuanType);
+                            $listProdukPengadaan.append($template);
+                        });
+
+                        // Tampilkan list produk pengadaan
+                        $listProdukPengadaan.show();
+                    }, 1000);
+                }
+            });
+
+            // Event saat modal ditampilkan
+            $('#add').on('shown.bs.modal', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+
+                if ($checkbox.is(':checked')) {
+                    $pengadaanSelect.show();
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
+                    });
+                    $select.selectpicker('refresh');
+
+                    // Cek apakah ada value yang dipilih sebelumnya
+                    if (selectedPengadaanValue && selectedPengadaanValue !== '') {
+                        $loadScreen.show();
+                        console.log('Showing load_screen:', $loadScreen.css('display'));
+                        setTimeout(function() {
+                            $loadScreen.hide();
+                            const data = dummyPengadaanData[selectedPengadaanValue] || [];
+                            $listProdukPengadaan.empty();
+
+                            data.forEach(function(item, index) {
+                                var $template = $(pengadaanTemplate);
+                                $template.find('.no-list span').text((index + 1) + '.');
+                                $template.find('.col-lg-5 input[type="text"]').val(item
+                                    .produk);
+                                $template.find('.col-lg-5 input[type="number"]').val(item
+                                    .satuan);
+                                $template.find('.col-lg-5 .input-group-text').text(item
+                                    .satuanType);
+                                $listProdukPengadaan.append($template);
+                            });
+
+                            $listProdukPengadaan.show();
+                        }, 1000);
+                    }
+                }
+            });
+
+            $('#add').on('hidden.bs.modal', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                if ($checkbox.is(':checked')) {
+                    selectedPengadaanValue = $select.val() || '';
+                }
+                $select.selectpicker('destroy');
+                $pengadaanSelect.hide();
+            });
+
+            // Logika list produk manual (diperbarui untuk posisi tombol)
+            let listCounter = 1;
+            let $listContainer = $('#list-container');
+            const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
+            const initialTemplate = $('#list-item-produk.row.px-3').clone();
+            initialTemplate.find('.selectpicker').remove();
+            initialTemplate.find('.bootstrap-select').remove();
+
+            $('.addProduk').off('click').one('click', function handleAddProduct() {
+                var template = initialTemplate.clone();
                 template.removeAttr('id');
                 var uniqueId = 'list-produk-' + (++listCounter);
                 template.attr('id', uniqueId);
-
-                // Pastikan class row dan px-3 ada
                 template.addClass('row px-3');
-
-                // Ganti elemen selectpicker dengan HTML asli
                 template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
-
-                // Reset input di list baru dan disable input satuan
                 template.find('select').val('');
                 template.find('input[type="number"]').val('').prop('disabled', true);
-
-                // Tambahkan list baru ke container parent di akhir
-                $('#list-container').append(template);
-
-                // Update nomor list
-                updateListNumbers();
-
-                // Inisialisasi ulang Selectpicker untuk elemen baru
+                $('#list-container').append(template); // Tambah list baru
+                // Pindah tombol ke akhir
+                $('.add-s-produk').appendTo('#list-container');
+                updateListNumbers('#list-container');
                 try {
                     var newSelectpicker = template.find('.selectpicker');
                     newSelectpicker.selectpicker({
                         liveSearch: true
                     });
                     newSelectpicker.on('changed.bs.select', function() {
-                        // Enable input satuan saat opsi dipilih
                         $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
                             false);
                     });
-                } catch (e) {
-                    // Error ditangani tanpa logging
-                }
-
-                // Re-bind event untuk klik berikutnya
+                } catch (e) {}
                 $('.addProduk').one('click', handleAddProduct);
             });
 
-            // Pastikan modal sudah terbuka untuk binding event hapus dan inisialisasi awal
             $('#add').on('shown.bs.modal', function() {
-                // Inisialisasi Selectpicker pertama saat modal dibuka
                 $('#list-item-produk .selectpicker').selectpicker({
                     liveSearch: true
                 });
-
-                // Disable input satuan di list awal kecuali sudah dipilih
                 var initialSelectpicker = $('#list-item-produk .selectpicker');
                 var initialInput = $('#list-item-produk input[type="number"]');
                 if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
@@ -974,7 +1171,6 @@
                     initialInput.prop('disabled', false);
                 });
 
-                // Hapus List Produk dengan event delegation
                 $('#list-container').on('click', '.icon-delete button', function() {
                     var listCount = $('.row.px-3').length;
                     if (listCount <= 1) {
@@ -985,23 +1181,24 @@
                         return;
                     }
                     $(this).closest('.row.px-3').remove();
-                    updateListNumbers();
+                    // Pindah tombol ke akhir setelah hapus
+                    $('.add-s-produk').appendTo('#list-container');
+                    updateListNumbers('#list-container');
                 });
             });
 
-            // Validasi form sebelum submit
             $('#addForm').on('submit', function(e) {
                 var isValid = true;
                 $('.row.px-3 .selectpicker').each(function() {
                     var $select = $(this);
                     if ($select.val() === '' || $select.val() === null) {
                         isValid = false;
-                        return false; // Hentikan loop jika ada yang invalid
+                        return false;
                     }
                 });
 
                 if (!isValid) {
-                    e.preventDefault(); // Hentikan submit
+                    e.preventDefault();
                     Snackbar.show({
                         text: 'Silakan pilih produk untuk semua list sebelum simpan!',
                         pos: 'bottom-left'
@@ -1009,7 +1206,6 @@
                 }
             });
 
-            // Reset counter saat modal ditutup
             $('#add').on('hidden.bs.modal', function() {
                 listCounter = 1;
             });
