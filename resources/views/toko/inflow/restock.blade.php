@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/file-upload/file-upload-with-preview.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
+
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -339,9 +340,20 @@
             /* Override kalau ada hide */
         }
 
+        #list-produk-pengadaan .input-group-append,
+        #list-produk-pengadaan .input-group-text {
+            min-width: 80px;
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+
         #list-produk-pengadaan input[readonly] {
-            background-color: #e9ecef;
-            border-color: #ced4da;
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 14px;
         }
     </style>
 @endsection
@@ -651,8 +663,21 @@
                                     <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y') }}</td>
                                     <td>PGDRST30052025-1107</td>
                                     <td class="text-center">
+                                        <button type="button" data-toggle="modal" data-target="#lihatbukti"
+                                            data-image='[]'
+                                            title="Lihat Bukti">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-image table-cancel">
+                                                <rect x="3" y="3" width="18" height="18" rx="2"
+                                                    ry="2"></rect>
+                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                <polyline points="21 15 16 10 5 21"></polyline>
+                                            </svg>
+                                        </button>
                                         <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Pengadaan Restock">
+                                            title="Detail Restock">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -675,7 +700,7 @@
                                     <!-- Modal Detail -->
                                     <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
                                         aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan Restock
@@ -734,6 +759,41 @@
                                                 <div class="modal-footer">
                                                     <button class="btn btn-primary" data-dismiss="modal"><i
                                                             class="flaticon-cancel-12"></i> Tutup</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Modal Lihat Bukti -->
+                                    <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
+                                        aria-labelledby="lihatbuktiLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto Restock
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p id="noImageMessage"
+                                                        style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
+                                                        Tidak ada bukti foto yang tersedia</p>
+                                                    <div class="text-center">
+                                                        <img id="buktiImage" src="" alt="Bukti Foto Restock"
+                                                            class="img-fluid" style="max-width: 100%; max-height: 70vh;">
+                                                    </div>
+                                                    <div class="d-flex justify-content-center mt-3">
+                                                        <button id="prevImage" class="btn btn-outline-secondary mr-2"
+                                                            disabled>Sebelumnya</button>
+                                                        <button id="nextImage" class="btn btn-outline-secondary"
+                                                            disabled>Selanjutnya</button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary"
+                                                        data-dismiss="modal">Tutup</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -965,27 +1025,27 @@
 
             // Template list produk pengadaan (statis, akan di-loop)
             const pengadaanTemplate = `
-        <div class="row px-3">
-            <div class="col-lg-1 no-list">
-                <span></span>
-            </div>
-            <div class="col-lg-5">
-                <div class="form-group mb-3">
-                    <input type="text" class="form-control" readonly>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="form-group mb-3">
-                    <div class="input-group">
-                        <input type="number" class="form-control" readonly>
-                        <div class="input-group-append">
-                            <span class="input-group-text"></span>
+                <div class="row px-3">
+                    <div class="col-lg-1 no-list">
+                        <span></span>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="form-group mb-3">
+                            <div class="input-group">
+                                <input type="number" class="form-control" readonly>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    `;
+            `;
 
             // Fungsi untuk update nomor list (manual dan pengadaan)
             function updateListNumbers(container) {
@@ -1052,7 +1112,7 @@
                         data.forEach(function(item, index) {
                             var $template = $(pengadaanTemplate);
                             $template.find('.no-list span').text((index + 1) + '.');
-                            $template.find('.col-lg-5 input[type="text"]').val(item.produk);
+                            $template.find('.col-lg-6 input[type="text"]').val(item.produk);
                             $template.find('.col-lg-5 input[type="number"]').val(item
                                 .satuan);
                             $template.find('.col-lg-5 .input-group-text').text(item
@@ -1209,6 +1269,83 @@
             $('#add').on('hidden.bs.modal', function() {
                 listCounter = 1;
             });
+        });
+
+        let currentImages = [];
+        let currentImageIndex = 0;
+
+        // Event saat button "Lihat Bukti" diklik
+        $('button[data-target="#lihatbukti"]').on('click', function() {
+            // Ambil data-image (sudah array dari jQuery data())
+            currentImages = $(this).data('image') || [];
+            currentImageIndex = 0;
+
+            // Cek apakah ada gambar
+            if (currentImages && currentImages.length > 0) {
+                // Tampilkan gambar pertama
+                $('#buktiImage').attr('src', currentImages[0]);
+                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
+                $('#buktiImage').show();
+                $('#noImageMessage').hide();
+
+                // Hide/show tombol navigasi berdasarkan jumlah gambar
+                if (currentImages.length > 1) {
+                    $('#prevImage').show();
+                    $('#nextImage').show();
+                    $('#nextImage').prop('disabled', false);
+                } else {
+                    $('#prevImage').hide();
+                    $('#nextImage').hide();
+                }
+                $('#prevImage').prop('disabled', true); // Awalnya di gambar pertama
+            } else {
+                $('#buktiImage').attr('src', '');
+                $('#buktiImage').hide();
+                $('#noImageMessage').show();
+                $('#prevImage').hide();
+                $('#nextImage').hide();
+            }
+        });
+
+        // Event untuk tombol Sebelumnya
+        $('#prevImage').on('click', function() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
+                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
+
+                // Update tombol
+                $('#nextImage').prop('disabled', false);
+                if (currentImageIndex === 0) {
+                    $('#prevImage').prop('disabled', true);
+                }
+            }
+        });
+
+        // Event untuk tombol Selanjutnya
+        $('#nextImage').on('click', function() {
+            if (currentImageIndex < currentImages.length - 1) {
+                currentImageIndex++;
+                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
+                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
+
+                // Update tombol
+                $('#prevImage').prop('disabled', false);
+                if (currentImageIndex === currentImages.length - 1) {
+                    $('#nextImage').prop('disabled', true);
+                }
+            }
+        });
+
+        // Reset state saat modal ditutup
+        $('#lihatbukti').on('hidden.bs.modal', function() {
+            currentImages = [];
+            currentImageIndex = 0;
+            $('#buktiImage').attr('src', '');
+            $('#buktiImage').hide();
+            $('#noImageMessage').show();
+            $('#prevImage').hide();
+            $('#nextImage').hide();
         });
     </script>
 @endsection
