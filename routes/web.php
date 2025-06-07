@@ -98,3 +98,7 @@ Route::get('/slugtoko/manager/restock', function() {
     return view('toko.inflow.restock');
 });
 
+Route::get('/slugtoko/manager/penjualan', function() {
+    return view('toko.outflow.penjualan');
+});
+

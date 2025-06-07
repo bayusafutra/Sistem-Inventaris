@@ -28,6 +28,12 @@ strong.title {
     font-weight: 900;
 }
 
+span.wajib {
+    color: red;
+    font-weight: 900;
+    font-size: 16px;
+}
+
 .position-relative {
     position: relative;
 }
@@ -172,6 +178,66 @@ input#ga {
     vertical-align: text-top;
 }
 
+.flatpickr-calendar {
+    z-index: 1060 !important;
+}
+
+.custom-file-container__custom-file__custom-file-control__button {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 6;
+    display: block;
+    height: auto;
+    padding: 10px 16px;
+    line-height: 1.25;
+    background-color: rgba(27, 85, 226, 0.239216);
+    color: black;
+    border-left: 1px solid #e0e6ed;
+    box-sizing: border-box;
+}
+
+.custom-file-container__image-preview {
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    margin-top: 34px;
+    margin-bottom: 25px;
+    height: 250px;
+    width: 100%;
+    border-radius: 4px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    overflow: auto;
+    padding: 15px;
+}
+
+.col-lg-3,
+.col-lg-9 {
+    min-height: 40px;
+}
+
+h5 {
+    margin-bottom: 0;
+}
+
+.via-pr,
+.switch {
+    display: inline-flex;
+    align-items: center;
+}
+
+.via-pr strong {
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.switch {
+    margin-bottom: 0;
+}
+
 .row.px-3 {
     display: flex;
     align-items: center;
@@ -179,14 +245,12 @@ input#ga {
     width: 100%;
 }
 
-/* Pastikan kolom sejajar */
 .col-lg-1,
 .col-lg-5 {
     display: flex;
     align-items: center;
     padding: 0 15px;
     max-width: 100%;
-    /* Sesuaikan padding default Bootstrap */
 }
 
 /* Atur no-list */
@@ -236,6 +300,46 @@ input#ga {
     box-sizing: border-box;
 }
 
+#load_screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* z-index: 1000; */
+    /* Pastikan di atas elemen lain */
+}
+
+.loader {
+    text-align: center;
+}
+
+.loader-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader.dual-loader.mx-auto {
+    /* Pastikan CSS dari templatemu udah terload */
+    display: inline-block !important;
+    /* Override kalau ada hide */
+}
+
+#list-produk-pengadaan .input-group-append,
+#list-produk-pengadaan .input-group-text {
+    min-width: 80px;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
 #list-item-produk .input-group-append,
 #list-item-produk .input-group-text {
     min-width: 80px;
@@ -244,4 +348,10 @@ input#ga {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+}
+
+#list-produk-pengadaan input[readonly] {
+    color: #6c757d;
+    font-weight: 700;
+    font-size: 14px;
 }

@@ -12,350 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/file-upload/file-upload-with-preview.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
-
-    <style>
-        table thead {
-            background-color: #f0f5ff;
-        }
-
-        table tbody tr td button {
-            background: none;
-            border: none;
-        }
-
-        .table-form {
-            display: flex;
-            margin: 17px 5px 25px 5px;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .table-form .col-lg-8 {
-            padding-right: 15px;
-        }
-
-        .table-form .col-lg-4 {
-            display: flex;
-            justify-content: flex-end;
-            padding-left: 15px;
-        }
-
-        strong.title {
-            font-weight: 900;
-        }
-
-        .position-relative {
-            position: relative;
-        }
-
-        .clear-icon {
-            position: absolute;
-            right: 22px;
-            top: 45%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            display: none;
-            font-weight: bold;
-            color: #888ea8;
-        }
-
-        .clear-icon:hover {
-            color: #e7515a;
-        }
-
-        .outline-badge-success {
-            padding: 2.2px 19px
-        }
-
-        .outline-badge-warning {
-            padding: 2.2px 19px
-        }
-
-        .form-control-sm.flatpickr {
-            padding-right: 30px;
-        }
-
-        .product-list {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .product-item {
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px 0;
-            margin-bottom: 5px;
-        }
-
-        .product-item:last-child {
-            border-bottom: none;
-        }
-
-        .number-list {
-            font-weight: 500;
-            color: #333;
-            margin-right: 10px;
-            min-width: 20px;
-            text-align: right;
-        }
-
-        .product-name {
-            font-weight: 500;
-            color: #333;
-            flex-grow: 1;
-        }
-
-        .product-quantity {
-            color: #666;
-            font-weight: 400;
-            margin-left: 10px;
-        }
-
-        hr.line {
-            border: 1.5px solid black
-        }
-
-        h5 {
-            font-weight: 900;
-            font-size: 20px;
-        }
-
-        input.list-item {
-            padding: 11px 10px;
-        }
-
-        input#ga {
-            font-size: 16.5px;
-        }
-
-        .row .no-list {
-            font-weight: 700;
-            font-size: 25px;
-            color: #3b3f5c;
-            display: flex;
-            align-items: center;
-        }
-
-        .row .icon-delete {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .icon-delete button {
-            background: none;
-            border: none;
-        }
-
-        .icon-delete button svg.delete-list {
-            cursor: pointer;
-            color: #e7515a;
-            stroke-width: 2.5;
-        }
-
-        .modal-body .add-s-produk {
-            transition: all 0.3s ease-out;
-            -webkit-transition: all 0.3s ease-out;
-            text-align: center;
-        }
-
-        .modal-body .add-s-produk button {
-            background: none;
-            border: none;
-        }
-
-        .modal-body .add-s-produk:hover {
-            -webkit-transform: translateY(-3px);
-            transform: translateY(-3px);
-        }
-
-        .modal-body .add-s-produk .addProduk {
-            display: block;
-            color: #3b3f5c;
-            font-size: 17px;
-            font-weight: 700;
-            text-align: center;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .modal-body .add-s-produk .addProduk:hover {
-            color: #4361ee;
-        }
-
-        .modal-body .add-s-produk .addProduk svg {
-            width: 20px;
-            height: 20px;
-            vertical-align: text-top;
-        }
-
-        .flatpickr-calendar {
-            z-index: 1060 !important;
-        }
-
-        .custom-file-container__custom-file__custom-file-control__button {
-            box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 6;
-            display: block;
-            height: auto;
-            padding: 10px 16px;
-            line-height: 1.25;
-            background-color: rgba(27, 85, 226, 0.239216);
-            color: black;
-            border-left: 1px solid #e0e6ed;
-            box-sizing: border-box;
-        }
-
-        .custom-file-container__image-preview {
-            box-sizing: border-box;
-            transition: all 0.2s ease;
-            margin-top: 34px;
-            margin-bottom: 25px;
-            height: 250px;
-            width: 100%;
-            border-radius: 4px;
-            background-size: contain;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-color: #fff;
-            overflow: auto;
-            padding: 15px;
-        }
-
-        .col-lg-3,
-        .col-lg-9 {
-            min-height: 40px;
-        }
-
-        h5 {
-            margin-bottom: 0;
-        }
-
-        .via-pr,
-        .switch {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .via-pr strong {
-            font-weight: 900;
-            font-size: 14px;
-        }
-
-        .switch {
-            margin-bottom: 0;
-        }
-
-        .row.px-3 {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .col-lg-1,
-        .col-lg-5 {
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            max-width: 100%;
-        }
-
-        /* Atur no-list */
-        .no-list {
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Atur form-group */
-        .form-group.mb-3 {
-            margin-bottom: 0 !important;
-            width: 100%;
-        }
-
-        /* Atur icon-delete */
-        .icon-delete {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Atur lebar selectpicker */
-        .selectpicker,
-        .bootstrap-select {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        /* Atur lebar dropdown selectpicker */
-        .bootstrap-select .dropdown-menu {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 100% !important;
-        }
-
-        /* Pastikan tombol delete rapi */
-        .icon-delete button {
-            padding: 0;
-            background: none;
-            border: none;
-            width: 100%;
-            height: 44px;
-        }
-
-        [class*="col-lg-"]>* {
-            box-sizing: border-box;
-        }
-
-        #load_screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* z-index: 1000; */
-            /* Pastikan di atas elemen lain */
-        }
-
-        .loader {
-            text-align: center;
-        }
-
-        .loader-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loader.dual-loader.mx-auto {
-            /* Pastikan CSS dari templatemu udah terload */
-            display: inline-block !important;
-            /* Override kalau ada hide */
-        }
-
-        #list-produk-pengadaan .input-group-append,
-        #list-produk-pengadaan .input-group-text {
-            min-width: 80px;
-            max-width: 80px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-        }
-
-        #list-produk-pengadaan input[readonly] {
-            color: #6c757d;
-            font-weight: 700;
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-restock.css') }}">
 @endsection
 @section('header')
     <div id="load_screen">
@@ -483,7 +140,7 @@
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label>No Series</label>
+                                                                    <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
                                                                         name="no_series" placeholder="No Series" required
                                                                         readonly>
@@ -491,10 +148,17 @@
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label>Tanggal dan Waktu</label>
+                                                                    <label><span class="wajib">*</span>Tanggal dan Waktu</label>
                                                                     <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
                                                                         class="form-control flatpickr flatpickr-input active"
-                                                                        type="text" placeholder="Select Date..">
+                                                                        type="text" placeholder="Select Date.."
+                                                                        required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <label for="">Catatan</label>
+                                                                <div class="form-group mb-4">
+                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Restock"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -537,7 +201,7 @@
                                                             <div class="col-4 my-3 mr-3" id="pengadaanSelect"
                                                                 style="display: none; margin-left: auto;">
                                                                 <select class="selectpicker form-control"
-                                                                    data-live-search="true" required>
+                                                                    data-live-search="true">
                                                                     <option value="" selected disabled>Pilih No
                                                                         Series Pengadaan</option>
                                                                     <option value="PGDRST30052025-1107">PGDRST30052025-1107
@@ -559,7 +223,8 @@
                                                                 <div class="col-lg-5">
                                                                     <div class="form-group mb-3">
                                                                         <select class="selectpicker form-control"
-                                                                            data-live-search="true" required>
+                                                                            data-live-search="true" name="produk[]"
+                                                                            required>
                                                                             <option selected disabled>Pilih Produk</option>
                                                                             <option>Beras 10Kg</option>
                                                                             <option>Gula 1Kg</option>
@@ -651,7 +316,7 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Restock</th>
+                                    <th>Tanggal & Waktu</th>
                                     <th>Pengadaan Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
@@ -660,11 +325,11 @@
                                 <tr>
                                     <td>RST02062025-1102</td>
                                     <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y H:i') }}</td>
                                     <td>PGDRST30052025-1107</td>
                                     <td class="text-center">
                                         <button type="button" data-toggle="modal" data-target="#lihatbukti"
-                                            data-image='[]'
+                                            data-image='["{{ asset('assets/img/90x90.jpg') }}", "{{ asset('assets/img/300x300.jpg') }}"]'
                                             title="Lihat Bukti">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -697,13 +362,48 @@
                                             </svg>
                                         </button>
                                     </td>
+                                    <!-- Modal Lihat Bukti -->
+                                    <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
+                                        aria-labelledby="lihatbuktiLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto Restock
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p id="noImageMessage"
+                                                        style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
+                                                        Tidak ada bukti foto yang tersedia</p>
+                                                    <div class="text-center">
+                                                        <img id="buktiImage" src="" alt="Bukti Foto Restock"
+                                                            class="img-fluid" style="max-width: 100%; max-height: 70vh;">
+                                                    </div>
+                                                    <div class="d-flex justify-content-center mt-3">
+                                                        <button id="prevImage" class="btn btn-outline-secondary mr-2"
+                                                            disabled>Sebelumnya</button>
+                                                        <button id="nextImage" class="btn btn-outline-secondary"
+                                                            disabled>Selanjutnya</button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary"
+                                                        data-dismiss="modal">Tutup</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- Modal Detail -->
                                     <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
                                         aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan Restock
+                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Restock
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -759,41 +459,6 @@
                                                 <div class="modal-footer">
                                                     <button class="btn btn-primary" data-dismiss="modal"><i
                                                             class="flaticon-cancel-12"></i> Tutup</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal Lihat Bukti -->
-                                    <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
-                                        aria-labelledby="lihatbuktiLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto Restock
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p id="noImageMessage"
-                                                        style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
-                                                        Tidak ada bukti foto yang tersedia</p>
-                                                    <div class="text-center">
-                                                        <img id="buktiImage" src="" alt="Bukti Foto Restock"
-                                                            class="img-fluid" style="max-width: 100%; max-height: 70vh;">
-                                                    </div>
-                                                    <div class="d-flex justify-content-center mt-3">
-                                                        <button id="prevImage" class="btn btn-outline-secondary mr-2"
-                                                            disabled>Sebelumnya</button>
-                                                        <button id="nextImage" class="btn btn-outline-secondary"
-                                                            disabled>Selanjutnya</button>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary"
-                                                        data-dismiss="modal">Tutup</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1031,7 +696,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group mb-3">
-                            <input type="text" class="form-control" readonly>
+                            <input type="text" class="form-control" name="produk[]" readonly>
                         </div>
                     </div>
                     <div class="col-lg-5">
@@ -1158,7 +823,7 @@
                             data.forEach(function(item, index) {
                                 var $template = $(pengadaanTemplate);
                                 $template.find('.no-list span').text((index + 1) + '.');
-                                $template.find('.col-lg-5 input[type="text"]').val(item
+                                $template.find('.col-lg-6 input[type="text"]').val(item
                                     .produk);
                                 $template.find('.col-lg-5 input[type="number"]').val(item
                                     .satuan);
@@ -1249,13 +914,40 @@
 
             $('#addForm').on('submit', function(e) {
                 var isValid = true;
-                $('.row.px-3 .selectpicker').each(function() {
-                    var $select = $(this);
-                    if ($select.val() === '' || $select.val() === null) {
-                        isValid = false;
-                        return false;
-                    }
-                });
+
+                // Validasi selectpicker pengadaan
+                var $pengadaanSelect = $('#pengadaanSelect select');
+                if ($('#restockCheckbox').is(':checked') && ($pengadaanSelect.val() === '' ||
+                        $pengadaanSelect.val() === null)) {
+                    isValid = false;
+                    e.preventDefault();
+                    Snackbar.show({
+                        text: 'Silakan pilih nomor pengadaan sebelum simpan!',
+                        pos: 'bottom-left'
+                    });
+                    return; // Hentikan eksekusi kalau pengadaan invalid
+                }
+
+                // Validasi selectpicker berdasarkan status checkbox
+                if ($('#restockCheckbox').is(':checked')) {
+                    // Validasi list produk pengadaan
+                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.length && ($select.val() === '' || $select.val() === null)) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                } else {
+                    // Validasi list produk manual
+                    $('#list-container .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.val() === '' || $select.val() === null) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                }
 
                 if (!isValid) {
                     e.preventDefault();
