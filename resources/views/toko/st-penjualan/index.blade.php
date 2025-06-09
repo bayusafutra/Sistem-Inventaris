@@ -20,7 +20,7 @@
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Manager</span>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Staff Gudang</span>
                                 </li>
                             </ol>
                         </nav>
@@ -37,7 +37,7 @@
                 <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="widget widget-chart-one">
                         <div class="widget-heading">
-                            <h5 class="">Tren Inflow & Outflow Produk</h5>
+                            <h5 class="">Tren Outflow Produk</h5>
                         </div>
                         <div class="widget-content">
                             <div id="revenueMonthly"></div>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="w-content">
                                     <span class="w-values">3,192</span>
-                                    <span class="w-numeric-titles">Pengadaan Produk</span>
+                                    <span class="w-numeric-titles">Penjualan Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
@@ -102,7 +102,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Produk <span class="summary-count">2.350 </span></h6>
+                                                <h6>Total Produk <span class="summary-count">35</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Gudang <span class="summary-count">9</span></h6>
+                                                <h6>Total Retur Konsumen<span class="summary-count">9</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Penjualan <span class="summary-count">3</span></h6>
+                                                <h6>Total Unit Produk Retur<span class="summary-count">97</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="w-content">
                                     <span class="w-value">3,192</span>
-                                    <span class="w-numeric-title">Penjualan Produk</span>
+                                    <span class="w-numeric-title">Expired Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
@@ -286,5 +286,5 @@
 @endsection
 @section('js-custom')
     <script src="{{ asset('plugins/apex/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/js/toko/manager/custom_dashboard.js') }}"></script>
+    <script src="{{ asset('assets/js/toko/st-penjualan/custom_dashboard.js') }}"></script>
 @endsection

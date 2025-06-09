@@ -102,3 +102,24 @@ Route::get('/slugtoko/manager/penjualan', function() {
     return view('toko.outflow.penjualan');
 });
 
+Route::get('/slugtoko/manager/expired', function() {
+    return view('toko.outflow.expired');
+});
+
+// =========================================================================
+// =========================================================================
+
+Route::get('/slugtoko/staffgudang/dashboard', function() {
+    return view('toko.st-gudang.index');
+});
+
+// =========================================================================
+// =========================================================================
+
+Route::get('/slugtoko/staffpenjualan/dashboard', function() {
+    return view('toko.st-penjualan.index');
+});
+
+Route::get('/slugtoko/staffpenjualan/retur-konsumen', function() {
+    return view('toko.st-penjualan.retur-konsumen');
+});

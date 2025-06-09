@@ -15,13 +15,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-restock.css') }}">
 @endsection
 @section('header')
-    <div id="load_screen">
-        <div class="loader">
-            <div class="loader-content">
-                <div class="spinner-border spinner-border-reverse align-self-center loader-lg text-primary">Loading...</div>
-            </div>
-        </div>
-    </div>
     <div class="sub-header-container">
         <header class="header navbar navbar-expand-sm">
             <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg

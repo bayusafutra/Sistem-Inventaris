@@ -26,12 +26,11 @@
             <ul class="navbar-nav flex-row">
                 <li>
                     <div class="page-header">
-
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Penjualan</span></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Pendataan Expired</span></li>
                             </ol>
                         </nav>
                     </div>
@@ -50,7 +49,7 @@
                             <div class="col-lg-8">
                                 <div class="form-group row">
                                     <label for="min" class="col-sm-3 col-form-label col-form-label-sm">Tanggal
-                                        Penjualan:</label>
+                                        Pendataan:</label>
                                     <div class="col-sm-4 position-relative">
                                         <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                             id="min" placeholder="Pilih tanggal awal">
@@ -104,7 +103,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Data
-                                                        Penjualan
+                                                        Produk Expired
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -261,7 +260,7 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Penjualan
+                                    <th>Tanggal Pendataan
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
@@ -272,7 +271,7 @@
                                     <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y H:i') }}</td>
                                     <td class="text-center">
                                         <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Penjualan">
+                                            title="Detail Expired">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -298,7 +297,7 @@
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Penjualan
+                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Pendataan Expired
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -308,9 +307,10 @@
                                                 <div class="modal-body">
                                                     <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                                                         <li class="nav-item">
-                                                            <a class="nav-link active" id="rekap-produk" data-toggle="tab"
-                                                                href="#rekaproduk" role="tab" aria-controls="rekaproduk"
-                                                                aria-selected="false">Rekap Produk</a>
+                                                            <a class="nav-link active" id="rekap-produk"
+                                                                data-toggle="tab" href="#rekaproduk" role="tab"
+                                                                aria-controls="rekaproduk" aria-selected="false">Rekap
+                                                                Produk</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="nav-link" id="staff-tab" data-toggle="tab"
@@ -327,14 +327,16 @@
                                                                         <div class="rekap-section-modal" id="tp">
                                                                             <div class="rekap-label-modal text-center">
                                                                                 Total Produk</div>
-                                                                            <div class="rekap-value-modal text-center">2</div>
+                                                                            <div class="rekap-value-modal text-center">2
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <div class="rekap-section-modal" id="tup">
                                                                             <div class="rekap-label-modal text-center">
                                                                                 Total Unit Produk</div>
-                                                                            <div class="rekap-value-modal text-center">6</div>
+                                                                            <div class="rekap-value-modal text-center">6
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -778,7 +780,7 @@
                     const $select = $(this);
                     const productName = $select.val();
                     const $quantityInput = $select.closest('.row.px-3').find(
-                    'input[type="number"]');
+                        'input[type="number"]');
                     const quantity = parseInt($quantityInput.val()) || 0;
 
                     if ($select.val() === '' || $select.val() === null) {
