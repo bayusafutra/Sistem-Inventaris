@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/file-upload/file-upload-with-preview.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/outflow/custom-returkonsumen.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-retursupplier.css') }}">
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -33,8 +33,8 @@
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Staff Penjualan</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Retur Konsumen</span></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Staff Gudang</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Retur Supplier</span></li>
                             </ol>
                         </nav>
                     </div>
@@ -53,14 +53,15 @@
                             <div class="col-lg-8">
                                 <div class="form-group row">
                                     <label for="min" class="col-sm-3 col-form-label col-form-label-sm">Tanggal
-                                        Retur:</label>
+                                        Supplier:</label>
                                     <div class="col-sm-4 position-relative">
                                         <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                             id="min" placeholder="Pilih tanggal awal">
                                         <span class="clear-icon" id="clear-min">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
-                                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18">
                                                 </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -108,7 +109,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Data
-                                                        Retur Konsumen
+                                                        Retur Supplier
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -134,23 +135,21 @@
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" value="RTKSM11062025-1105"
-                                                                        placeholder="No Series" required readonly>
+                                                                        name="no_series" value="RTSP11062025-1108" required
+                                                                        readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label><span class="wajib">*</span>Penanggung
-                                                                        Jawab</label>
+                                                                    <label><span class="wajib">*</span>Penanggung Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="penanggung_jawab" value="Bayu Safutra"
-                                                                        required readonly>
+                                                                        name="no_series" value="Bayu Safutra" required
+                                                                        readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
                                                                 <div class="form-group mb-4">
-                                                                    <label><span class="wajib">*</span>Tanggal dan
-                                                                        Waktu</label>
+                                                                    <label><span class="wajib">*</span>Tanggal dan Waktu</label>
                                                                     <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
                                                                         class="form-control flatpickr flatpickr-input active"
                                                                         type="text" placeholder="Select Date.."
@@ -166,7 +165,7 @@
                                                             <div class="col-12">
                                                                 <div class="custom-file-container"
                                                                     data-upload-id="mySecondImage">
-                                                                    <label>Bukti Foto (bisa lebih dari 1) <a
+                                                                    <label>Bukti Foto(bisa lebih dari 1) <a
                                                                             href="javascript:void(0)"
                                                                             class="custom-file-container__image-clear"
                                                                             title="Clear Image">x</a></label>
@@ -189,12 +188,23 @@
                                                             <div class="col-lg-3 d-flex align-items-center">
                                                                 <h5>List Produk</h5>
                                                             </div>
-                                                            <div class="col-lg-4 d-flex justify-content-end align-items-center"
-                                                                style="margin-left: auto" id="penjualanSelect">
+                                                            <div
+                                                                class="col-lg-9 d-flex justify-content-end align-items-center">
+                                                                <div class="via-pr mr-3">
+                                                                    <strong>Melalui Retur Konsumen?</strong>
+                                                                </div>
+                                                                <label
+                                                                    class="switch s-icons s-outline s-outline-dark mr-2">
+                                                                    <input type="checkbox" id="restockCheckbox">
+                                                                    <span class="slider round"></span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-4 my-3 mr-3" id="pengadaanSelect"
+                                                                style="display: none; margin-left: auto;">
                                                                 <select class="selectpicker form-control"
                                                                     data-live-search="true">
                                                                     <option value="" selected disabled>Pilih No
-                                                                        Series Penjualan</option>
+                                                                        Series Retur Konsumen</option>
                                                                     <option value="PGDRST30052025-1107">PGDRST30052025-1107
                                                                     </option>
                                                                     <option value="PGDRST30052025-1108">PGDRST30052025-1108
@@ -203,30 +213,91 @@
                                                                     </option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-lg-12 mt-5">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <div class="rekap-section" id="tp">
-                                                                            <div class="rekap-label text-center">
-                                                                                Total Produk</div>
-                                                                            <div class="rekap-value text-center"
-                                                                                id="total-products">0</div>
+                                                        </div>
+
+                                                        <!-- Container untuk list produk manual dan tombol tambah -->
+                                                        <div id="list-container">
+                                                            <div id="list-item-produk" class="row px-3">
+                                                                <div class="col-lg-1 no-list">
+                                                                    <span>1.</span>
+                                                                </div>
+                                                                <div class="col-lg-5">
+                                                                    <div class="form-group mb-3">
+                                                                        <select class="selectpicker form-control"
+                                                                            data-live-search="true" name="produk[]"
+                                                                            required>
+                                                                            <option selected disabled>Pilih Produk</option>
+                                                                            <option>Beras 10Kg</option>
+                                                                            <option>Gula 1Kg</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-5">
+                                                                    <div class="form-group mb-3">
+                                                                        <div class="input-group">
+                                                                            <input id="ga" type="number"
+                                                                                min="1"
+                                                                                class="form-control list-item"
+                                                                                placeholder="Jumlah Satuan" required>
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text"
+                                                                                    id="basic-addon6">Karung</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-6">
-                                                                        <div class="rekap-section" id="tup">
-                                                                            <div class="rekap-label text-center">
-                                                                                Total Unit Produk</div>
-                                                                            <div class="rekap-value text-center"
-                                                                                id="total-units">0</div>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="col-lg-1">
+                                                                    <div class="icon-delete">
+                                                                        <button class="" type="button">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="44" height="44"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="feather feather-trash-2 delete-list">
+                                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                                <path
+                                                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                                                </path>
+                                                                                <line x1="10" y1="11"
+                                                                                    x2="10" y2="17"></line>
+                                                                                <line x1="14" y1="11"
+                                                                                    x2="14" y2="17"></line>
+                                                                            </svg>
+                                                                        </button>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="add-s-produk mt-3">
+                                                                <button class="addProduk" type="button">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="feather feather-plus-circle">
+                                                                        <circle cx="12" cy="12" r="10">
+                                                                        </circle>
+                                                                        <line x1="12" y1="8"
+                                                                            x2="12" y2="16"></line>
+                                                                        <line x1="8" y1="12"
+                                                                            x2="16" y2="12"></line>
+                                                                    </svg> Tambah Produk
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Spinner loading -->
+                                                        <div id="load_screen" style="display: none;">
+                                                            <div class="loader">
+                                                                <div class="loader-content">
+                                                                    <div class="loader dual-loader mx-auto"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <!-- Container untuk list produk manual-->
-                                                        <div id="list-container"></div>
+                                                        <!-- Container untuk list produk dari pengadaan -->
+                                                        <div id="list-produk-pengadaan" style="display: none;"></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn" data-dismiss="modal"><i
@@ -247,7 +318,7 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal & Waktu</th>
-                                    <th>Penjualan</th>
+                                    <th>Retur Konsumen</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
@@ -272,7 +343,7 @@
                                             </svg>
                                         </button>
                                         <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Retur Konsumen">
+                                            title="Detail Retur Supplier">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -298,8 +369,7 @@
                                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Retur
-                                                        Konsumen
+                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Retur Supplier
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -334,7 +404,7 @@
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Retur Konsumen
+                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Restock
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -401,7 +471,7 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal Pengadaan</th>
-                                    <th>Penjualan</th>
+                                    <th>Retur Konsumen</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -585,8 +655,11 @@
         });
 
         $(document).ready(function() {
-            // Dummy data untuk simulasi list produk dari penjualan
-            const dummyPenjualanData = {
+            // Variabel untuk menyimpan value selectpicker
+            let selectedPengadaanValue = '';
+
+            // Dummy data untuk simulasi list produk dari pengadaan
+            const dummyPengadaanData = {
                 "PGDRST30052025-1107": [{
                         produk: "Beras 10Kg",
                         satuan: 5,
@@ -596,11 +669,6 @@
                         produk: "Gula 1Kg",
                         satuan: 10,
                         satuanType: "Sak"
-                    },
-                    {
-                        produk: "Minyak 1L",
-                        satuan: 15,
-                        satuanType: "Botol"
                     }
                 ],
                 "PGDRST30052025-1108": [{
@@ -621,207 +689,278 @@
                 ]
             };
 
-            // Objek untuk simpan state input
-            let inputState = {};
-
-            // Template list produk penjualan (text statis + input)
-            const penjualanTemplate = `
-                <div class="row px-3 product-items">
+            // Template list produk pengadaan (statis, akan di-loop)
+            const pengadaanTemplate = `
+                <div class="row px-3">
                     <div class="col-lg-1 no-list">
                         <span></span>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="produk-awal">
-                            <input type="hidden" name="id_produk[]">
-                            <strong class="nama-produk" style="font-size: 16.5px; font-weight: 900; color: #3b3f5c"></strong><br>
-                            <em class="jumlah-produk" style="font-size: 15px"></em> <small style="font-size: 13px" class="satuan-produk"></small>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control" name="produk[]" readonly>
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-5">
                         <div class="form-group mb-3">
                             <div class="input-group">
-                                <input type="number" style="font-size: 15px" class="form-control jumlah-retur" min="1" placeholder="Jumlah Retur" required>
+                                <input type="number" class="form-control" readonly>
                                 <div class="input-group-append">
-                                    <span class="input-group-text satuan-retur"></span>
+                                    <span class="input-group-text"></span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-1">
-                        <div class="icon-delete">
-                            <button type="button" class="delete-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    class="feather feather-trash-2 delete-list">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </div>
             `;
 
-            // Sembunyikan template awal dan hapus dari HTML statis
-            $('#list-item-produk').remove();
-
-            // Fungsi update nomor list
-            function updateListNumbers() {
-                $('#list-container .product-items').each(function(index) {
+            // Fungsi untuk update nomor list (manual dan pengadaan)
+            function updateListNumbers(container) {
+                $(container).find('.row.px-3').each(function(index) {
                     $(this).find('.no-list span').text((index + 1) + '.');
                 });
             }
 
-            // Fungsi update rekap
-            function updateRekap() {
-                const $listContainer = $('#list-container');
-                const totalProducts = $listContainer.find('.product-items').length;
-                const totalUnits = $listContainer.find('.jumlah-retur').toArray().reduce((sum, input) => {
-                    const value = parseInt($(input).val()) || 0;
-                    return sum + (value > 0 ? value : 0);
-                }, 0);
-                $('#total-products').text(totalProducts);
-                $('#total-units').text(totalUnits);
-            }
+            // Event saat checkbox berubah
+            $('#restockCheckbox').on('change', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
 
-            // Event saat selectpicker No Series dipilih
-            $('#penjualanSelect select').on('change', function() {
-                const selectedValue = $(this).val();
-                const $listContainer = $('#list-container');
-                $listContainer.empty(); // Kosongkan list sebelum load data baru
-                if (selectedValue && selectedValue !== '') {
-                    const data = dummyPenjualanData[selectedValue] || [];
-                    data.forEach(item => {
-                        const $template = $(penjualanTemplate);
-                        $template.find('.nama-produk').text(item.produk);
-                        $template.find('.jumlah-produk').text(`${item.satuan}`);
-                        $template.find('.satuan-produk').text(item.satuanType);
-                        $template.find('.satuan-retur').text(item.satuanType);
-                        $template.find('.jumlah-retur').attr('max', item.satuan);
-                        $listContainer.append($template);
+                if ($(this).is(':checked')) {
+                    $pengadaanSelect.show();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
                     });
-                    updateListNumbers();
-                    restoreInputValues(selectedValue); // Restore nilai input setelah load
-                    updateRekap(); // Update rekap setelah load data
+                    $select.selectpicker('refresh');
+
+                    // Sembunyikan list manual dan tombol tambah
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                } else {
+                    selectedPengadaanValue = '';
+                    $select.selectpicker('destroy');
+                    $select.val('');
+                    $pengadaanSelect.hide();
+
+                    // Kembalikan list manual
+                    $listContainer.show();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
                 }
             });
 
-            // Fungsi simpan state input
-            function saveInputValues(selectedValue) {
-                const $listContainer = $('#list-container');
-                inputState[selectedValue] = {};
-                $listContainer.find('.product-items').each(function(index) {
-                    const $input = $(this).find('.jumlah-retur');
-                    inputState[selectedValue][index] = $input.val();
-                });
-            }
+            // Event saat selectpicker pengadaan dipilih
+            $('#pengadaanSelect select').on('change', function() {
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listContainer = $('#list-container');
+                var selectedValue = $(this).val();
 
-            // Fungsi restore state input
-            function restoreInputValues(selectedValue) {
-                const $listContainer = $('#list-container');
-                if (inputState[selectedValue]) {
-                    $listContainer.find('.product-items').each(function(index) {
-                        const $input = $(this).find('.jumlah-retur');
-                        const savedValue = inputState[selectedValue][index];
-                        if (savedValue) {
-                            $input.val(savedValue);
-                        }
-                    });
+                if (selectedValue && selectedValue !== '') {
+                    // Tampilkan spinner
+                    $listContainer.hide();
+                    $listProdukPengadaan.hide();
+                    $loadScreen.show();
+                    console.log('Showing load_screen:', $loadScreen.css('display'));
+                    // Simulasi loading data (1 detik delay)
+                    setTimeout(function() {
+                        $loadScreen.hide();
+
+                        // Ambil dummy data berdasarkan nomor series
+                        const data = dummyPengadaanData[selectedValue] || [];
+                        $listProdukPengadaan.empty();
+
+                        // Loop data ke template
+                        data.forEach(function(item, index) {
+                            var $template = $(pengadaanTemplate);
+                            $template.find('.no-list span').text((index + 1) + '.');
+                            $template.find('.col-lg-6 input[type="text"]').val(item.produk);
+                            $template.find('.col-lg-5 input[type="number"]').val(item
+                                .satuan);
+                            $template.find('.col-lg-5 .input-group-text').text(item
+                                .satuanType);
+                            $listProdukPengadaan.append($template);
+                        });
+
+                        // Tampilkan list produk pengadaan
+                        $listProdukPengadaan.show();
+                    }, 1000);
                 }
-            }
+            });
 
             // Event saat modal ditampilkan
             $('#add').on('shown.bs.modal', function() {
-                $('#penjualanSelect select').selectpicker({
-                    liveSearch: true
-                }).selectpicker('refresh');
-                const $select = $('#penjualanSelect select');
-                const selectedValue = $select.val();
-                const $listContainer = $('#list-container');
-                if (selectedValue && selectedValue !== '') {
-                    $listContainer.empty();
-                    const data = dummyPenjualanData[selectedValue] || [];
-                    data.forEach(item => {
-                        const $template = $(penjualanTemplate);
-                        $template.find('.nama-produk').text(item.produk);
-                        $template.find('.jumlah-produk').text(`${item.satuan}`);
-                        $template.find('.satuan-produk').text(item.satuanType);
-                        $template.find('.satuan-retur').text(item.satuanType);
-                        $template.find('.jumlah-retur').attr('max', item.satuan);
-                        $listContainer.append($template);
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+
+                if ($checkbox.is(':checked')) {
+                    $pengadaanSelect.show();
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
                     });
-                    updateListNumbers();
-                    restoreInputValues(selectedValue); // Restore nilai input saat modal dibuka
-                    updateRekap(); // Update rekap setelah load data
-                } else {
-                    $listContainer.empty().append(
-                        '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Silahkan pilih no series penjualan terlebih dahulu!</div>'
-                    );
-                    $('#total-products').text('0');
-                    $('#total-units').text('0'); // Reset rekap kalau nggak ada pilihan
+                    $select.selectpicker('refresh');
+
+                    // Cek apakah ada value yang dipilih sebelumnya
+                    if (selectedPengadaanValue && selectedPengadaanValue !== '') {
+                        $loadScreen.show();
+                        console.log('Showing load_screen:', $loadScreen.css('display'));
+                        setTimeout(function() {
+                            $loadScreen.hide();
+                            const data = dummyPengadaanData[selectedPengadaanValue] || [];
+                            $listProdukPengadaan.empty();
+
+                            data.forEach(function(item, index) {
+                                var $template = $(pengadaanTemplate);
+                                $template.find('.no-list span').text((index + 1) + '.');
+                                $template.find('.col-lg-6 input[type="text"]').val(item
+                                    .produk);
+                                $template.find('.col-lg-5 input[type="number"]').val(item
+                                    .satuan);
+                                $template.find('.col-lg-5 .input-group-text').text(item
+                                    .satuanType);
+                                $listProdukPengadaan.append($template);
+                            });
+
+                            $listProdukPengadaan.show();
+                        }, 1000);
+                    }
                 }
             });
 
-            // Event saat modal ditutup
             $('#add').on('hidden.bs.modal', function() {
-                const $select = $('#penjualanSelect select');
-                const selectedValue = $select.val();
-                if (selectedValue && selectedValue !== '') {
-                    saveInputValues(selectedValue); // Simpan nilai input sebelum modal tutup
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                if ($checkbox.is(':checked')) {
+                    selectedPengadaanValue = $select.val() || '';
                 }
+                $select.selectpicker('destroy');
+                $pengadaanSelect.hide();
             });
 
-            // Event klik delete item
-            $('#list-container').on('click', '.delete-item', function() {
-                const listCount = $('#list-container .product-items').length;
-                if (listCount <= 1) {
-                    Snackbar.show({
-                        text: 'Minimal harus ada 1 produk!',
-                        pos: 'bottom-left'
+            // Logika list produk manual (diperbarui untuk posisi tombol)
+            let listCounter = 1;
+            let $listContainer = $('#list-container');
+            const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
+            const initialTemplate = $('#list-item-produk.row.px-3').clone();
+            initialTemplate.find('.selectpicker').remove();
+            initialTemplate.find('.bootstrap-select').remove();
+
+            $('.addProduk').off('click').one('click', function handleAddProduct() {
+                var template = initialTemplate.clone();
+                template.removeAttr('id');
+                var uniqueId = 'list-produk-' + (++listCounter);
+                template.attr('id', uniqueId);
+                template.addClass('row px-3');
+                template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
+                template.find('select').val('');
+                template.find('input[type="number"]').val('').prop('disabled', true);
+                $('#list-container').append(template); // Tambah list baru
+                // Pindah tombol ke akhir
+                $('.add-s-produk').appendTo('#list-container');
+                updateListNumbers('#list-container');
+                try {
+                    var newSelectpicker = template.find('.selectpicker');
+                    newSelectpicker.selectpicker({
+                        liveSearch: true
                     });
-                    return;
-                }
-                $(this).closest('.product-items').remove();
-                updateListNumbers();
-                updateRekap(); // Update rekap setelah delete
+                    newSelectpicker.on('changed.bs.select', function() {
+                        $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
+                            false);
+                    });
+                } catch (e) {}
+                $('.addProduk').one('click', handleAddProduct);
             });
 
-            // Validasi jumlah retur
-            $('#list-container').on('input', '.jumlah-retur', function() {
-                const $input = $(this);
-                const max = parseInt($input.attr('max'));
-                const value = parseInt($input.val()) || 0;
-                if (value > max) {
-                    $input.val(max);
-                    Snackbar.show({
-                        text: `Jumlah retur tidak boleh melebihi ${max} ${$input.next().find('.satuan-retur').text()}!`,
-                        pos: 'bottom-left'
-                    });
-                } else if (value < 1) {
-                    $input.val(1);
-                    Snackbar.show({
-                        text: 'Jumlah retur minimal 1!',
-                        pos: 'bottom-left'
-                    });
+            $('#add').on('shown.bs.modal', function() {
+                $('#list-item-produk .selectpicker').selectpicker({
+                    liveSearch: true
+                });
+                var initialSelectpicker = $('#list-item-produk .selectpicker');
+                var initialInput = $('#list-item-produk input[type="number"]');
+                if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
+                    initialInput.prop('disabled', true);
                 }
-                updateRekap(); // Update rekap saat input berubah
+                initialSelectpicker.on('changed.bs.select', function() {
+                    initialInput.prop('disabled', false);
+                });
+
+                $('#list-container').on('click', '.icon-delete button', function() {
+                    var listCount = $('.row.px-3').length;
+                    if (listCount <= 1) {
+                        Snackbar.show({
+                            text: 'Minimal harus ada 1 list produk!',
+                            pos: 'bottom-left'
+                        });
+                        return;
+                    }
+                    $(this).closest('.row.px-3').remove();
+                    // Pindah tombol ke akhir setelah hapus
+                    $('.add-s-produk').appendTo('#list-container');
+                    updateListNumbers('#list-container');
+                });
             });
 
-            // Validasi form sebelum submit
             $('#addForm').on('submit', function(e) {
-                const $select = $('#penjualanSelect select');
-                const $listContainer = $('#list-container');
-                if ($select.val() === '' || $select.val() === null || $listContainer.children().length ===
-                    0) {
+                var isValid = true;
+
+                // Validasi selectpicker pengadaan
+                var $pengadaanSelect = $('#pengadaanSelect select');
+                if ($('#restockCheckbox').is(':checked') && ($pengadaanSelect.val() === '' ||
+                        $pengadaanSelect.val() === null)) {
+                    isValid = false;
                     e.preventDefault();
                     Snackbar.show({
-                        text: 'Silakan pilih No Series penjualan sebelum simpan!',
+                        text: 'Silakan pilih nomor pengadaan sebelum simpan!',
                         pos: 'bottom-left'
                     });
-                    return;
+                    return; // Hentikan eksekusi kalau pengadaan invalid
                 }
+
+                // Validasi selectpicker berdasarkan status checkbox
+                if ($('#restockCheckbox').is(':checked')) {
+                    // Validasi list produk pengadaan
+                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.length && ($select.val() === '' || $select.val() === null)) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                } else {
+                    // Validasi list produk manual
+                    $('#list-container .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.val() === '' || $select.val() === null) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    Snackbar.show({
+                        text: 'Silakan pilih produk untuk semua list sebelum simpan!',
+                        pos: 'bottom-left'
+                    });
+                }
+            });
+
+            $('#add').on('hidden.bs.modal', function() {
+                listCounter = 1;
             });
         });
 

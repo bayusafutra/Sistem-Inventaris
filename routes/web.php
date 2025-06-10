@@ -113,6 +113,10 @@ Route::get('/slugtoko/staffgudang/dashboard', function() {
     return view('toko.st-gudang.index');
 });
 
+Route::get('/slugtoko/staffgudang/retur-supplier', function() {
+    return view('toko.st-gudang.retur-supplier');
+});
+
 // =========================================================================
 // =========================================================================
 
