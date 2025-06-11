@@ -309,25 +309,12 @@ h5 {
     background: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
-    align-items: center;
-    /* z-index: 1000; */
-    /* Pastikan di atas elemen lain */
-}
-
-.loader {
-    text-align: center;
-}
-
-.loader-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: end;
 }
 
 .loader.dual-loader.mx-auto {
-    /* Pastikan CSS dari templatemu udah terload */
     display: inline-block !important;
-    /* Override kalau ada hide */
+    border-bottom: 7px solid #4361ee;
 }
 
 #list-produk-pengadaan .input-group-append,

@@ -159,7 +159,7 @@
                                                             <div class="col-12">
                                                                 <label for="">Catatan</label>
                                                                 <div class="form-group mb-4">
-                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Restock"></textarea>
+                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Retur Supplier"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -195,11 +195,11 @@
                                                                 </div>
                                                                 <label
                                                                     class="switch s-icons s-outline s-outline-dark mr-2">
-                                                                    <input type="checkbox" id="restockCheckbox">
+                                                                    <input type="checkbox" id="returKonsumenCheckbox">
                                                                     <span class="slider round"></span>
                                                                 </label>
                                                             </div>
-                                                            <div class="col-4 my-3 mr-3" id="pengadaanSelect"
+                                                            <div class="col-4 my-3 mr-3" id="returKonsumenSelect"
                                                                 style="display: none; margin-left: auto;">
                                                                 <select class="selectpicker form-control"
                                                                     data-live-search="true">
@@ -289,15 +289,13 @@
 
                                                         <!-- Spinner loading -->
                                                         <div id="load_screen" style="display: none;">
-                                                            <div class="loader">
-                                                                <div class="loader-content">
-                                                                    <div class="loader dual-loader mx-auto"></div>
-                                                                </div>
+                                                            <div class="loader-content">
+                                                                <div class="loader dual-loader mx-auto"></div>
                                                             </div>
                                                         </div>
 
                                                         <!-- Container untuk list produk dari pengadaan -->
-                                                        <div id="list-produk-pengadaan" style="display: none;"></div>
+                                                        <div id="returKonsumenProductList" style="display: none;"></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button class="btn" data-dismiss="modal"><i
@@ -404,7 +402,7 @@
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Restock
+                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Retur Konsumen
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -659,7 +657,7 @@
             let selectedPengadaanValue = '';
 
             // Dummy data untuk simulasi list produk dari pengadaan
-            const dummyPengadaanData = {
+            const dummyReturKonsumenData = {
                 "PGDRST30052025-1107": [{
                         produk: "Beras 10Kg",
                         satuan: 5,
@@ -690,7 +688,7 @@
             };
 
             // Template list produk pengadaan (statis, akan di-loop)
-            const pengadaanTemplate = `
+            const returKonsumenTemplate = `
                 <div class="row px-3">
                     <div class="col-lg-1 no-list">
                         <span></span>
@@ -703,7 +701,7 @@
                     <div class="col-lg-5">
                         <div class="form-group mb-3">
                             <div class="input-group">
-                                <input type="number" class="form-control" readonly>
+                                <input type="number" min="1" class="form-control" readonly>
                                 <div class="input-group-append">
                                     <span class="input-group-text"></span>
                                 </div>
@@ -721,15 +719,15 @@
             }
 
             // Event saat checkbox berubah
-            $('#restockCheckbox').on('change', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
+            $('#returKonsumenCheckbox').on('change', function() {
+                var $returKonsumenSelect = $('#returKonsumenSelect');
+                var $select = $returKonsumenSelect.find('select');
                 var $listContainer = $('#list-container');
                 var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listProdukPengadaan = $('#returKonsumenProductList');
 
                 if ($(this).is(':checked')) {
-                    $pengadaanSelect.show();
+                    $returKonsumenSelect.show();
                     $select.val(selectedPengadaanValue);
                     $select.selectpicker({
                         liveSearch: true
@@ -744,7 +742,7 @@
                     selectedPengadaanValue = '';
                     $select.selectpicker('destroy');
                     $select.val('');
-                    $pengadaanSelect.hide();
+                    $returKonsumenSelect.hide();
 
                     // Kembalikan list manual
                     $listContainer.show();
@@ -754,9 +752,9 @@
             });
 
             // Event saat selectpicker pengadaan dipilih
-            $('#pengadaanSelect select').on('change', function() {
+            $('#returKonsumenSelect select').on('change', function() {
                 var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listProdukPengadaan = $('#returKonsumenProductList');
                 var $listContainer = $('#list-container');
                 var selectedValue = $(this).val();
 
@@ -771,12 +769,12 @@
                         $loadScreen.hide();
 
                         // Ambil dummy data berdasarkan nomor series
-                        const data = dummyPengadaanData[selectedValue] || [];
+                        const data = dummyReturKonsumenData[selectedValue] || [];
                         $listProdukPengadaan.empty();
 
                         // Loop data ke template
                         data.forEach(function(item, index) {
-                            var $template = $(pengadaanTemplate);
+                            var $template = $(returKonsumenTemplate);
                             $template.find('.no-list span').text((index + 1) + '.');
                             $template.find('.col-lg-6 input[type="text"]').val(item.produk);
                             $template.find('.col-lg-5 input[type="number"]').val(item
@@ -794,15 +792,15 @@
 
             // Event saat modal ditampilkan
             $('#add').on('shown.bs.modal', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
-                var $checkbox = $('#restockCheckbox');
+                var $returKonsumenSelect = $('#returKonsumenSelect');
+                var $select = $returKonsumenSelect.find('select');
+                var $checkbox = $('#returKonsumenCheckbox');
                 var $listContainer = $('#list-container');
                 var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listProdukPengadaan = $('#returKonsumenProductList');
 
                 if ($checkbox.is(':checked')) {
-                    $pengadaanSelect.show();
+                    $returKonsumenSelect.show();
                     $listContainer.hide();
                     $loadScreen.hide();
                     $listProdukPengadaan.hide();
@@ -818,11 +816,11 @@
                         console.log('Showing load_screen:', $loadScreen.css('display'));
                         setTimeout(function() {
                             $loadScreen.hide();
-                            const data = dummyPengadaanData[selectedPengadaanValue] || [];
+                            const data = dummyReturKonsumenData[selectedPengadaanValue] || [];
                             $listProdukPengadaan.empty();
 
                             data.forEach(function(item, index) {
-                                var $template = $(pengadaanTemplate);
+                                var $template = $(returKonsumenTemplate);
                                 $template.find('.no-list span').text((index + 1) + '.');
                                 $template.find('.col-lg-6 input[type="text"]').val(item
                                     .produk);
@@ -840,14 +838,14 @@
             });
 
             $('#add').on('hidden.bs.modal', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
-                var $checkbox = $('#restockCheckbox');
+                var $returKonsumenSelect = $('#returKonsumenSelect');
+                var $select = $returKonsumenSelect.find('select');
+                var $checkbox = $('#returKonsumenCheckbox');
                 if ($checkbox.is(':checked')) {
                     selectedPengadaanValue = $select.val() || '';
                 }
                 $select.selectpicker('destroy');
-                $pengadaanSelect.hide();
+                $returKonsumenSelect.hide();
             });
 
             // Logika list produk manual (diperbarui untuk posisi tombol)
@@ -917,9 +915,9 @@
                 var isValid = true;
 
                 // Validasi selectpicker pengadaan
-                var $pengadaanSelect = $('#pengadaanSelect select');
-                if ($('#restockCheckbox').is(':checked') && ($pengadaanSelect.val() === '' ||
-                        $pengadaanSelect.val() === null)) {
+                var $returKonsumenSelect = $('#returKonsumenSelect select');
+                if ($('#returKonsumenCheckbox').is(':checked') && ($returKonsumenSelect.val() === '' ||
+                        $returKonsumenSelect.val() === null)) {
                     isValid = false;
                     e.preventDefault();
                     Snackbar.show({
@@ -930,9 +928,9 @@
                 }
 
                 // Validasi selectpicker berdasarkan status checkbox
-                if ($('#restockCheckbox').is(':checked')) {
+                if ($('#returKonsumenCheckbox').is(':checked')) {
                     // Validasi list produk pengadaan
-                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
+                    $('#returKonsumenProductList .row.px-3 .selectpicker').each(function() {
                         var $select = $(this);
                         if ($select.length && ($select.val() === '' || $select.val() === null)) {
                             isValid = false;

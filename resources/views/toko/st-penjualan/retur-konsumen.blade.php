@@ -160,7 +160,7 @@
                                                             <div class="col-12">
                                                                 <label for="">Catatan</label>
                                                                 <div class="form-group mb-4">
-                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Restock"></textarea>
+                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Retur Konsumen"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">

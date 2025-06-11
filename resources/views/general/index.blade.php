@@ -91,7 +91,7 @@
                                 <strong>TechnoLogis</strong> cocok untuk berbagai jenis usaha, mulai dari toko ritel,
                                 gudang, hingga bisnis skala kecil. Hanya dengan beberapa langkah mudah, Anda bisa mulai
                                 mengatur stok, melacak aset, dan membuat keputusan bisnis yang lebih tepat. <a
-                                    href="" class="ajakan">Bergabunglah</a>
+                                    href="{{ route('pendaftaran-toko') }}" class="ajakan">Bergabunglah</a>
                                 bersama kami di <strong>TechnoLogis</strong> hari ini dan jadilah bagian dari revolusi
                                 pengelolaan
                                 inventaris yang cerdas!

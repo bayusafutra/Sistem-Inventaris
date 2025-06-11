@@ -281,10 +281,8 @@
 
                                                         <!-- Spinner loading -->
                                                         <div id="load_screen" style="display: none;">
-                                                            <div class="loader">
-                                                                <div class="loader-content">
-                                                                    <div class="loader dual-loader mx-auto"></div>
-                                                                </div>
+                                                            <div class="loader-content">
+                                                                <div class="loader dual-loader mx-auto"></div>
                                                             </div>
                                                         </div>
 

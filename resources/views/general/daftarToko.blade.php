@@ -145,7 +145,7 @@
 
                                                 <div class="col-md-12">
                                                     <label for="">Deskripsi Toko</label>
-                                                    <textarea class="form-control" placeholder="Jelaskkan secara singkat deskripsi toko Anda" rows=""></textarea>
+                                                    <textarea class="form-control" placeholder="Jelaskkan secara singkat deskripsi toko Anda" rows="4"></textarea>
                                                 </div>
                                             </div>
                                             <div class="row mt-3">
