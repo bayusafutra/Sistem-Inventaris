@@ -143,7 +143,7 @@
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>Penanggung Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" value="Bayu Safutra" required
+                                                                        name="penanggung_jawab" value="Bayu Safutra" required
                                                                         readonly>
                                                                 </div>
                                                             </div>
@@ -658,7 +658,7 @@
 
             // Dummy data untuk simulasi list produk dari pengadaan
             const dummyReturKonsumenData = {
-                "PGDRST30052025-1107": [{
+                "RTKSM30052025-1107": [{
                         produk: "Beras 10Kg",
                         satuan: 5,
                         satuanType: "Karung"
@@ -669,12 +669,12 @@
                         satuanType: "Sak"
                     }
                 ],
-                "PGDRST30052025-1108": [{
+                "RTKSM30052025-1108": [{
                     produk: "Minyak 2L",
                     satuan: 3,
                     satuanType: "Botol"
                 }],
-                "PGDRST30052025-1109": [{
+                "RTKSM30052025-1109": [{
                         produk: "Tepung 5Kg",
                         satuan: 2,
                         satuanType: "Karung"

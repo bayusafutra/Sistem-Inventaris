@@ -46,7 +46,7 @@
             </li>
 
             <li class="menu">
-                <a href="{{ route('verifikasi-toko') }}" aria-expanded="false" class="dropdown-toggle">
+                <a href="{{ route('admin.verifikasi-toko') }}" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -82,10 +82,10 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="master-admin" data-parent="#accordionExample">
                     <li>
-                        <a href="{{ route('master-toko') }}"> Toko </a>
+                        <a href="{{ route('admin.master-toko') }}"> Toko </a>
                     </li>
                     <li>
-                        <a href="{{ route('master-pengguna') }}"> Pengguna </a>
+                        <a href="{{ route('admin.master-pengguna') }}"> Pengguna </a>
                     </li>
                 </ul>
             </li>

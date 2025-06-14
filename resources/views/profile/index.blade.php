@@ -4,6 +4,10 @@
     <link href="plugins/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="plugins/dropify/dropify.min.css">
     <link href="assets/css/users/account-setting.css" rel="stylesheet" type="text/css" />
+    <link href="plugins/animate/animate.css" rel="stylesheet" type="text/css" />
+    <link href="plugins/sweetalerts/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="plugins/sweetalerts/sweetalert.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/components/custom-sweetalert.css" rel="stylesheet" type="text/css" />
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -54,8 +58,8 @@
                                                                 data-default-file="assets/img/200x200.jpg"
                                                                 data-max-file-size="2M" />
                                                             <p class="mt-2"><i class="flaticon-cloud-upload mr-1"></i>
-                                                                Unggah
-                                                                Foto</p>
+                                                                Unggah Foto
+                                                            </p>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-10 col-lg-12 col-md-8 mt-md-0 mt-4">
@@ -67,7 +71,7 @@
                                                                             Lengkap</label>
                                                                         <input type="text" class="form-control mb-4"
                                                                             id="namaLengkap" placeholder="Nama Lengkap"
-                                                                            value="Jimmy Turner">
+                                                                            value="{{ auth()->user()->name }}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
@@ -75,24 +79,25 @@
                                                                         <label for="namaPanggilan">Nama
                                                                             Panggilan</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="namaPanggilan" placeholder="Nama Panggilan"
-                                                                            value="Jimmy">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <div class="form-group">
-                                                                        <label for="username">Username</label>
-                                                                        <input type="text" class="form-control mb-4"
-                                                                            id="username" placeholder="ciroaples"
-                                                                            value="Jimmy">
+                                                                            id="namaPanggilan"
+                                                                            placeholder="Nama Panggilan"
+                                                                            value="{{ auth()->user()->panggilan }}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="email">Email</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="email" placeholder="ciroaples"
-                                                                            value="ciroaples@gmail.com">
+                                                                            id="email" placeholder="Email"
+                                                                            value="{{ auth()->user()->email }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="notelp">No Telp</label>
+                                                                        <input type="text" class="form-control mb-4"
+                                                                            id="notelp" placeholder="No Telp"
+                                                                            value="{{ auth()->user()->notelp }}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
@@ -113,11 +118,24 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
-                                                                        <label for="jk">Jenis
-                                                                            Kelamin</label>
+                                                                        <label for="jk">Jenis Kelamin</label>
                                                                         <select class="form-control" id="jk">
-                                                                            <option selected>Pria</option>
-                                                                            <option>Wanita</option>
+                                                                            @if (auth()->user()->jk)
+                                                                                @if (auth()->user()->jk === true)
+                                                                                    <option value="1" selected>Pria
+                                                                                    </option>
+                                                                                    <option value="0">Wanita</option>
+                                                                                @else
+                                                                                    <option value="1">Pria</option>
+                                                                                    <option value="0" selected>Wanita
+                                                                                    </option>
+                                                                                @endif
+                                                                            @else
+                                                                                <option selected disabled>Pilih Jenis
+                                                                                    Kelamin</option>
+                                                                                <option value="1">Pria</option>
+                                                                                <option value="0">Wanita</option>
+                                                                            @endif
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -127,15 +145,8 @@
                                                                         <input id="basicFlatpickr" value=""
                                                                             class="form-control flatpickr flatpickr-input active"
                                                                             type="text"
-                                                                            placeholder="Pilih Tanggal Lahir">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-12">
-                                                                    <div class="form-group">
-                                                                        <label for="notelp">No Telp</label>
-                                                                        <input type="text" class="form-control mb-4"
-                                                                            id="notelp" placeholder="08362936442"
-                                                                            value="">
+                                                                            placeholder="Pilih Tanggal Lahir"
+                                                                            value="{{ auth()->user()->tgl_lahir }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -153,16 +164,58 @@
                                 </form>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
-                                <form id="work-platforms" class="section work-platforms" action="" method="POST">
+                                <form id="work-platforms" class="section work-platforms"
+                                    action="{{ route('ubah-password') }}" method="POST">
                                     @csrf
                                     <div class="info">
-                                        <h5 class="">Ubah Password</h5>
-                                        <div class="row">
+                                        <h5 class="">
+                                            @if (is_null(auth()->user()->password))
+                                                Buat Password Akun Anda
+                                            @else
+                                                Ubah Password
+                                            @endif
+                                        </h5>
+                                        <div class="row mt-4">
                                             <div class="col-md-12 mx-auto">
-                                                <!-- Password Saat Ini -->
+                                                @if (!is_null(auth()->user()->password))
+                                                    <div class="field-wrapper input mb-3">
+                                                        <label for="current-password" class="form-label">Password Saat
+                                                            Ini</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="feather feather-lock">
+                                                                    <rect x="3" y="11" width="18" height="11"
+                                                                        rx="2" ry="2"></rect>
+                                                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                                                </svg>
+                                                            </span>
+                                                            <input id="current-password" name="current_password"
+                                                                type="password" class="form-control"
+                                                                placeholder="Masukkan password saat ini" required>
+                                                            <span class="input-group-text toggle-password"
+                                                                data-target="current-password">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="feather feather-eye">
+                                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                                                    </path>
+                                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                        @error('current_password')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                @endif
                                                 <div class="field-wrapper input mb-3">
-                                                    <label for="current-password" class="form-label">Password
-                                                        Saat Ini</label>
+                                                    <label for="new-password" class="form-label">Password Baru</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -175,11 +228,10 @@
                                                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                                             </svg>
                                                         </span>
-                                                        <input id="current-password" name="current_password"
-                                                            type="password" class="form-control"
-                                                            placeholder="Masukkan password saat ini">
+                                                        <input id="new-password" name="password" type="password"
+                                                            class="form-control" placeholder="Masukkan password baru" required>
                                                         <span class="input-group-text toggle-password"
-                                                            data-target="current-password">
+                                                            data-target="new-password">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                 height="24" viewBox="0 0 24 24" fill="none"
                                                                 stroke="currentColor" stroke-width="2"
@@ -187,19 +239,16 @@
                                                                 class="feather feather-eye">
                                                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
                                                                 </path>
-                                                                <circle cx="12" cy="12" r="3">
-                                                                </circle>
+                                                                <circle cx="12" cy="12" r="3"></circle>
                                                             </svg>
                                                         </span>
                                                     </div>
-                                                    @error('current_password')
+                                                    @error('password')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-
-                                                <!-- Password Baru -->
                                                 <div class="field-wrapper input mb-3">
-                                                    <label for="new-password" class="form-label">Password
+                                                    <label for="new-password-confirm" class="form-label">Konfirmasi Password
                                                         Baru</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">
@@ -213,46 +262,9 @@
                                                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                                             </svg>
                                                         </span>
-                                                        <input id="new-password" name="new_password" type="password"
-                                                            class="form-control" placeholder="Masukkan password baru">
-                                                        <span class="input-group-text toggle-password"
-                                                            data-target="new-password">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="feather feather-eye">
-                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
-                                                                </path>
-                                                                <circle cx="12" cy="12" r="3">
-                                                                </circle>
-                                                            </svg>
-                                                        </span>
-                                                    </div>
-                                                    @error('new_password')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-
-                                                <!-- Ulangi Password Baru -->
-                                                <div class="field-wrapper input mb-3">
-                                                    <label for="new-password-confirm" class="form-label">Ulangi
-                                                        Password Baru</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                height="24" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="feather feather-lock">
-                                                                <rect x="3" y="11" width="18" height="11"
-                                                                    rx="2" ry="2"></rect>
-                                                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                                            </svg>
-                                                        </span>
-                                                        <input id="new-password-confirm" name="new_password_confirmation"
+                                                        <input id="new-password-confirm" name="password_confirmation"
                                                             type="password" class="form-control"
-                                                            placeholder="Ulangi password baru">
+                                                            placeholder="Konfirmasi password baru" required>
                                                         <span class="input-group-text toggle-password"
                                                             data-target="new-password-confirm">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -262,19 +274,18 @@
                                                                 class="feather feather-eye">
                                                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
                                                                 </path>
-                                                                <circle cx="12" cy="12" r="3">
-                                                                </circle>
+                                                                <circle cx="12" cy="12" r="3"></circle>
                                                             </svg>
                                                         </span>
                                                     </div>
-                                                    @error('new_password_confirmation')
+                                                    @error('password')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-
                                                 <div class="row mt-5">
                                                     <div class="col-sm-12 d-flex justify-content-end">
-                                                        <button class="btn btn-primary submit-profile">Simpan</button>
+                                                        <button type="submit"
+                                                            class="btn btn-primary submit-profile">Simpan</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,4 +309,53 @@
     <script src="plugins/blockui/jquery.blockUI.min.js"></script>
     <script src="assets/js/users/account-settings.js"></script>
     <script src="assets/js/profile/custom.js"></script>
+    <script src="plugins/sweetalerts/promise-polyfill.js"></script>
+    <script src="plugins/sweetalerts/sweetalert2.min.js"></script>
+    <script src="plugins/sweetalerts/custom-sweetalert.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Cek session untuk alert sukses/error dari redirect
+            @if (session('showAlert'))
+                const toast = swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    padding: '2em'
+                });
+
+                @if ($errors->any())
+                    toast({
+                        type: 'error',
+                        title: '{{ $errors->first() }}',
+                        padding: '2em',
+                    });
+                @elseif (session('message'))
+                    toast({
+                        type: 'success',
+                        title: '{{ session('message') }}',
+                        padding: '2em',
+                    });
+                @endif
+            @endif
+
+            // Cek error langsung setelah submit (tanpa redirect)
+            $('#work-platforms').on('submit', function() {
+                if ($('.text-danger').length > 0) {
+                    const toast = swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        padding: '2em'
+                    });
+                    toast({
+                        type: 'error',
+                        title: $('.text-danger').first().text(),
+                        padding: '2em',
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

@@ -15,6 +15,18 @@
 
     <!--  BEGIN CUSTOM STYLE FILE  -->
     @yield('css-custom')
+    <style>
+        .navbar-item .nama-user {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 900;
+            font-size: 15px;
+        }
+        .navbar-item .nama-user span.nama {
+            font-style: italic;
+        }
+    </style>
     <!--  END CUSTOM STYLE FILE  -->
 </head>
 

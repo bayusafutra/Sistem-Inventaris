@@ -18,23 +18,21 @@
 </head>
 
 <body class="form no-image-content">
-
     <div class="form-container outer">
         <div class="form-form">
             <div class="form-form-wrap">
                 <div class="form-container">
                     <div class="form-content">
-
                         <h1 class="">Lupa Password</h1>
                         <p class="signup-link recovery">Masukkan email Anda dan instruksi akan dikirimkan kepada Anda!
                         </p>
-                        <form class="text-left">
+                        <form class="text-left" method="POST" action="">
+                            @csrf
                             <div class="form">
-
                                 <div id="email-field" class="field-wrapper input mb-2">
                                     <div class="d-flex justify-content-between">
                                         <label for="email">EMAIL</label>
-                                        <a href="#" class="forgot-pass-link">Kembali ke halaman awal</a>
+                                        <a href="{{ route('login') }}" class="forgot-pass-link">Kembali ke halaman awal</a>
                                     </div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -42,8 +40,7 @@
                                         <circle cx="12" cy="12" r="4"></circle>
                                         <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
                                     </svg>
-                                    <input id="email" name="email" type="text" class="form-control"
-                                        value="" placeholder="Email">
+                                    <input id="email" name="email" type="text" class="form-control" placeholder="Email">
                                 </div>
 
                                 <div class="d-sm-flex justify-content-between">
@@ -51,16 +48,13 @@
                                         <button type="submit" class="btn btn-primary" value="">Reset</button>
                                     </div>
                                 </div>
-
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
     <script src="assets/js/libs/jquery-3.1.1.min.js"></script>
