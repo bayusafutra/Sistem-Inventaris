@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\TokoController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -48,20 +49,19 @@ Route::get('/profil', function () {
     return view('profile.index');
 })->name('profil')->middleware('auth');
 
-Route::middleware(['auth', 'role:2'])->group(function () {
-    Route::get('/home', function () {
-        return view('general.index');
-    })->name('home');
+Route::get('/home', function () {
+    return view('general.index');
+})->name('home');
 
-    Route::get('/pendaftaran-toko', function () {
-        return view('general.daftarToko');
-    })->name('pendaftaran-toko');
+Route::get('/pendaftaran-toko', [TokoController::class, 'daftarToko'])->name('pendaftaran-toko');
+Route::post('/store-toko', [TokoController::class, 'store'])->name('store-toko');
+Route::get('/get-provinces', [TokoController::class, 'getProvinces']);
+Route::get('/get-cities/{provId}', [TokoController::class, 'getCities']);
+Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts']);
+Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts']);
 
-    Route::get('/get-provinces', [TokoController::class, 'getProvinces']);
-    Route::get('/get-cities/{provId}', [TokoController::class, 'getCities']);
-    Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts']);
-    Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts']);
-});
+// Route::middleware(['auth', 'role:2'])->group(function () {
+// });
 
 
 // =========================================================================
@@ -71,17 +71,17 @@ Route::get('/admin/dashboard', function () {
     return view('admin.index');
 })->name('admin.dashboard')->middleware('auth');
 
-Route::get('/admin/verifikasi-pendaftaran', function () {
-    return view('admin.verifikasi-pendaftaran');
-})->name('admin.verifikasi-toko');
+Route::get('/admin/verifikasi-pendaftaran', [TokoController::class, 'verifToko'])->name('admin.verifikasi-toko');
+Route::post('/admin/toko/approve/{id}', [TokoController::class, 'approve'])->name('toko.approve');
+Route::post('/admin/toko/reject/{id}', [TokoController::class, 'reject'])->name('toko.reject');
 
-Route::get('/admin/master-toko', function () {
-    return view('admin.m-toko');
-})->name('admin.master-toko');
+Route::get('/admin/master-toko', [TokoController::class, 'masterToko'])->name('admin.master-toko');
+Route::post('/admin/toko/nonaktif/{id}', [TokoController::class, 'nonaktif'])->name('toko.nonaktif');
+Route::post('/admin/toko/aktif/{id}', [TokoController::class, 'aktif'])->name('toko.aktif');
 
-Route::get('/admin/master-pengguna', function () {
-    return view('admin.m-pengguna');
-})->name('admin.master-pengguna');
+Route::get('/admin/master-pengguna', [UserController::class, 'masterUser'])->name('admin.master-pengguna');
+Route::post('/admin/user/nonaktif/{id}', [UserController::class, 'nonaktif'])->name('admin.master-usernonaktif');
+Route::post('/admin/user/aktif/{id}', [UserController::class, 'aktif'])->name('admin.master-useraktif');
 
 // =========================================================================
 // =========================================================================

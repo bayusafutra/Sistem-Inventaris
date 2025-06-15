@@ -21,10 +21,11 @@ return new class extends Migration
             $table->string('kecamatan');
             $table->string('kelurahan');
             $table->text('deskripsi')->nullable();
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->string('slug')->unique();
             $table->date('tgl_pendaftaran');
             $table->date('tgl_pengesahan')->nullable();
-            $table->boolean('isactive')->default(false);
+            $table->integer('status')->default(1); //1 = verif; 2 = aktif; 3 = non-aktif
             $table->timestamps();
         });
     }

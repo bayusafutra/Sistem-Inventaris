@@ -6,6 +6,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/flatpickr.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-modal.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -86,8 +89,8 @@
                     <div class="widget-content widget-content-area br-6">
                         <div class="table-form">
                             <div class="form-group row mr-3">
-                                <label for="min" class="col-sm-5 col-form-label col-form-label-sm">Verifikasi
-                                    Awal:</label>
+                                <label for="min" class="col-sm-5 col-form-label col-form-label-sm">Tanggal
+                                    Aktivasi:</label>
                                 <div class="col-sm-7 position-relative">
                                     <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                         id="min" placeholder="Pilih tanggal awal">
@@ -102,8 +105,8 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="max" class="col-sm-5 col-form-label col-form-label-sm">Verifikasi
-                                    Akhir:</label>
+                                <label for="max" class="col-sm-5 col-form-label col-form-label-sm">Tanggal
+                                    Aktivasi:</label>
                                 <div class="col-sm-7 position-relative">
                                     <input type="text" class="form-control form-control-sm flatpickr" name="max"
                                         id="max" placeholder="Pilih tanggal akhir">
@@ -131,349 +134,291 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Badan Usaha Milik Dafa (BUMD)</td>
-                                    <td>Grosir Sembako</td>
-                                    <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/04/25')->translatedFormat('l, d F Y') }}</td>
-                                    <td><span class="badge outline-badge-success"> Aktif </span></td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Toko">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-list table-cancel">
-                                                <line x1="8" y1="6" x2="21" y2="6">
-                                                </line>
-                                                <line x1="8" y1="12" x2="21" y2="12">
-                                                </line>
-                                                <line x1="8" y1="18" x2="21" y2="18">
-                                                </line>
-                                                <line x1="3" y1="6" x2="3.01" y2="6">
-                                                </line>
-                                                <line x1="3" y1="12" x2="3.01" y2="12">
-                                                </line>
-                                                <line x1="3" y1="18" x2="3.01" y2="18">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                        <!-- Button trigger modal -->
-                                        <button type="button" data-toggle="modal" data-target="#standardModal"
-                                            title="Verifikasi Toko">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-clipboard table-cancel">
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                                </path>
-                                                <rect x="8" y="2" width="8" height="4" rx="1"
-                                                    ry="1"></rect>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Detail -->
-                                    <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Toko</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="home-tab" data-toggle="tab"
-                                                                href="#home" role="tab" aria-controls="home"
-                                                                aria-selected="true">Identitas</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="profile-tab" data-toggle="tab"
-                                                                href="#profile" role="tab" aria-controls="profile"
-                                                                aria-selected="false">Penanggung Jawab</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
-                                                                href="#staff" role="tab" aria-controls="staff"
-                                                                aria-selected="false">Staff</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="contact-tab" data-toggle="tab"
-                                                                href="#contact" role="tab" aria-controls="contact"
-                                                                aria-selected="false">Deskripsi</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="tab-content" id="myTabContent">
-                                                        <div class="tab-pane fade show active" id="home"
-                                                            role="tabpanel" aria-labelledby="home-tab">
-                                                            <ul>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Nama Toko </strong>
+                                @foreach ($toko as $tk)
+                                    <tr>
+                                        <td>{{ ucwords($tk->name) }}</td>
+                                        <td>{{ $tk->jenis_usaha }}</td>
+                                        <td>{{ ucwords($tk->user->name) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($tk->tgl_pendaftaran)->translatedFormat('l, d F Y') }}
+                                        <td>
+                                            @if ($tk->status == 2)
+                                                <span class="badge outline-badge-success"> Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-danger"> Tidak Aktif </span>
+                                            @endif
+                                        </td>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#tabsModal-{{ $tk->id }}" title="Detail Toko">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-list table-cancel">
+                                                    <line x1="8" y1="6" x2="21" y2="6">
+                                                    </line>
+                                                    <line x1="8" y1="12" x2="21" y2="12">
+                                                    </line>
+                                                    <line x1="8" y1="18" x2="21" y2="18">
+                                                    </line>
+                                                    <line x1="3" y1="6" x2="3.01" y2="6">
+                                                    </line>
+                                                    <line x1="3" y1="12" x2="3.01" y2="12">
+                                                    </line>
+                                                    <line x1="3" y1="18" x2="3.01" y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#standardModal-{{ $tk->id }}" title="Verifikasi Toko">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-clipboard table-cancel">
+                                                    <path
+                                                        d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                                    </path>
+                                                    <rect x="8" y="2" width="8" height="4" rx="1"
+                                                        ry="1"></rect>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Detail -->
+                                        <div class="modal fade" id="tabsModal-{{ $tk->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="tabsModalLabel-{{ $tk->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="tabsModalLabel-{{ $tk->id }}">
+                                                            Detail Toko</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs mb-3" id="myTab-{{ $tk->id }}"
+                                                            role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active"
+                                                                    id="home-tab-{{ $tk->id }}" data-toggle="tab"
+                                                                    href="#home-{{ $tk->id }}" role="tab"
+                                                                    aria-controls="home-{{ $tk->id }}"
+                                                                    aria-selected="true">Identitas</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="profile-tab-{{ $tk->id }}"
+                                                                    data-toggle="tab" href="#profile-{{ $tk->id }}"
+                                                                    role="tab"
+                                                                    aria-controls="profile-{{ $tk->id }}"
+                                                                    aria-selected="false">Penanggung Jawab</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="contact-tab-{{ $tk->id }}"
+                                                                    data-toggle="tab" href="#contact-{{ $tk->id }}"
+                                                                    role="tab"
+                                                                    aria-controls="contact-{{ $tk->id }}"
+                                                                    aria-selected="false">Deskripsi</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content" id="myTabContent-{{ $tk->id }}">
+                                                            <div class="tab-pane fade show active"
+                                                                id="home-{{ $tk->id }}" role="tabpanel"
+                                                                aria-labelledby="home-tab-{{ $tk->id }}">
+                                                                <ul>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Nama Toko </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ ucwords($tk->name) }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Badan Usaha Milik
-                                                                                Dafa (BUMD)</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Jenis Usaha</strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->jenis_usaha }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Jenis Usaha </strong>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Alamat </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->alamat }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Grosir Sembako
-                                                                            </span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Kelurahan </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->kelurahan }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Alamat </strong>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Kecamatan </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->kecamatan }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Jl. Sulanjana No
-                                                                                56</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Kota atau
+                                                                                    Kabupaten</strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->kota }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Kelurahan </strong>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Provinsi </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->provinsi }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Jemursari</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="profile-{{ $tk->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="profile-tab-{{ $tk->id }}">
+                                                                <ul>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Pemilik </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ ucwords($tk->user->name) }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Kecamatan </strong>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">Email </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->user->email }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Wonocolo</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-3">
+                                                                                <strong class="title">No Telp </strong>
+                                                                            </div>
+                                                                            <div class="col-9">
+                                                                                <span class="modal-text">:
+                                                                                    {{ $tk->user->phone ?? 'N/A' }}</span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Kota atau Kabupaten
-                                                                            </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Surabaya</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Provinsi </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Jawa Timur</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="profile" role="tabpanel"
-                                                            aria-labelledby="profile-tab">
-                                                            <ul>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Pemilik </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: Dafa Ariq</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Username </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: dafaariq77</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">Email </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">: dafariq@gmail.com
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-3">
-                                                                            <strong class="title">No Telp </strong>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <span class="modal-text">:
-                                                                                08242882528657</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
-                                                            aria-labelledby="staff-tab">
-                                                            <ol>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Nama</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            <span class="modal-text">: Rudi Santoso</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Status</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            : <span class="badge outline-badge-warning"> Staff Gudang </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Nama</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            <span class="modal-text">: Anita Sari</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Status</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            : <span class="badge outline-badge-success"> Staff Penjualan </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Nama</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            <span class="modal-text">: Budi Hartono</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-2">
-                                                                            <strong class="title">Status</strong>
-                                                                        </div>
-                                                                        <div class="col-10">
-                                                                            : <span class="badge outline-badge-warning"> Staff Gudang </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ol>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="contact" role="tabpanel"
-                                                            aria-labelledby="contact-tab">
-                                                            <p class="modal-text">Pellentesque semper tortor id ligula
-                                                                ultrices suscipit. Donec viverra vulputate lectus non
-                                                                consectetur. Donec ac interdum lacus. Donec euismod nisi
-                                                                at justo molestie elementum. Vivamus vitae hendrerit
-                                                                neque. Orci varius natoque penatibus et magnis dis
-                                                                parturient montes, nascetur ridiculus mus.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="contact-{{ $tk->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="contact-tab-{{ $tk->id }}">
+                                                                <p class="modal-text">
+                                                                    {{ $tk->deskripsi ?? 'Tidak ada deskripsi' }}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" data-dismiss="modal"><i
-                                                            class="flaticon-cancel-12"></i> Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" data-dismiss="modal"><i
+                                                                class="flaticon-cancel-12"></i> Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal ACC -->
-                                    <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
-                                        role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document"
-                                            id="standardModalLabel">
-                                            <div class="modal-content">
-                                                <div class="modal-body text-center">
-                                                    <div class="icon-content">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-bell">
-                                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
-                                                            </path>
-                                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                                        </svg>
+                                        <!-- Modal ACC -->
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $tk->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
+                                                        </div>
+                                                        @if ($tk->status == 2)
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                status Toko <strong>{{ ucwords($tk->name) }}?</strong>
+                                                            </p>
+                                                        @else
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                status Toko <strong>{{ ucwords($tk->name) }}?</strong>
+                                                            </p>
+                                                        @endif
                                                     </div>
-                                                    <p class="modal-text">Apakah anda yakin untuk <strong style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                        status Toko <strong>Badan Usaha Milik Dafa (BUMD)?</strong></p>
+                                                    @if ($tk->status == 2)
+                                                        <form action="{{ route('toko.nonaktif', $tk->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('toko.aktif', $tk->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @endif
                                                 </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i> Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Yakin</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
-                                <tr>
-                                    <td>Badan Usaha Milik Nanang (BUMN)</td>
-                                    <td>Grosir Pakaian</td>
-                                    <td>Nanang Hidayat</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/13')->translatedFormat('l, d F Y') }}</td>
-                                    <td><span class="badge outline-badge-danger"> Non Aktif </span></td>
-                                    <td class="text-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-list table-cancel">
-                                            <line x1="8" y1="6" x2="21" y2="6"></line>
-                                            <line x1="8" y1="12" x2="21" y2="12"></line>
-                                            <line x1="8" y1="18" x2="21" y2="18"></line>
-                                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-clipboard table-cancel">
-                                            <path
-                                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                            </path>
-                                            <rect x="8" y="2" width="8" height="4" rx="1"
-                                                ry="1"></rect>
-                                        </svg>
-                                    </td>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -501,7 +446,38 @@
     <script src="{{ asset('plugins/table/datatable/button-ext/jszip.min.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
 
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         // Inisialisasi Flatpickr
         const minPicker = $("#min").flatpickr({

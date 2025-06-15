@@ -32,5 +32,19 @@ class UserSeeder extends Seeder
                 'isactive' => true,
             ]);
         }
+        User::create([
+            'name' => 'Bayu Safutra',
+            'panggilan' => 'Bayu',
+            'email' => 'mochamad.bayu.safutra-2021@vokasi.unair.ac.id',
+            'password' => Hash::make('password'),
+            'googleid' => null,
+            'roleuser' => 2,
+            'jk' => true,
+            'tgl_lahir' => '2002-05-03',
+            'notelp' => '08123456789',
+            'gambar' => null,
+            'email_verified_at' => now(),
+            'isactive' => true,
+        ]);
     }
 }

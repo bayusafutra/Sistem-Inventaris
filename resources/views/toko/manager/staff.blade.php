@@ -275,7 +275,8 @@
                                     <td>08255835382861</td>
                                     <td>Pria</td>
                                     <td>{{ floor(\Carbon\Carbon::parse('2002/05/30')->diffInYears(\Carbon\Carbon::now())) }}
-                                        tahun</td>
+                                        tahun
+                                    </td>
                                     <td>Staff Gudang</td>
                                     <td><span class="badge outline-badge-success"> Aktif </span></td>
                                     <td class="text-center">

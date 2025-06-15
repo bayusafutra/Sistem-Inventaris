@@ -2,6 +2,19 @@
 @section('css-custom')
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-modal.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
+    <style>
+        table tbody tr td button {
+            background: none;
+            border: none;
+        }
+        .outline-badge-success {
+            padding: 2.2px 19px
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -45,85 +58,138 @@
                                 <tr>
                                     <th>Nama Lengkap</th>
                                     <th>Nama Panggilan</th>
-                                    <th>Username</th>
                                     <th>Email</th>
                                     <th>No Telp</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Tanggal Lahir</th>
                                     <th>Posisi</th>
                                     <th>Toko</th>
+                                    <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>Tiger</td>
-                                    <td>tigernixon</td>
-                                    <td>tigernixon@gmail.com</td>
-                                    <td>08255835382861</td>
-                                    <td>Pria</td>
-                                    <td>{{ \Carbon\Carbon::parse('2002/09/02')->translatedFormat('l, d F Y') }}
-                                    </td>
-                                    <td>Manager</td>
-                                    <td>Badan Usaha Milik Dafa (BUMD)</td>
-                                    <td class="text-center">
-                                        <a href="javascript:void(0);" class="bs-tooltip" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-x-octagon table-cancel">
-                                                <polygon
-                                                    points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
-                                                </polygon>
-                                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Agung Pambudi</td>
-                                    <td>Agung</td>
-                                    <td>agungpambudi</td>
-                                    <td>agungpambudi@gmail.com</td>
-                                    <td>081237393199</td>
-                                    <td>Wanita</td>
-                                    <td>Surabaya, {{ \Carbon\Carbon::parse('2001/12/22')->translatedFormat('l, d F Y') }}
-                                    </td>
-                                    <td>Manager</td>
-                                    <td>Badan Usaha Milik Nanang (BUMN)</td>
-                                    <td class="text-center">
-                                        <a href="javascript:void(0);" class="bs-tooltip" data-toggle="tooltip"
-                                            data-placement="top" title="" data-original-title="Delete"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-x-octagon table-cancel">
-                                                <polygon
-                                                    points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
-                                                </polygon>
-                                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                <line x1="9" y1="9" x2="15" y2="15">
-                                                </line>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->panggilan ?? 'N/A' }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->notelp ?? 'N/A' }}</td>
+                                        <td>{{ is_null($user->jk) ? 'N/A' : ($user->jk ? 'Pria' : 'Wanita') }}</td>
+                                        <td>
+                                            @if ($user->jk)
+                                                {{ floor(\Carbon\Carbon::parse($user->jk)->diffInYears(\Carbon\Carbon::now())) }}
+                                                tahun
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($user->roleuser == 2)
+                                                User Umum
+                                            @elseif ($user->roleuser == 3)
+                                                Manager
+                                            @elseif ($user->roleuser == 4)
+                                                Staff Gudang
+                                            @elseif ($user->roleuser == 5)
+                                                Staff Penjualan
+                                            @endif
+                                        </td>
+                                        <td>{{ $user->toko->name }}</td>
+                                        <td>
+                                            @if ($user->isactive == true)
+                                                <span class="badge outline-badge-success"> Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-danger"> Tidak Aktif </span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#standardModal-{{ $user->id }}" title="Verifikasi Toko">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-x-octagon table-cancel">
+                                                    <polygon
+                                                        points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
+                                                    </polygon>
+                                                    <line x1="15" y1="9" x2="9" y2="15">
+                                                    </line>
+                                                    <line x1="9" y1="9" x2="15" y2="15">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $user->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
+                                                        </div>
+                                                        @if ($user->isactive == true)
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                status User <strong>{{ ucwords($user->name) }}?</strong>
+                                                            </p>
+                                                        @else
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                status User <strong>{{ ucwords($user->name) }}?</strong>
+                                                            </p>
+                                                        @endif
+                                                    </div>
+                                                    @if ($user->isactive == true)
+                                                        <form action="{{ route('admin.master-usernonaktif', $user->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('admin.master-useraktif', $user->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Nama Lengkap</th>
                                     <th>Nama Panggilan</th>
-                                    <th>Username</th>
                                     <th>Email</th>
                                     <th>No Telp</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Tanggal Lahir</th>
                                     <th>Posisi</th>
                                     <th>Toko</th>
+                                    <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -137,6 +203,38 @@
 @endsection
 @section('js-custom')
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         $(document).ready(function() {
             $('#alter_pagination').DataTable({
