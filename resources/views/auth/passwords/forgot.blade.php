@@ -15,6 +15,7 @@
     <!-- END GLOBAL MANDATORY STYLES -->
     <link rel="stylesheet" type="text/css" href="assets/css/forms/theme-checkbox-radio.css">
     <link rel="stylesheet" type="text/css" href="assets/css/forms/switches.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
 </head>
 
 <body class="form no-image-content">
@@ -32,7 +33,8 @@
                                 <div id="email-field" class="field-wrapper input mb-2">
                                     <div class="d-flex justify-content-between">
                                         <label for="email">EMAIL</label>
-                                        <a href="{{ route('login') }}" class="forgot-pass-link">Kembali ke halaman awal</a>
+                                        <a href="{{ route('login') }}" class="forgot-pass-link">Kembali ke halaman
+                                            awal</a>
                                     </div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -40,7 +42,8 @@
                                         <circle cx="12" cy="12" r="4"></circle>
                                         <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
                                     </svg>
-                                    <input id="email" name="email" type="text" class="form-control" placeholder="Email">
+                                    <input id="email" name="email" type="text" class="form-control"
+                                        placeholder="Email">
                                 </div>
 
                                 <div class="d-sm-flex justify-content-between">
@@ -63,6 +66,22 @@
 
     <!-- END GLOBAL MANDATORY SCRIPTS -->
     <script src="assets/js/authentication/form-2.js"></script>
+    <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    <script>
+        @if (session('error'))
+            $(document).ready(function() {
+                Snackbar.show({
+                    text: '{{ session('error')['message'] }}',
+                    pos: 'top-right', // Sesuai contoh templatemu
+                    actionText: 'Tutup',
+                    actionTextColor: '#fff',
+                    backgroundColor: '#e74c3c', // Merah untuk error
+                    duration: 5000
+                });
+            });
+        @endif
+    </script>
 
 </body>
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\TokoController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -45,20 +46,23 @@ Route::post('/ubah-password', [AuthController::class, 'updatePassword'])->name('
 
 Route::get('/profil', function () {
     return view('profile.index');
-})->name('profil');
+})->name('profil')->middleware('auth');
 
-// Route::get('/home', function () {
-//     return view('general.index');
-// })->name('home')->middleware('auth');
 Route::middleware(['auth', 'role:2'])->group(function () {
     Route::get('/home', function () {
         return view('general.index');
     })->name('home');
+
+    Route::get('/pendaftaran-toko', function () {
+        return view('general.daftarToko');
+    })->name('pendaftaran-toko');
+
+    Route::get('/get-provinces', [TokoController::class, 'getProvinces']);
+    Route::get('/get-cities/{provId}', [TokoController::class, 'getCities']);
+    Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts']);
+    Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts']);
 });
 
-Route::get('/pendaftaran-toko', function () {
-    return view('general.daftarToko');
-})->name('pendaftaran-toko');
 
 // =========================================================================
 // =========================================================================

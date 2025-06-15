@@ -118,8 +118,7 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $request->validate(['email' => 'required|email|exists:users,email']);
-
+        // $request->validate(['email' => 'required|email|exists:users,email']);
         $user = User::where('email', $request->email)->where('isactive', true)->first();
 
         if ($user) {
@@ -132,6 +131,11 @@ class AuthController extends Controller
             ]);
 
             Mail::to($user->email)->send(new ResetPasswordEmail($user, $token));
+        }else {
+            return redirect()->route('lupa-password')->with('error', [
+                'message' => 'Email tidak ditemukan pada sistem',
+                'type' => 'erorr'
+            ]);
         }
 
         return redirect()->route('login')->with('reset', [
@@ -187,7 +191,6 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi berdasarkan apakah user punya password
         $validationRules = [
             'password' => 'required|min:6|confirmed',
         ];
@@ -203,11 +206,10 @@ class AuthController extends Controller
             'password.confirmed' => 'Password baru dan konfirmasi tidak sesuai.',
         ]);
 
-        // Cek password saat ini kalau ada
         if (!is_null($user->password) && !Hash::check($request->current_password, $user->password)) {
             return redirect()->back()->withErrors([
                 'current_password' => 'Password saat ini salah.',
-            ])->with('showAlert', true); // Trigger alert untuk error
+            ])->with('showAlert', true);
         }
 
         // Update password
@@ -219,7 +221,7 @@ class AuthController extends Controller
         return redirect()->back()->with([
             'message' => $message,
             'type' => 'success',
-            'showAlert' => true, // Trigger alert untuk sukses
+            'showAlert' => true,
         ]);
     }
 

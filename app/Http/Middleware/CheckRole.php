@@ -17,12 +17,9 @@ class CheckRole
         }
 
         $user = Auth::user();
-        Log::info('CheckRole Middleware', ['user_id' => $user->id, 'roleuser' => $user->roleuser, 'allowed_roles' => $roles]);
-
         $userRole = $user->roleuser;
 
         if (!in_array((int)$userRole, array_map('intval', $roles))) {
-            Log::warning('Access Denied', ['user_role' => $userRole, 'required_roles' => $roles]);
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 

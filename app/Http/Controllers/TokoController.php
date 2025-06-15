@@ -5,62 +5,62 @@ namespace App\Http\Controllers;
 use App\Models\Toko;
 use App\Http\Requests\StoreTokoRequest;
 use App\Http\Requests\UpdateTokoRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class TokoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'jenis_usaha' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'provinsi' => 'required|string|max:255',
+            'kota' => 'required|string|max:255',
+            'kecamatan' => 'required|string|max:255',
+            'kelurahan' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        Toko::create([
+            'name' => $request->name,
+            'jenis_usaha' => $request->jenis_usaha,
+            'alamat' => $request->alamat,
+            'provinsi' => $request->provinsi,
+            'kota' => $request->kota,
+            'kecamatan' => $request->kecamatan,
+            'kelurahan' => $request->kelurahan,
+            'deskripsi' => $request->deskripsi,
+            'slug' => Str::slug($request->name),
+            'tgl_pendaftaran' => now(),
+        ]);
+
+        return redirect()->back()->with('message', 'Pendaftaran toko berhasil diajukan. Menunggu verifikasi admin.');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getProvinces()
     {
-        //
+        $provinces = DB::table('ec_provinces')->where('status', 1)->select('prov_id', 'prov_name')->get();
+        return response()->json($provinces);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTokoRequest $request)
+    public function getCities($provId)
     {
-        //
+        $cities = DB::table('ec_cities')->where('prov_id', $provId)->select('city_id', 'city_name')->get();
+        return response()->json($cities);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Toko $toko)
+    public function getDistricts($cityId)
     {
-        //
+        $districts = DB::table('ec_districts')->where('city_id', $cityId)->select('dis_id', 'dis_name')->get();
+        return response()->json($districts);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Toko $toko)
+    public function getSubdistricts($disId)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTokoRequest $request, Toko $toko)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Toko $toko)
-    {
-        //
+        $subdistricts = DB::table('ec_subdistricts')->where('dis_id', $disId)->select('subdis_id', 'subdis_name')->get();
+        return response()->json($subdistricts);
     }
 }
