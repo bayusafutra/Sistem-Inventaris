@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('toko_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('panggilan')->nullable();
             $table->string('email')->unique();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('gambar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('isactive')->default(false);
+            $table->string('verification_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

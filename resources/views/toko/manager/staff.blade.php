@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/flatpickr.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/flatpickr/custom-flatpickr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -93,8 +96,9 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ $toko->name }}</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Master</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Staff</span>
                                 </li>
                             </ol>
@@ -150,32 +154,16 @@
                                                     </svg>
                                                 </button>
                                             </div>
-                                            <form action="" method="">
+                                            <form action="{{ route('manager.store-staff', ['slug' => $toko->slug]) }}"
+                                                method="POST">
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group mb-3">
                                                                 <label for="nama_lengkap">Nama Lengkap</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="nama_lengkap" id="nama_lengkap"
-                                                                    placeholder="Nama Lengkap" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="form-group mb-3">
-                                                                <label for="nama_panggilan">Nama Panggilan</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="nama_panggilan" id="nama_panggilan"
-                                                                    placeholder="Nama Panggilan" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="form-group mb-3">
-                                                                <label for="username">Username</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="username" id="username" placeholder="Username"
-                                                                    required>
+                                                                <input type="text" class="form-control" name="name"
+                                                                    id="nama_lengkap" placeholder="Nama Lengkap" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
@@ -188,18 +176,18 @@
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
                                                                 <label for="no_telp">No Telp</label>
-                                                                <input type="text" class="form-control" name="no_telp"
+                                                                <input type="text" class="form-control" name="notelp"
                                                                     id="no_telp" placeholder="No Telp" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-group mb-3">
                                                                 <label for="jenis_kelamin">Jenis Kelamin</label>
-                                                                <select class="form-control" name="jenis_kelamin"
-                                                                    id="jenis_kelamin" data-live-search="true">
+                                                                <select class="form-control" name="jk"
+                                                                    id="jenis_kelamin" data-live-search="true" required>
                                                                     <option selected disabled>Pilih Jenis Kelamin</option>
-                                                                    <option value="Pria">Pria</option>
-                                                                    <option value="Wanita">Wanita</option>
+                                                                    <option value="1">Pria</option>
+                                                                    <option value="0">Wanita</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -207,9 +195,10 @@
                                                             <div class="form-group mb-3">
                                                                 <label for="basicFlatpickr">Tanggal Lahir</label>
                                                                 <div class="d-sm-flex">
-                                                                    <input id="basicFlatpickr" name="tanggal_lahir"
+                                                                    <input id="basicFlatpickr" name="tgl_lahir"
                                                                         class="form-control flatpickr flatpickr-input active"
-                                                                        type="text" placeholder="Pilih Tanggal Lahir">
+                                                                        type="text" placeholder="Pilih Tanggal Lahir"
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -219,8 +208,8 @@
                                                                 <div class="d-flex">
                                                                     <div class="col-md-6">
                                                                         <label class="custom-radio flex-fill">
-                                                                            <input type="radio"name="posisi"
-                                                                                value="Staff Gudang" required>
+                                                                            <input type="radio"name="roleuser"
+                                                                                value="4" required>
                                                                             <span class="radio-box"
                                                                                 style="margin-right: 15px">Staff
                                                                                 Gudang</span>
@@ -228,8 +217,8 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label class="custom-radio flex-fill">
-                                                                            <input type="radio" name="posisi"
-                                                                                value="Staff Penjualan" required>
+                                                                            <input type="radio" name="roleuser"
+                                                                                value="5" required>
                                                                             <span class="radio-box"
                                                                                 style="margin-left: 15px">Staff
                                                                                 Penjualan</span>
@@ -256,7 +245,6 @@
                                 <tr>
                                     <th>Nama Lengkap</th>
                                     <th>Nama Panggilan</th>
-                                    <th>Username</th>
                                     <th>Email</th>
                                     <th>No Telp</th>
                                     <th>Jenis Kelamin</th>
@@ -267,210 +255,114 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>Tiger</td>
-                                    <td>tigernixon</td>
-                                    <td>tigernixon@gmail.com</td>
-                                    <td>08255835382861</td>
-                                    <td>Pria</td>
-                                    <td>{{ floor(\Carbon\Carbon::parse('2002/05/30')->diffInYears(\Carbon\Carbon::now())) }}
-                                        tahun
-                                    </td>
-                                    <td>Staff Gudang</td>
-                                    <td><span class="badge outline-badge-success"> Aktif </span></td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#edit"
-                                            title="Edit Data">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-clipboard table-cancel">
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                                </path>
-                                                <rect x="8" y="2" width="8" height="4" rx="1"
-                                                    ry="1"></rect>
-                                            </svg>
-                                        </button>
-                                        <button type="button" data-toggle="modal" data-target="#standardModal"
-                                            title="Verifikasi Toko">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-x-octagon table-cancel">
-                                                <polygon
-                                                    points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
-                                                </polygon>
-                                                <line x1="15" y1="9" x2="9" y2="15">
-                                                </line>
-                                                <line x1="9" y1="9" x2="15" y2="15">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Edit -->
-                                    <div class="modal fade" id="edit" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Data Produk
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <svg style="color: black" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-x">
-                                                            <line x1="18" y1="6" x2="6"
-                                                                y2="18"></line>
-                                                            <line x1="6" y1="6" x2="18"
-                                                                y2="18"></line>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="nama_lengkap">Nama Lengkap</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nama_lengkap" id="nama_lengkap"
-                                                                        placeholder="Nama Lengkap" value="Tiger Nixon" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="nama_panggilan">Nama Panggilan</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nama_panggilan" id="nama_panggilan"
-                                                                        placeholder="Nama Panggilan" value="Tiger" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="username">Username</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="username" id="username"
-                                                                        placeholder="Username" value="tigernixon" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="email">Email</label>
-                                                                    <input type="email" class="form-control"
-                                                                        name="email" id="email" placeholder="Email"
-                                                                        value="tigernixon@gmail.com" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="no_telp">No Telp</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="no_telp" id="no_telp"
-                                                                        placeholder="No Telp" value="08255835382861" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="jenis_kelamin">Jenis Kelamin</label>
-                                                                    <select class="form-control" name="jenis_kelamin"
-                                                                        id="jenis_kelamin" data-live-search="true">
-                                                                        <option value="Pria" selected>Pria</option>
-                                                                        <option value="Wanita">Wanita</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="basicFlatpickr">Tanggal Lahir</label>
-                                                                    <div class="d-sm-flex">
-                                                                        <input id="basicFlatpickr" name="tanggal_lahir"
-                                                                            class="form-control flatpickr flatpickr-input active"
-                                                                            type="text" value="2002/05/30"
-                                                                            placeholder="Pilih Tanggal Lahir">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <div class="form-group mb-3">
-                                                                    <label>Posisi</label>
-                                                                    <div class="d-flex">
-                                                                        <div class="col-md-6">
-                                                                            <label class="custom-radio flex-fill">
-                                                                                <input type="radio"name="posisi"
-                                                                                    value="Staff Gudang" checked required>
-                                                                                <span class="radio-box"
-                                                                                    style="margin-right: 15px">Staff
-                                                                                    Gudang</span>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <label class="custom-radio flex-fill">
-                                                                                <input type="radio" name="posisi"
-                                                                                    value="Staff Penjualan" required>
-                                                                                <span class="radio-box"
-                                                                                    style="margin-left: 15px">Staff
-                                                                                    Penjualan</span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                @foreach ($staff as $st)
+                                    <tr>
+                                        <td>{{ ucwords($st->name) }}</td>
+                                        <td>{{ $st->panggilan ?? 'N/A' }}</td>
+                                        <td>{{ $st->email }}</td>
+                                        <td>{{ $st->notelp ?? 'N/A' }}</td>
+                                        <td>
+                                            @if (!is_null($st->jk))
+                                                {{ $st->jk ? 'Pria' : 'Wanita' }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (!is_null($st->tgl_lahir))
+                                                {{ floor(\Carbon\Carbon::parse($st->tgl_lahir)->diffInYears(\Carbon\Carbon::now())) }}
+                                                tahun
+                                            @else
+                                                n/A
+                                            @endif
+                                        </td>
+                                        <td>{{ $st->roleuser == 4 ? 'Staff Gudang' : 'Staff Penjualan' }}</td>
+                                        <td>
+                                            @if ($st->isactive === 1)
+                                                <span class="badge outline-badge-success"> Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-danger"> Tidak Aktif </span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#standardModal-{{ $st->id }}" title="Verifikasi Toko">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-x-octagon table-cancel">
+                                                    <polygon
+                                                        points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
+                                                    </polygon>
+                                                    <line x1="15" y1="9" x2="9" y2="15">
+                                                    </line>
+                                                    <line x1="9" y1="9" x2="15" y2="15">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Status -->
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $st->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
                                                         </div>
+                                                        @if ($st->isactive === 1)
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                staff <strong>{{ ucwords($st->name) }}</strong>?
+                                                            </p>
+                                                        @else
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                staff <strong>{{ ucwords($st->name) }}</strong>?
+                                                            </p>
+                                                        @endif
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i>Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal Status -->
-                                    <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
-                                        role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document"
-                                            id="standardModalLabel">
-                                            <div class="modal-content">
-                                                <div class="modal-body text-center">
-                                                    <div class="icon-content">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-bell">
-                                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
-                                                            </path>
-                                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                                        </svg>
-                                                    </div>
-                                                    <p class="modal-text">Apakah anda yakin untuk <strong
-                                                            style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                        produk <strong>Gula 5Kg?</strong></p>
+                                                    @if ($st->isactive === 1)
+                                                        <form action="{{ route('manager.master-staffnonaktif', $st->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('manager.master-staffaktif', $st->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @endif
                                                 </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i> Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Yakin</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Nama Lengkap</th>
                                     <th>Nama Panggilan</th>
-                                    <th>Username</th>
                                     <th>Email</th>
                                     <th>No Telp</th>
                                     <th>Jenis Kelamin</th>
@@ -496,6 +388,38 @@
     <script src="{{ asset('plugins/table/datatable/button-ext/jszip.min.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/button-ext/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         $(document).ready(function() {
             var table = $('#html5-extension').DataTable({

@@ -232,19 +232,17 @@
                                                                                 @endif
                                                                             </p>
                                                                         </div>
+                                                                        @php
+                                                                            $manager = $toko->user->where('roleuser', 2)->first();
+                                                                        @endphp
+
                                                                         <div class="col-sm-6 align-self-center mt-3">
                                                                             <p class="inv-street-addr">
-                                                                                {{ ucwords($toko->user->name) }}</p>
+                                                                                {{ ucwords($manager->name) }}</p>
                                                                             <p class="inv-email-address">
-                                                                                {{ $toko->user->email }}
-                                                                            </p>
+                                                                                {{ $manager->email }}</p>
                                                                             <p class="inv-email-address">
-                                                                                @if ($toko->user->notelp)
-                                                                                    {{ $toko->user->notelp }}
-                                                                                @else
-                                                                                    -
-                                                                                @endif
-                                                                            </p>
+                                                                                {{ $manager->notelp ?? 'N/A' }}</p>
                                                                         </div>
                                                                         <div
                                                                             class="col-sm-6 align-self-center mt-3 text-sm-right">
@@ -280,12 +278,14 @@
                                                                             <h6 class=" inv-title">Deskripsi Toko :</h6>
                                                                         </div>
                                                                         <div class="col-xl-8 col-lg-7 col-md-6 col-sm-4">
-                                                                            <p class="inv-customer-name">{{ $toko->jenis_usaha }}</p>
+                                                                            <p class="inv-customer-name">
+                                                                                {{ $toko->jenis_usaha }}</p>
                                                                             <p class="inv-street-addr">
                                                                                 {{ $toko->alamat }}
                                                                             </p>
                                                                             <p class="inv-email-address">
-                                                                                {{ $toko->kelurahan }}, {{ $toko->kecamatan }}
+                                                                                {{ $toko->kelurahan }},
+                                                                                {{ $toko->kecamatan }}
                                                                             </p>
                                                                             <p class="inv-email-address">
                                                                                 {{ $toko->kota }}, {{ $toko->provinsi }}

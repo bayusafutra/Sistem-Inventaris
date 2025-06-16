@@ -136,9 +136,12 @@
                             <tbody>
                                 @foreach ($toko as $tk)
                                     <tr>
+                                        @php
+                                            $manager = $tk->user->where('toko_id', $tk->id)->first();
+                                        @endphp
                                         <td>{{ ucwords($tk->name) }}</td>
                                         <td>{{ $tk->jenis_usaha }}</td>
-                                        <td>{{ ucwords($tk->user->name) }}</td>
+                                        <td>{{ ucwords($manager->name) }}</td>
                                         <td>{{ \Carbon\Carbon::parse($tk->tgl_pendaftaran)->translatedFormat('l, d F Y') }}
                                         <td>
                                             @if ($tk->status == 2)
@@ -319,7 +322,7 @@
                                                                             </div>
                                                                             <div class="col-9">
                                                                                 <span class="modal-text">:
-                                                                                    {{ ucwords($tk->user->name) }}</span>
+                                                                                    {{ ucwords($manager->name) }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -330,7 +333,7 @@
                                                                             </div>
                                                                             <div class="col-9">
                                                                                 <span class="modal-text">:
-                                                                                    {{ $tk->user->email }}</span>
+                                                                                    {{ $manager->email }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -341,7 +344,7 @@
                                                                             </div>
                                                                             <div class="col-9">
                                                                                 <span class="modal-text">:
-                                                                                    {{ $tk->user->phone ?? 'N/A' }}</span>
+                                                                                    {{ $manager->phone ?? 'N/A' }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -362,7 +365,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Modal ACC -->
                                         <div class="modal fade modal-notification" id="standardModal-{{ $tk->id }}"
                                             tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
                                             aria-hidden="true">

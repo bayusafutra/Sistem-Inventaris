@@ -3,6 +3,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
     <link href="{{ asset('assets/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
     <style>
         table thead {
             background-color: #f0f5ff;
@@ -38,7 +41,7 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ $toko->name }}</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Master</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Satuan Produk</span>
@@ -77,7 +80,8 @@
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Satuan
                                                 Produk</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
                                                 <svg style="color: black" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -90,11 +94,13 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                        <form action="" method="">
+                                        <form action="{{ route('manager.store-satuan', ['slug' => $toko->slug]) }}"
+                                            method="POST">
                                             @csrf
                                             <div class="modal-body">
                                                 <label for="namaSatuan">Nama</label>
-                                                <input type="text" class="form-control" name="" placeholder="Nama Satuan Produk" required>
+                                                <input type="text" class="form-control" name="name"
+                                                    placeholder="Nama Satuan Produk" autofocus required>
                                             </div>
                                             <div class="modal-footer">
                                                 <button class="btn" data-dismiss="modal"><i
@@ -115,110 +121,147 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Kardus</td>
-                                    <td><span class="badge outline-badge-success"> Aktif </span></td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#edit"
-                                            title="Edit Data">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-clipboard table-cancel">
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
-                                                </path>
-                                                <rect x="8" y="2" width="8" height="4" rx="1"
-                                                    ry="1"></rect>
-                                            </svg>
-                                        </button>
-                                        <button type="button" data-toggle="modal" data-target="#standardModal"
-                                            title="Verifikasi Toko">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-x-octagon table-cancel">
-                                                <polygon
-                                                    points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
-                                                </polygon>
-                                                <line x1="15" y1="9" x2="9" y2="15">
-                                                </line>
-                                                <line x1="9" y1="9" x2="15" y2="15">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Edit -->
-                                    <div class="modal fade" id="edit" tabindex="-1" role="dialog"
-                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalCenterTitle">Edit Satuan
-                                                        Produk</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <svg style="color: black" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="4" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-x">
-                                                            <line x1="18" y1="6" x2="6"
-                                                                y2="18"></line>
-                                                            <line x1="6" y1="6" x2="18"
-                                                                y2="18"></line>
-                                                        </svg>
-                                                    </button>
+                                @foreach ($satuanproduk as $sp)
+                                    <tr>
+                                        <td>{{ ucwords($sp->name) }}</td>
+                                        <td>
+                                            @if ($sp->isactive === 1)
+                                                <span class="badge outline-badge-success"> Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-danger"> Tidak Aktif </span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#edit-{{ $sp->id }}" title="Edit Data">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-clipboard table-cancel">
+                                                    <path
+                                                        d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                                    </path>
+                                                    <rect x="8" y="2" width="8" height="4" rx="1"
+                                                        ry="1"></rect>
+                                                </svg>
+                                            </button>
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#standardModal-{{ $sp->id }}" title="Verifikasi Toko">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-x-octagon table-cancel">
+                                                    <polygon
+                                                        points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
+                                                    </polygon>
+                                                    <line x1="15" y1="9" x2="9" y2="15">
+                                                    </line>
+                                                    <line x1="9" y1="9" x2="15" y2="15">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Edit -->
+                                        <div class="modal fade" id="edit-{{ $sp->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Edit Satuan
+                                                            Produk</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <svg style="color: black" aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="4"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-x">
+                                                                <line x1="18" y1="6" x2="6"
+                                                                    y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18"
+                                                                    y2="18"></line>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{{ route('manager.edit-satuan') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="idsatuan"
+                                                            value="{{ $sp->id }}">
+                                                        <div class="modal-body">
+                                                            <label for="namaSatuan">Nama</label>
+                                                            <input type="text" class="form-control" name="name"
+                                                                placeholder="Nama Satuan Produk"
+                                                                value="{{ $sp->name }}" required>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn" data-dismiss="modal"><i
+                                                                    class="flaticon-cancel-12"></i>Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-body">
-                                                        <label for="namaSatuan">Nama</label>
-                                                        <input type="text" class="form-control" name="" placeholder="Nama Satuan Produk"
-                                                            value="Kardus" required>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i>Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal Status -->
-                                    <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
-                                        role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document"
-                                            id="standardModalLabel">
-                                            <div class="modal-content">
-                                                <div class="modal-body text-center">
-                                                    <div class="icon-content">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-bell">
-                                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
-                                                            </path>
-                                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                                        </svg>
+                                        <!-- Modal Status -->
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $sp->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
+                                                        </div>
+                                                        @if ($sp->isactive === 1)
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                status satuan produk
+                                                                <strong>{{ ucwords($sp->name) }}</strong>?
+                                                            </p>
+                                                        @else
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                status satuan produk
+                                                                <strong>{{ ucwords($sp->name) }}</strong>?
+                                                            </p>
+                                                        @endif
                                                     </div>
-                                                    <p class="modal-text">Apakah anda yakin untuk <strong
-                                                            style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                        status satuan produk <strong>Kardus?</strong></p>
+                                                    @if ($sp->isactive === 1)
+                                                        <form action="{{ route('manager.master-satuannonaktif', $sp->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('manager.master-satuanaktif', $sp->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @endif
                                                 </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i> Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Yakin</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -237,6 +280,38 @@
 @endsection
 @section('js-custom')
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         $(document).ready(function() {
             $('#alter_pagination').DataTable({

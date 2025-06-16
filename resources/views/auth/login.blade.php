@@ -157,6 +157,18 @@
                 });
             });
         @endif
+        @if (session('verif-staff'))
+            $(document).ready(function() {
+                Snackbar.show({
+                    text: '{{ session('verif-staff')['message'] }}',
+                    pos: 'top-right',
+                    actionText: 'Tutup',
+                    actionTextColor: '#fff',
+                    backgroundColor: '#9DC08B',
+                    duration: 5000
+                });
+            });
+        @endif
     </script>
 </body>
 

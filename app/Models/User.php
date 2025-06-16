@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Toko;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -42,7 +43,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function toko(){
-        return $this->hasOne(Toko::class, 'user_id');
+    public function toko()
+    {
+        return $this->belongsTo(Toko::class, 'toko_id');
     }
 }

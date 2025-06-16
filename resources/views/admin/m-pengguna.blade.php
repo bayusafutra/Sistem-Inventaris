@@ -71,7 +71,7 @@
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{ $user->name }}</td>
+                                        <td>{{ ucwords($user->name) }}</td>
                                         <td>{{ $user->panggilan ?? 'N/A' }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->notelp ?? 'N/A' }}</td>
@@ -95,7 +95,7 @@
                                                 Staff Penjualan
                                             @endif
                                         </td>
-                                        <td>{{ $user->toko->name }}</td>
+                                        <td>{{ ucwords($user->toko->name ?? 'N/A') }}</td>
                                         <td>
                                             @if ($user->isactive == true)
                                                 <span class="badge outline-badge-success"> Aktif </span>

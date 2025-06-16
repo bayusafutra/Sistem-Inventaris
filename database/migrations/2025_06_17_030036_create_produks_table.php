@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('staff', function (Blueprint $table) {
+        Schema::create('produks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
+            $table->string('name');
             $table->foreignId('toko_id')->constrained()->onDelete('cascade');
-            $table->string('jabatan'); // Misal 'manager', 'staff gudang', 'staff penjualan'
+            $table->foreignId('satuan_id')->constrained('satuan_produks')->onDelete('cascade');
+            $table->bigInteger('stok');
+            $table->boolean('isactive')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff');
+        Schema::dropIfExists('produks');
     }
 };

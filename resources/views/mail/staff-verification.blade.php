@@ -11,6 +11,9 @@
             padding: 0;
             color: #333;
         }
+        p {
+            color: black
+        }
         .container {
             width: 100%;
             max-width: 600px;
@@ -74,12 +77,13 @@
             <h1>TechnoLogis</h1>
         </div>
         <div class="content">
-            <h2>Halo {{ $user->name }},</h2>
-            <p>Terima kasih telah mendaftar di Sistem Inventaris TechnoLogis. Silakan klik tombol di bawah ini untuk memverifikasi pendaftaran akun Anda.</p>
-            <a href="{{ $verificationUrl }}" class="button">
+            <h2>Selamat, {{ ucwords($user->name) }},</h2>
+            <p>Akun Technologis Anda telah berhasil ditambahkan oleh manajer toko <strong>{{ ucwords($user->toko->name) }}</strong>. Silakan klik tombol di bawah ini untuk mengaktifkan akun Anda.</p>
+            <a href="{{ url('verify-staff/' . $user->verification_token) }}" class="button">
                 <span class="text">Verifikasi Akun Saya</span>
             </a>
-            <p>Jika Anda tidak mendaftar, silakan abaikan email ini.</p>
+            <p>Setelah akun berhasil diaktifkan, silahkan masuk menggunakan <span style="font-style: italic">email</span> ini dengan <span style="font-style: italic">password</span> : <span style="font-family:courier;">technologis</span></p>
+            <p>Selamat bergabung bersama kami di Sistem Inventaris Technologis</p>
         </div>
         <div class="footer">
             <p>© 2025 TechnoLogis Team. Semua hak dilindungi.</p>

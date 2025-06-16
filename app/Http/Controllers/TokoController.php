@@ -14,7 +14,8 @@ class TokoController extends Controller
 {
     public function daftarToko()
     {
-        $toko = Toko::where('user_id', auth()->user()->id)->first();
+        $toko = auth()->user()->toko;
+
         return view('general.daftarToko', [
             'toko' => $toko,
         ]);
@@ -48,7 +49,7 @@ class TokoController extends Controller
             $districtName = DB::table('ec_districts')->where('dis_id', $request->kecamatan)->value('dis_name');
             $subdistrictName = DB::table('ec_subdistricts')->where('subdis_id', $request->kelurahan)->value('subdis_name');
 
-            Toko::create([
+            $toko = Toko::create([
                 'name' => $request->name,
                 'jenis_usaha' => $request->jenis_usaha,
                 'alamat' => $request->alamat,
@@ -57,11 +58,14 @@ class TokoController extends Controller
                 'kecamatan' => $districtName,
                 'kelurahan' => $subdistrictName,
                 'deskripsi' => $request->deskripsi,
-                'slug' => Str::slug($request->name),
+                'slug' => Str::slug($request->name) . '-' . Str::random(5),
                 'tgl_pendaftaran' => now(),
-                'user_id' => auth()->user()->id,
                 'isactive' => false,
             ]);
+
+            $user = auth()->user();
+            $user->toko_id = $toko->id;
+            $user->save();
 
             return redirect()->back()->with([
                 'message' => 'Pendaftaran toko berhasil diajukan. Menunggu verifikasi admin.',
@@ -91,8 +95,10 @@ class TokoController extends Controller
             'tgl_pengesahan' => now(),
         ]);
 
-        $user = User::findOrFail($toko->user_id);
-        $user->update(['roleuser' => 3]);
+        $user = User::where('toko_id', $toko->id)->first();
+        if ($user) {
+            $user->update(['roleuser' => 3]);
+        }
 
         return redirect()->back()->with([
             'message' => 'Pendaftaran toko telah disetujui.',
@@ -142,8 +148,10 @@ class TokoController extends Controller
             'status' => 2,
         ]);
 
-        $user = User::findOrFail($toko->user_id);
-        $user->update(['roleuser' => 3]);
+        $user = User::where('toko_id', $toko->id)->where('roleuser', 2)->first();
+        if ($user) {
+            $user->update(['roleuser' => 3]);
+        }
 
         return redirect()->back()->with([
             'message' => 'Status toko telah diAktifkan.',

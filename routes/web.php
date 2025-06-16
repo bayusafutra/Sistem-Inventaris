@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -39,11 +42,11 @@ Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('lupa-password');
-Route::post('/lupa-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
-Route::get('/reset-password', [AuthController::class, 'showResetPasswordForm'])->name('reset-password');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password.post');
-Route::post('/ubah-password', [AuthController::class, 'updatePassword'])->name('ubah-password');
+Route::get('/lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('lupa-password')->middleware('guest');
+Route::post('/lupa-password', [AuthController::class, 'forgotPassword'])->name('forgot-password')->middleware('guest');
+Route::get('/reset-password', [AuthController::class, 'showResetPasswordForm'])->name('reset-password')->middleware('guest');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password.post')->middleware('guest');
+Route::post('/ubah-password', [AuthController::class, 'updatePassword'])->name('ubah-password')->middleware('auth');
 
 Route::get('/profil', function () {
     return view('profile.index');
@@ -51,14 +54,14 @@ Route::get('/profil', function () {
 
 Route::get('/home', function () {
     return view('general.index');
-})->name('home');
+})->name('home')->middleware('auth');
 
-Route::get('/pendaftaran-toko', [TokoController::class, 'daftarToko'])->name('pendaftaran-toko');
-Route::post('/store-toko', [TokoController::class, 'store'])->name('store-toko');
-Route::get('/get-provinces', [TokoController::class, 'getProvinces']);
-Route::get('/get-cities/{provId}', [TokoController::class, 'getCities']);
-Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts']);
-Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts']);
+Route::get('/pendaftaran-toko', [TokoController::class, 'daftarToko'])->name('pendaftaran-toko')->middleware('auth');
+Route::post('/store-toko', [TokoController::class, 'store'])->name('store-toko')->middleware('auth');
+Route::get('/get-provinces', [TokoController::class, 'getProvinces'])->middleware('auth');
+Route::get('/get-cities/{provId}', [TokoController::class, 'getCities'])->middleware('auth');
+Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts'])->middleware('auth');
+Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts'])->middleware('auth');
 
 // Route::middleware(['auth', 'role:2'])->group(function () {
 // });
@@ -71,17 +74,17 @@ Route::get('/admin/dashboard', function () {
     return view('admin.index');
 })->name('admin.dashboard')->middleware('auth');
 
-Route::get('/admin/verifikasi-pendaftaran', [TokoController::class, 'verifToko'])->name('admin.verifikasi-toko');
-Route::post('/admin/toko/approve/{id}', [TokoController::class, 'approve'])->name('toko.approve');
-Route::post('/admin/toko/reject/{id}', [TokoController::class, 'reject'])->name('toko.reject');
+Route::get('/admin/verifikasi-pendaftaran', [TokoController::class, 'verifToko'])->name('admin.verifikasi-toko')->middleware('auth');
+Route::post('/admin/toko/approve/{id}', [TokoController::class, 'approve'])->name('toko.approve')->middleware('auth');
+Route::post('/admin/toko/reject/{id}', [TokoController::class, 'reject'])->name('toko.reject')->middleware('auth');
 
-Route::get('/admin/master-toko', [TokoController::class, 'masterToko'])->name('admin.master-toko');
-Route::post('/admin/toko/nonaktif/{id}', [TokoController::class, 'nonaktif'])->name('toko.nonaktif');
-Route::post('/admin/toko/aktif/{id}', [TokoController::class, 'aktif'])->name('toko.aktif');
+Route::get('/admin/master-toko', [TokoController::class, 'masterToko'])->name('admin.master-toko')->middleware('auth');
+Route::post('/admin/toko/nonaktif/{id}', [TokoController::class, 'nonaktif'])->name('toko.nonaktif')->middleware('auth');
+Route::post('/admin/toko/aktif/{id}', [TokoController::class, 'aktif'])->name('toko.aktif')->middleware('auth');
 
-Route::get('/admin/master-pengguna', [UserController::class, 'masterUser'])->name('admin.master-pengguna');
-Route::post('/admin/user/nonaktif/{id}', [UserController::class, 'nonaktif'])->name('admin.master-usernonaktif');
-Route::post('/admin/user/aktif/{id}', [UserController::class, 'aktif'])->name('admin.master-useraktif');
+Route::get('/admin/master-pengguna', [UserController::class, 'masterUser'])->name('admin.master-pengguna')->middleware('auth');
+Route::post('/admin/user/nonaktif/{id}', [UserController::class, 'nonaktif'])->name('admin.master-usernonaktif')->middleware('auth');
+Route::post('/admin/user/aktif/{id}', [UserController::class, 'aktif'])->name('admin.master-useraktif')->middleware('auth');
 
 // =========================================================================
 // =========================================================================
@@ -90,17 +93,21 @@ Route::get('/slugtoko/manager/dashboard', function () {
     return view('toko.manager.index');
 })->name('manager.dashboard');
 
-Route::get('/slugtoko/manager/master/satuan-produk', function () {
-    return view('toko.manager.satuan-produk');
-})->name('manager.master-satuan-produk');
+Route::get('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'masterSatuan'])->name('manager.master-satuan-produk')->middleware('auth');
+Route::post('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'storeSatuan'])->name('manager.store-satuan')->middleware('auth');
+Route::post('/manager/master/satuan-produk/edit', [SatuanProdukController::class, 'editSatuan'])->name('manager.edit-satuan')->middleware('auth');
+Route::post('/manager/master/satuan-produk/nonaktif/{id}', [SatuanProdukController::class, 'nonaktif'])->name('manager.master-satuannonaktif')->middleware('auth');
+Route::post('/manager/master/satuan-produk/aktif/{id}', [SatuanProdukController::class, 'aktif'])->name('manager.master-satuanaktif')->middleware('auth');
 
-Route::get('/slugtoko/manager/master/produk', function () {
-    return view('toko.manager.produk');
-})->name('manager.master-produk');
+Route::get('/{slug}/manager/master/produk', [ProdukController::class, 'masterProduk'])->name('manager.master-produk')->middleware('auth');
+Route::post('/{slug}/manager/master/produk', [ProdukController::class, 'storeProduk'])->name('manager.store-produk')->middleware('auth');
+Route::post('/manager/master/produk/edit', [ProdukController::class, 'editProduk'])->name('manager.edit-produk')->middleware('auth');
 
-Route::get('/slugtoko/manager/master/staff', function () {
-    return view('toko.manager.staff');
-})->name('manager.master-staff');
+Route::get('/{slug}/manager/master/staff', [ManagerController::class, 'masterStaff'])->name('manager.master-staff')->middleware('auth');
+Route::post('/{slug}/manager/master/staff', [ManagerController::class, 'storeStaff'])->name('manager.store-staff')->middleware('auth');
+Route::get('/verify-staff/{token}', [ManagerController::class, 'verifyStaff'])->name('verify.staff');
+Route::post('/manager/staff/nonaktif/{id}', [ManagerController::class, 'nonaktif'])->name('manager.master-staffnonaktif')->middleware('auth');
+Route::post('/manager/staff/aktif/{id}', [ManagerController::class, 'aktif'])->name('manager.master-staffaktif')->middleware('auth');
 
 Route::get('/slugtoko/manager/pengadaan-restock', function () {
     return view('toko.inflow.pengadaan-restock');
