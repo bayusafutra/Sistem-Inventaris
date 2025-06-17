@@ -8,6 +8,13 @@
     <link href="plugins/sweetalerts/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <link href="plugins/sweetalerts/sweetalert.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/components/custom-sweetalert.css" rel="stylesheet" type="text/css" />
+    <style>
+        input[readonly] {
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 13px;k
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -45,7 +52,9 @@
                         data-offset="-100">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 layout-spacing">
-                                <form id="general-info" class="section general-info">
+                                <form id="general-info" class="section general-info" action="{{ route('editprofil') }}"
+                                    enctype="multipart/form-data" method="POST">
+                                    @csrf
                                     <div class="info">
                                         <h6 class="">Informasi Umum</h6>
                                         <div class="row">
@@ -54,9 +63,11 @@
                                                     <div class="col-xl-2 col-lg-12 col-md-4">
                                                         <div class="upload mt-4 pr-md-4">
                                                             <input type="file" id="input-file-max-fs" class="dropify"
-                                                                accept=".png,.jpg,.jpeg"
-                                                                data-default-file="assets/img/200x200.jpg"
-                                                                data-max-file-size="2M" />
+                                                                name="gambar" accept=".png,.jpg,.jpeg"
+                                                                data-max-file-size="2M"
+                                                                @if (auth()->user()->gambar) data-default-file="{{ asset('storage/' . auth()->user()->gambar) }}"
+                                                                @else
+                                                                    data-default-file="assets/img/200x200.jpg" @endif />
                                                             <p class="mt-2"><i class="flaticon-cloud-upload mr-1"></i>
                                                                 Unggah Foto
                                                             </p>
@@ -70,8 +81,8 @@
                                                                         <label for="namaLengkap">Nama
                                                                             Lengkap</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="namaLengkap" placeholder="Nama Lengkap"
-                                                                            value="{{ auth()->user()->name }}">
+                                                                            name="name" placeholder="Nama Lengkap"
+                                                                            value="{{ auth()->user()->name }}" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
@@ -79,8 +90,7 @@
                                                                         <label for="namaPanggilan">Nama
                                                                             Panggilan</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="namaPanggilan"
-                                                                            placeholder="Nama Panggilan"
+                                                                            name="panggilan" placeholder="Nama Panggilan"
                                                                             value="{{ auth()->user()->panggilan }}">
                                                                     </div>
                                                                 </div>
@@ -88,24 +98,34 @@
                                                                     <div class="form-group">
                                                                         <label for="email">Email</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="email" placeholder="Email"
-                                                                            value="{{ auth()->user()->email }}">
+                                                                            placeholder="Email" name="email"
+                                                                            value="{{ auth()->user()->email }}" readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="notelp">No Telp</label>
                                                                         <input type="text" class="form-control mb-4"
-                                                                            id="notelp" placeholder="No Telp"
+                                                                            placeholder="No Telp" name="notelp"
                                                                             value="{{ auth()->user()->notelp }}">
                                                                     </div>
                                                                 </div>
+                                                                @php
+                                                                    $roles = [
+                                                                        1 => 'Admin',
+                                                                        2 => 'User Umum',
+                                                                        3 => 'Manajer',
+                                                                        4 => 'Staff Gudang',
+                                                                        5 => 'Staff Penjualan',
+                                                                    ];
+                                                                @endphp
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="profession">Posisi</label>
                                                                         <input type="text" class="form-control mb-4"
                                                                             id="profession" placeholder="Posisi"
-                                                                            value="Manager" readonly>
+                                                                            value="{{ $roles[auth()->user()->roleuser] ?? 'Tidak Diketahui' }}"
+                                                                            readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
@@ -113,40 +133,34 @@
                                                                         <label for="toko">Toko</label>
                                                                         <input type="text" class="form-control mb-4"
                                                                             id="toko" placeholder="Toko"
-                                                                            value="Badan Usaha Mas Dafa" readonly>
+                                                                            value="{{ auth()->user()->toko_id ? ucwords(auth()->user()->toko->name) : 'Belum terdaftar di toko manapun' }}"
+                                                                            readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
                                                                         <label for="jk">Jenis Kelamin</label>
-                                                                        <select class="form-control" id="jk">
-                                                                            @if (auth()->user()->jk)
-                                                                                @if (auth()->user()->jk === true)
-                                                                                    <option value="1" selected>Pria
-                                                                                    </option>
-                                                                                    <option value="0">Wanita</option>
-                                                                                @else
-                                                                                    <option value="1">Pria</option>
-                                                                                    <option value="0" selected>Wanita
-                                                                                    </option>
-                                                                                @endif
-                                                                            @else
-                                                                                <option selected disabled>Pilih Jenis
-                                                                                    Kelamin</option>
-                                                                                <option value="1">Pria</option>
-                                                                                <option value="0">Wanita</option>
-                                                                            @endif
+                                                                        <select class="form-control" id="jk"
+                                                                            name="jk">
+                                                                            @php $jk = old('jk', auth()->user()->jk); @endphp
+                                                                            <option disabled
+                                                                                {{ is_null($jk) ? 'selected' : '' }}>Pilih
+                                                                                Jenis Kelamin</option>
+                                                                            <option value="1"
+                                                                                {{ $jk === 1 ? 'selected' : '' }}>Pria
+                                                                            </option>
+                                                                            <option value="0"
+                                                                                {{ $jk === 0 ? 'selected' : '' }}>Wanita
+                                                                            </option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
                                                                     <label class="dob-input">Tanggal Lahir</label>
                                                                     <div class="d-sm-flex">
-                                                                        <input id="basicFlatpickr" value=""
-                                                                            class="form-control flatpickr flatpickr-input active"
-                                                                            type="text"
-                                                                            placeholder="Pilih Tanggal Lahir"
-                                                                            value="{{ auth()->user()->tgl_lahir }}">
+                                                                        <input id="basicFlatpickr" name="tgl_lahir"
+                                                                            class="form-control flatpickr" type="text"
+                                                                            placeholder="Pilih Tanggal Lahir">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -155,7 +169,8 @@
                                                 </div>
                                                 <div class="row px-5 mt-3">
                                                     <div class="col-sm-12 d-flex justify-content-end">
-                                                        <button class="btn btn-primary submit-profile">Simpan</button>
+                                                        <button class="btn btn-primary submit-profile"
+                                                            type="submit">Simpan</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -229,7 +244,8 @@
                                                             </svg>
                                                         </span>
                                                         <input id="new-password" name="password" type="password"
-                                                            class="form-control" placeholder="Masukkan password baru" required>
+                                                            class="form-control" placeholder="Masukkan password baru"
+                                                            required>
                                                         <span class="input-group-text toggle-password"
                                                             data-target="new-password">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -248,7 +264,8 @@
                                                     @enderror
                                                 </div>
                                                 <div class="field-wrapper input mb-3">
-                                                    <label for="new-password-confirm" class="form-label">Konfirmasi Password
+                                                    <label for="new-password-confirm" class="form-label">Konfirmasi
+                                                        Password
                                                         Baru</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">
@@ -314,6 +331,11 @@
     <script src="plugins/sweetalerts/custom-sweetalert.js"></script>
     <script>
         $(document).ready(function() {
+            flatpickr("#basicFlatpickr", {
+                maxDate: "today",
+                dateFormat: "Y-m-d",
+                defaultDate: "{{ auth()->user()->tgl_lahir }}"
+            });
             // Cek session untuk alert sukses/error dari redirect
             @if (session('showAlert'))
                 const toast = swal.mixin({
@@ -333,6 +355,12 @@
                 @elseif (session('message'))
                     toast({
                         type: 'success',
+                        title: '{{ session('message') }}',
+                        padding: '2em',
+                    });
+                @elseif (session('error'))
+                    toast({
+                        type: 'error',
                         title: '{{ session('message') }}',
                         padding: '2em',
                     });

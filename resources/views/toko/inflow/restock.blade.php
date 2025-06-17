@@ -13,6 +13,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-restock.css') }}">
+    <style>
+        .form-group.mb-4 input[readonly] {
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -59,9 +66,8 @@
                                             id="min" placeholder="Pilih tanggal awal">
                                         <span class="clear-icon" id="clear-min">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-x">
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
+                                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18">
                                                 </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -131,21 +137,30 @@
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group mb-4">
+                                                                    <label><span class="wajib">*</span>Tanggal dan
+                                                                        Waktu</label>
+                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
+                                                                        class="form-control flatpickr flatpickr-input active"
+                                                                        type="text" placeholder="Select Date.."
+                                                                        required>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" placeholder="No Series" required
+                                                                        name="no_series" value="PJGK62426" required
                                                                         readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label><span class="wajib">*</span>Tanggal dan Waktu</label>
-                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
-                                                                        class="form-control flatpickr flatpickr-input active"
-                                                                        type="text" placeholder="Select Date.."
-                                                                        required>
+                                                                    <label><span class="wajib">*</span>Penanggung
+                                                                        Jawab</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="" value="Bayu" required readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">

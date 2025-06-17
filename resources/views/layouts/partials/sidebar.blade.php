@@ -112,13 +112,13 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="master-manager" data-parent="#accordionExample">
                     <li>
+                        <a href="{{ Auth::user()->toko_id ? route('manager.master-staff', ['slug' => Auth::user()->toko->slug]) : '#' }}">Staff</a>
+                    </li>
+                    <li>
                         <a href="{{ Auth::user()->toko_id ? route('manager.master-satuan-produk', ['slug' => Auth::user()->toko->slug]) : '#' }}">Satuan Produk</a>
                     </li>
                     <li>
                         <a href="{{ Auth::user()->toko_id ? route('manager.master-produk', ['slug' => Auth::user()->toko->slug]) : '#' }}">Produk</a>
-                    </li>
-                    <li>
-                        <a href="{{ Auth::user()->toko_id ? route('manager.master-staff', ['slug' => Auth::user()->toko->slug]) : '#' }}">Staff</a>
                     </li>
                 </ul>
             </li>

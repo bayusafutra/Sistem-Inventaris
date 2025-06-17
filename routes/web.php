@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
@@ -32,7 +33,6 @@ Route::get('/', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('post.login')->middleware('guest');
-
 Route::get('/daftar', function () {
     return view('auth.register');
 })->name('register')->middleware('guest');
@@ -48,9 +48,8 @@ Route::get('/reset-password', [AuthController::class, 'showResetPasswordForm'])-
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password.post')->middleware('guest');
 Route::post('/ubah-password', [AuthController::class, 'updatePassword'])->name('ubah-password')->middleware('auth');
 
-Route::get('/profil', function () {
-    return view('profile.index');
-})->name('profil')->middleware('auth');
+Route::get('/profil', [ProfileController::class, 'index'])->name('profil')->middleware('auth');
+Route::post('/profil', [ProfileController::class, 'editprofile'])->name('editprofil')->middleware('auth');
 
 Route::get('/home', function () {
     return view('general.index');
@@ -102,6 +101,8 @@ Route::post('/manager/master/satuan-produk/aktif/{id}', [SatuanProdukController:
 Route::get('/{slug}/manager/master/produk', [ProdukController::class, 'masterProduk'])->name('manager.master-produk')->middleware('auth');
 Route::post('/{slug}/manager/master/produk', [ProdukController::class, 'storeProduk'])->name('manager.store-produk')->middleware('auth');
 Route::post('/manager/master/produk/edit', [ProdukController::class, 'editProduk'])->name('manager.edit-produk')->middleware('auth');
+Route::post('/manager/master/produk/nonaktif/{id}', [ProdukController::class, 'nonaktif'])->name('manager.master-produknonaktif')->middleware('auth');
+Route::post('/manager/master/produk/aktif/{id}', [ProdukController::class, 'aktif'])->name('manager.master-produkaktif')->middleware('auth');
 
 Route::get('/{slug}/manager/master/staff', [ManagerController::class, 'masterStaff'])->name('manager.master-staff')->middleware('auth');
 Route::post('/{slug}/manager/master/staff', [ManagerController::class, 'storeStaff'])->name('manager.store-staff')->middleware('auth');

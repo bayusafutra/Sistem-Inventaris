@@ -78,14 +78,13 @@ class ProdukController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
-        dd($request->all());
         try {
             $produk = Produk::where('id', $request->idproduk)->first();
             $produk->name = $request->name;
             $produk->satuan_id = $request->satuan;
             $produk->save();
             return redirect()->route('manager.master-produk', $toko->slug)->with([
-                'message' => 'Produk berhasil ditambahkan.',
+                'message' => 'Produk berhasil diubah.',
                 'showAlert' => true,
             ]);
         } catch (\Exception $e) {
@@ -93,5 +92,31 @@ class ProdukController extends Controller
                 'general' => 'Terjadi kesalahan saat mengubah produk.',
             ])->with('showAlert', true);
         }
+    }
+
+    public function nonaktif($id)
+    {
+        $produk = Produk::findOrFail($id);
+        $produk->update([
+            'isactive' => false,
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Status Produk telah di-NonAktifkan.',
+            'showAlert' => true,
+        ]);
+    }
+
+    public function aktif($id)
+    {
+        $produk = Produk::findOrFail($id);
+        $produk->update([
+            'isactive' => true,
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Status Produk telah diAktifkan.',
+            'showAlert' => true,
+        ]);
     }
 }

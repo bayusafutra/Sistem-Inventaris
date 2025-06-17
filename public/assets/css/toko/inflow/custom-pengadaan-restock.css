@@ -172,6 +172,10 @@ input#ga {
     vertical-align: text-top;
 }
 
+.flatpickr-calendar {
+    z-index: 1060 !important;
+}
+
 .row.px-3 {
     display: flex;
     align-items: center;
@@ -244,4 +248,92 @@ input#ga {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+}
+
+.rekap-section {
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px 0;
+    border-right: 1px solid #e9ecef; /* Pemisah garis vertikal */
+}
+
+.rekap-section#tp {
+    background-color: #d7e0ea;
+}
+
+.rekap-section#tup {
+    background-color: #fad9db;
+}
+
+.rekap-section:last-child {
+    border-right: none; /* Hapus garis di kolom terakhir */
+}
+
+.rekap-label {
+    font-weight: 900;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.rekap-value {
+    font-weight: 900;
+    color: #3b3f5c;
+    font-size: 34px; /* Ukuran besar buat angka */
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .rekap-value {
+        font-size: 18px;
+    }
+    .rekap-section {
+        border-right: none; /* Hapus garis di layar kecil */
+        margin-bottom: 10px; /* Pemisah vertikal */
+    }
+}
+
+.rekap-section-modal {
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px 0;
+    border-right: 1px solid #e9ecef; /* Pemisah garis vertikal */
+}
+
+.rekap-section-modal#tp {
+    background-color: #d7e0ea;
+}
+
+.rekap-section-modal#tup {
+    background-color: #fad9db;
+}
+
+.rekap-section-modal:last-child {
+    border-right: none; /* Hapus garis di kolom terakhir */
+}
+
+.rekap-label-modal {
+    font-weight: 900;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.rekap-value-modal {
+    font-weight: 900;
+    color: #3b3f5c;
+    font-size: 34px; /* Ukuran besar buat angka */
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .rekap-value-modal {
+        font-size: 18px;
+    }
+    .rekap-section-modal {
+        border-right: none; /* Hapus garis di layar kecil */
+        margin-bottom: 10px; /* Pemisah vertikal */
+    }
 }

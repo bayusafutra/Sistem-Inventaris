@@ -118,7 +118,6 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        // $request->validate(['email' => 'required|email|exists:users,email']);
         $user = User::where('email', $request->email)->where('isactive', true)->first();
 
         if ($user) {

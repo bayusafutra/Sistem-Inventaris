@@ -59,7 +59,8 @@
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
                                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18">
+                                                </line>
                                             </svg>
                                         </span>
                                     </div>
@@ -126,6 +127,16 @@
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group mb-4">
+                                                                    <label><span class="wajib">*</span>Tanggal dan
+                                                                        Waktu</label>
+                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
+                                                                        class="form-control flatpickr flatpickr-input active"
+                                                                        type="text" placeholder="Select Date.."
+                                                                        required>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
                                                                     <label>No Series</label>
@@ -146,6 +157,27 @@
                                                                 <label for="">Catatan Pengadaan</label>
                                                                 <div class="form-group mb-2">
                                                                     <textarea class="form-control" name="" rows="4" placeholder="Catatan Pengadaan"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <label>Rekap Produk</label>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <div class="rekap-section" id="tp">
+                                                                            <div class="rekap-label text-center">
+                                                                                Total Produk</div>
+                                                                            <div class="rekap-value text-center"
+                                                                                id="total-products">0</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="rekap-section" id="tup">
+                                                                            <div class="rekap-label text-center">
+                                                                                Total Unit Produk</div>
+                                                                            <div class="rekap-value text-center"
+                                                                                id="total-units">0</div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -369,7 +401,8 @@
                                                     <p class="modal-text">Apakah anda yakin untuk <strong
                                                             style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
                                                         pengadaan restock dengan No Series
-                                                        <strong>PGDRST30052025-11</strong>?</p>
+                                                        <strong>PGDRST30052025-11</strong>?
+                                                    </p>
                                                 </div>
                                                 <form action="" method="">
                                                     @csrf
@@ -533,6 +566,43 @@
             "pageLength": 10
         });
 
+        var f2 = flatpickr(document.getElementById('dateTimeFlatpickr'), {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            defaultDate: new Date(),
+            time_24hr: true,
+            allowInput: true,
+            position: 'auto end',
+            maxDate: new Date(),
+            onReady: function(selectedDates, dateStr, instance) {
+                var now = new Date();
+                if (selectedDates[0] && selectedDates[0].toDateString() === now.toDateString()) {
+                    var maxTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString()
+                        .padStart(2, '0');
+                    instance.set('maxTime', maxTime); // Misalnya: "03:49" kalau hari ini
+                }
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                var now = new Date();
+                if (selectedDates[0] && selectedDates[0].toDateString() === now.toDateString()) {
+                    var maxTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString()
+                        .padStart(2, '0');
+                    instance.set('maxTime', maxTime); // Set maxTime kalau hari ini
+                } else {
+                    instance.set('maxTime', null); // Hapus maxTime kalau bukan hari ini
+                }
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            var flatpickrInput = document.getElementById('dateTimeFlatpickr');
+            var flatpickrCalendar = document.querySelector('.flatpickr-calendar.open');
+            if (flatpickrCalendar && !flatpickrInput.contains(event.target) && !flatpickrCalendar.contains(event
+                    .target)) {
+                f2.close();
+            }
+        });
+
         $(document).ready(function() {
             // Variabel counter untuk ID unik
             let listCounter = 1;
@@ -557,6 +627,30 @@
                 $('.row.px-3').each(function(index) {
                     $(this).find('.no-list span').text((index + 1) + '.');
                 });
+            }
+
+            // Fungsi untuk rekap produk
+            function updateRekap() {
+                let totalProducts = new Set();
+                let totalUnits = 0;
+
+                $('#list-container .row.px-3 .selectpicker').each(function() {
+                    const $select = $(this);
+                    const productName = $select.find('option:selected').text();
+                    const $quantityInput = $select.closest('.row.px-3').find('input[type="number"]');
+                    const quantity = parseInt($quantityInput.val()) || 0;
+
+                    if (productName && productName !== 'Pilih Produk' && quantity > 0) {
+                        totalProducts.add(productName);
+                        totalUnits += quantity;
+                    }
+                });
+
+                $('#total-products').text(totalProducts.size);
+                $('#total-units').text(totalUnits);
+
+                // Reset border color (tanpa cek stok untuk pengadaan)
+                $('#list-container .row.px-3 input[type="number"]').css('border-color', '');
             }
 
             // Tambah Produk
@@ -595,10 +689,16 @@
                         // Enable input satuan saat opsi dipilih
                         $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
                             false);
+                        updateRekap(); // Update rekap saat perubahan
                     });
                 } catch (e) {
                     // Error ditangani tanpa logging
                 }
+
+                // Bind event input quantity untuk list baru
+                template.find('input[type="number"]').on('input', function() {
+                    updateRekap(); // Update rekap saat input quantity
+                });
 
                 // Re-bind event untuk klik berikutnya
                 $('.addProduk').one('click', handleAddProduct);
@@ -619,6 +719,7 @@
                 }
                 initialSelectpicker.on('changed.bs.select', function() {
                     initialInput.prop('disabled', false);
+                    updateRekap(); // Update rekap saat perubahan
                 });
 
                 // Hapus List Produk dengan event delegation
@@ -633,6 +734,15 @@
                     }
                     $(this).closest('.row.px-3').remove();
                     updateListNumbers();
+                    updateRekap(); // Update rekap setelah hapus
+                });
+
+                // Bind event listener global untuk semua selectpicker dan input quantity
+                $('#list-container').on('changed.bs.select', '.selectpicker', function() {
+                    updateRekap();
+                });
+                $('#list-container').on('input', 'input[type="number"]', function() {
+                    updateRekap();
                 });
             });
 
@@ -653,13 +763,19 @@
                         text: 'Silakan pilih produk untuk semua list sebelum simpan!',
                         pos: 'bottom-left'
                     });
+                } else {
+                    updateRekap(); // Update rekap terakhir sebelum submit
                 }
             });
 
             // Reset counter saat modal ditutup
             $('#add').on('hidden.bs.modal', function() {
                 listCounter = 1;
+                updateRekap(); // Reset rekap kalau perlu
             });
+
+            // Inisialisasi rekap saat load
+            updateRekap();
         });
     </script>
 @endsection

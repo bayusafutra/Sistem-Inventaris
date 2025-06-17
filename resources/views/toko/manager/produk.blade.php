@@ -26,6 +26,11 @@
         .buttons {
             margin: 18px 20px 0 18px;
         }
+
+        .select2-container .select2-dropdown {
+            z-index: 1060;
+            /* Lebih tinggi dari modal Bootstrap (1050) */
+        }
     </style>
 @endsection
 @section('header')
@@ -185,7 +190,7 @@
                                                         ry="1"></rect>
                                                 </svg>
                                             </button>
-                                            <button type="button" data-toggle="modal" data-target="#standardModal"
+                                            <button type="button" data-toggle="modal" data-target="#standardModal-{{ $pr->id }}"
                                                 title="Verifikasi Toko">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -238,17 +243,15 @@
                                                             </div>
                                                             <div class="form-group mb-3">
                                                                 <label for="satuan-produk">Satuan Produk</label>
-                                                                <select class="selectpicker form-control"
-                                                                    name="satuan"
-                                                                    data-live-search="true" required>
+                                                                <select class="select2 form-control" name="satuan"
+                                                                    style="width: 100%;" required>
+                                                                    <option value="" disabled>Pilih Satuan Produk
+                                                                    </option>
                                                                     @foreach ($satuan as $st)
-                                                                        @if ($st->id == $pr->satuan_id)
-                                                                            <option value="{{ $st->id }}" selected>
-                                                                                {{ ucwords($st->name) }}</option>
-                                                                        @else
-                                                                            <option value="{{ $st->id }}">
-                                                                                {{ ucwords($st->name) }}</option>
-                                                                        @endif
+                                                                        <option value="{{ $st->id }}"
+                                                                            {{ $st->id == $pr->satuan_id ? 'selected' : '' }}>
+                                                                            {{ ucwords($st->name) }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -263,7 +266,7 @@
                                             </div>
                                         </div>
                                         <!-- Modal Status -->
-                                        <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $pr->id }}" tabindex="-1"
                                             role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document"
                                                 id="standardModalLabel">
@@ -280,18 +283,39 @@
                                                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                                                             </svg>
                                                         </div>
-                                                        <p class="modal-text">Apakah anda yakin untuk <strong
-                                                                style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                            Produk <strong>Gula 5Kg?</strong></p>
+                                                        @if ($pr->isactive === 1)
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                Produk <strong>{{ ucwords($pr->name) }}</strong>?
+                                                            </p>
+                                                        @else
+                                                            <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                    style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                Produk <strong>{{ ucwords($pr->name) }}</strong>?
+                                                            </p>
+                                                        @endif
                                                     </div>
-                                                    <form action="" method="">
-                                                        @csrf
-                                                        <div class="modal-footer justify-content-between">
-                                                            <button class="btn" data-dismiss="modal"><i
-                                                                    class="flaticon-cancel-12"></i> Batal</button>
-                                                            <button type="submit" class="btn btn-primary">Yakin</button>
-                                                        </div>
-                                                    </form>
+                                                    @if ($pr->isactive === 1)
+                                                        <form action="{{ route('manager.master-produknonaktif', $pr->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @else
+                                                        <form action="{{ route('manager.master-produkaktif', $pr->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button class="btn" data-dismiss="modal"><i
+                                                                        class="flaticon-cancel-12"></i> Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Yakin</button>
+                                                            </div>
+                                                        </form>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -327,35 +351,6 @@
     <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
     <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
-    {{-- <script>
-        @if (session('showAlert'))
-            const toast = swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                padding: '2em'
-            });
-
-            @if ($errors->any())
-                toast({
-                    type: 'error',
-                    title: @if ($errors->has('general'))
-                        '{{ $errors->first('general') }}'
-                    @else
-                        '{{ $errors->first() }}'
-                    @endif ,
-                    padding: '2em',
-                });
-            @elseif (session('message'))
-                toast({
-                    type: 'success',
-                    title: '{{ session('message') }}',
-                    padding: '2em',
-                });
-            @endif
-        @endif
-    </script> --}}
     <script>
         $(document).ready(function() {
             var table = $('#html5-extension').DataTable({
@@ -396,7 +391,23 @@
                 "pageLength": 10
             });
 
-            // SweetAlert (existing code)
+            $('.modal').on('shown.bs.modal', function(e) {
+                var modalId = $(this).attr('id');
+                if (modalId.startsWith('edit-')) {
+                    var $select = $(this).find('.select2');
+                    // Inisialisasi Select2
+                    $select.select2({
+                        placeholder: "Pilih Satuan Produk",
+                        allowClear: true,
+                        dropdownParent: $(this)
+                    });
+                    var satuanId = $select.data('satuan-id');
+                    if (satuanId) {
+                        $select.val(satuanId).trigger('change');
+                    }
+                }
+            });
+
             @if (session('showAlert'))
                 const toast = swal.mixin({
                     toast: true,
