@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengadaan_restocks', function (Blueprint $table) {
+        Schema::create('restocks', function (Blueprint $table) {
             $table->id();
             $table->string('noseries')->unique();
             $table->foreignId('toko_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pengadaan_id')->nullable()->constrained('pengadaan_restocks')->nullOnDelete();
             $table->integer('status')->default(1);
-            $table->dateTime('tgl_pengadaan');
+            $table->dateTime('tgl_restock');
             $table->text('catatan')->nullable();
             $table->integer('total_produk')->nullable();
             $table->integer('total_unit_produk')->nullable();
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengadaan_restocks');
+        Schema::dropIfExists('restocks');
     }
 };

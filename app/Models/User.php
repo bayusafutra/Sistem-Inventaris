@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Toko;
+use App\Models\PengadaanRestock;
 
 class User extends Authenticatable
 {
@@ -46,5 +47,10 @@ class User extends Authenticatable
     public function toko()
     {
         return $this->belongsTo(Toko::class, 'toko_id');
+    }
+
+    public function pengadaan()
+    {
+        return $this->hasMany(PengadaanRestock::class, 'user_id');
     }
 }

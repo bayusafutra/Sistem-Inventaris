@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Toko;
 use App\Models\SatuanProduk;
+use App\Models\DetailPengadaanRestock;
 
 class Produk extends Model
 {
@@ -21,5 +22,10 @@ class Produk extends Model
     public function satuan()
     {
         return $this->belongsTo(SatuanProduk::class, 'satuan_id');
+    }
+
+    public function detailpengadaan()
+    {
+        return $this->hasMany(DetailPengadaanRestock::class, 'produk_id');
     }
 }

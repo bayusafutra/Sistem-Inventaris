@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Produk;
-use App\Models\PengadaanRestock;
+use App\Models\Restock;
 
-class DetailPengadaanRestock extends Model
+class DetailRestock extends Model
 {
-    /** @use HasFactory<\Database\Factories\DetailPengadaanRestockFactory> */
+    /** @use HasFactory<\Database\Factories\DetailRestockFactory> */
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function pengadaan()
+    public function restock()
     {
-        return $this->belongsTo(PengadaanRestock::class, 'pengadaan_id');
+        return $this->belongsTo(Restock::class, 'restock_id');
     }
 
     public function produk()

@@ -10,6 +10,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-pengadaan-restock.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
+    <style>
+        .form-group.mb-4 input[readonly] {
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -58,7 +68,8 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
                                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="18" y1="6" x2="6" y2="18">
+                                                </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
                                                 </line>
                                             </svg>
@@ -104,8 +115,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Data
-                                                        Pengadaan
-                                                        Restock
+                                                        Pengadaan Restock
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -123,7 +133,9 @@
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <form id="addForm" action="#" method="">
+                                                <form id="addForm"
+                                                    action="{{ route('manager.store-pengadaan-restock', ['slug' => $toko->slug]) }}"
+                                                    method="POST">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
@@ -131,7 +143,8 @@
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>Tanggal dan
                                                                         Waktu</label>
-                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
+                                                                    <input id="dateTimeFlatpickr" value=""
+                                                                        name="tgl_pengadaan"
                                                                         class="form-control flatpickr flatpickr-input active"
                                                                         type="text" placeholder="Select Date.."
                                                                         required>
@@ -139,24 +152,29 @@
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label>No Series</label>
+                                                                    <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" placeholder="No Series" required
-                                                                        readonly>
+                                                                        name="noseries" value="{{ $noseries }}"
+                                                                        placeholder="No Series" required readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
-                                                                    <label>Penanggung Jawab</label>
+                                                                    <label><span class="wajib">*</span>Penanggung
+                                                                        Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="Penanggung Jawab"
-                                                                        readonly required>
+                                                                        name=""
+                                                                        value="{{ ucwords(auth()->user()->name) }}"
+                                                                        readonly>
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ auth()->user()->id }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
-                                                                <label for="">Catatan Pengadaan</label>
+                                                                <label>Catatan Pengadaan</label>
                                                                 <div class="form-group mb-2">
-                                                                    <textarea class="form-control" name="" rows="4" placeholder="Catatan Pengadaan"></textarea>
+                                                                    <textarea class="form-control" name="catatan" value="{{ old('catatan') }}" rows="4"
+                                                                        placeholder="Catatan Pengadaan"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -190,11 +208,15 @@
                                                             <div class="col-lg-5">
                                                                 <div class="form-group mb-3">
                                                                     <select class="selectpicker form-control"
-                                                                        data-live-search="true" required>
+                                                                        name="produk_id[]" data-live-search="true"
+                                                                        required>
                                                                         <option selected disabled>Pilih Produk
                                                                         </option>
-                                                                        <option>Beras 10Kg</option>
-                                                                        <option>Gula 1Kg</option>
+                                                                        @foreach ($produk as $pr)
+                                                                            <option value="{{ $pr->id }}"
+                                                                                data-satuan="{{ $pr->satuan->name ?? 'Satuan' }}">
+                                                                                {{ ucwords($pr->name) }}</option>
+                                                                        @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -202,11 +224,12 @@
                                                                 <div class="form-group mb-3">
                                                                     <div class="input-group">
                                                                         <input id="ga" type="number"
-                                                                            min="1" class="form-control list-item"
+                                                                            name="quantity[]" min="1"
+                                                                            class="form-control list-item"
                                                                             placeholder="Jumlah Satuan" required>
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text"
-                                                                                id="basic-addon6">Karung</span>
+                                                                                id="nama-satuan">Satuan</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -273,149 +296,197 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>PGDRST30052025-1107</td>
-                                    <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y') }}</td>
-                                    <td><span class="badge outline-badge-success"> Selesai </span></td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Pengadaan Restock">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-list table-cancel">
-                                                <line x1="8" y1="6" x2="21" y2="6">
-                                                </line>
-                                                <line x1="8" y1="12" x2="21" y2="12">
-                                                </line>
-                                                <line x1="8" y1="18" x2="21" y2="18">
-                                                </line>
-                                                <line x1="3" y1="6" x2="3.01" y2="6">
-                                                </line>
-                                                <line x1="3" y1="12" x2="3.01" y2="12">
-                                                </line>
-                                                <line x1="3" y1="18" x2="3.01" y2="18">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                        <button type="button" data-toggle="modal" data-target="#standardModal"
-                                            title="non-Aktif Pengadaan Restock">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-alert-octagon table-cancel">
-                                                <polygon
-                                                    points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
-                                                </polygon>
-                                                <line x1="12" y1="8" x2="12" y2="12">
-                                                </line>
-                                                <line x1="12" y1="16" x2="12.01" y2="16">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Detail -->
-                                    <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan Restock
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="contact-tab" data-toggle="tab"
-                                                                href="#contact" role="tab" aria-controls="contact"
-                                                                aria-selected="false">Catatan</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
-                                                                href="#staff" role="tab" aria-controls="staff"
-                                                                aria-selected="false">List Produk</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="tab-content" id="myTabContent">
-                                                        <div class="tab-pane fade show active" id="contact"
-                                                            role="tabpanel" aria-labelledby="contact-tab">
-                                                            <p class="modal-text">Pellentesque semper tortor id ligula
-                                                                ultrices suscipit. Donec viverra vulputate lectus non
-                                                                consectetur. Donec ac interdum lacus. Donec euismod nisi
-                                                                at justo molestie elementum. Vivamus vitae hendrerit
-                                                                neque. Orci varius natoque penatibus et magnis dis
-                                                                parturient montes, nascetur ridiculus mus.</p>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
-                                                            aria-labelledby="staff-tab">
-                                                            <div class="product-list">
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">1.</span>
-                                                                        <span class="product-name">Beras 5kg</span>
-                                                                        <span class="product-quantity">20 Karung</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">2.</span>
-                                                                        <span class="product-name">Gula 1kg</span>
-                                                                        <span class="product-quantity">20 Pcs</span>
-                                                                    </div>
+                                @foreach ($pengadaanrestock as $prs)
+                                    <tr>
+                                        <td>{{ $prs->noseries }}</td>
+                                        <td>{{ ucwords($prs->user->name) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($prs->tgl_pengadaan)->translatedFormat('l, d F Y H:i') }}
+                                        </td>
+                                        <td>
+                                            @if ($prs->status == 1)
+                                                <span class="badge outline-badge-primary"> Aktif </span>
+                                            @elseif ($prs->status == 2)
+                                                <span class="badge outline-badge-danger"> Tidak Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-success"> Selesai </span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#tabsModal-{{ $prs->id }}"
+                                                title="Detail Pengadaan Restock">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-list table-cancel">
+                                                    <line x1="8" y1="6" x2="21" y2="6">
+                                                    </line>
+                                                    <line x1="8" y1="12" x2="21" y2="12">
+                                                    </line>
+                                                    <line x1="8" y1="18" x2="21" y2="18">
+                                                    </line>
+                                                    <line x1="3" y1="6" x2="3.01" y2="6">
+                                                    </line>
+                                                    <line x1="3" y1="12" x2="3.01" y2="12">
+                                                    </line>
+                                                    <line x1="3" y1="18" x2="3.01" y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#standardModal-{{ $prs->id }}"
+                                                title="non-Aktif Pengadaan Restock">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-alert-octagon table-cancel">
+                                                    <polygon
+                                                        points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2">
+                                                    </polygon>
+                                                    <line x1="12" y1="8" x2="12" y2="12">
+                                                    </line>
+                                                    <line x1="12" y1="16" x2="12.01" y2="16">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Detail -->
+                                        <div class="modal fade" id="tabsModal-{{ $prs->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="tabsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan
+                                                            Restock
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active"
+                                                                    id="contact-tab-{{ $prs->id }}"
+                                                                    data-toggle="tab" href="#contact-{{ $prs->id }}"
+                                                                    role="tab" aria-controls="contact"
+                                                                    aria-selected="false">Catatan</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="staff-tab-{{ $prs->id }}"
+                                                                    data-toggle="tab" href="#staff-{{ $prs->id }}"
+                                                                    role="tab" aria-controls="staff"
+                                                                    aria-selected="false">List Produk</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content" id="myTabContent">
+                                                            <div class="tab-pane fade show active"
+                                                                id="contact-{{ $prs->id }}" role="tabpanel"
+                                                                aria-labelledby="contact-tab-{{ $prs->id }}">
+                                                                <p class="modal-text">{{ $prs->catatan ?? '-' }}</p>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="staff-{{ $prs->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="staff-tab-{{ $prs->id }}">
+                                                                <div class="product-list">
+                                                                    @foreach ($prs->detailpengadaan as $index => $detail)
+                                                                        <div class="product-item">
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-center">
+                                                                                <span
+                                                                                    class="number-list">{{ $index + 1 }}.</span>
+                                                                                <span
+                                                                                    class="product-name">{{ ucwords($detail->produk->name) }}</span>
+                                                                                <span
+                                                                                    class="product-quantity">{{ $detail->total_unit }}
+                                                                                    {{ ucwords($detail->produk->satuan->name) }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" data-dismiss="modal"><i
-                                                            class="flaticon-cancel-12"></i> Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" data-dismiss="modal"><i
+                                                                class="flaticon-cancel-12"></i> Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal Non Aktif -->
-                                    <div class="modal fade modal-notification" id="standardModal" tabindex="-1"
-                                        role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document"
-                                            id="standardModalLabel">
-                                            <div class="modal-content">
-                                                <div class="modal-body text-center">
-                                                    <div class="icon-content">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="feather feather-bell">
-                                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
-                                                            </path>
-                                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                                        </svg>
+                                        <!-- Modal Non Aktif -->
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $prs->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
+                                                        </div>
+                                                        @if ($prs->status != 3)
+                                                            @if ($prs->status == 1)
+                                                                <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                        style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
+                                                                    pengadaan restock dengan No Series
+                                                                    <strong>{{ $prs->noseries }}</strong>?
+                                                                </p>
+                                                            @else
+                                                                <p class="modal-text">Apakah anda yakin untuk <strong
+                                                                        style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
+                                                                    pengadaan restock dengan No Series
+                                                                    <strong>{{ $prs->noseries }}</strong>?
+                                                                </p>
+                                                            @endif
+                                                        @else
+                                                            <p class="modal-text">Pengadaan Restock ini telah digunakan pada Restock <strong
+                                                                    style="font-weight: bolder; color: black">RST180620251-12</strong>
+                                                            </p>
+                                                        @endif
                                                     </div>
-                                                    <p class="modal-text">Apakah anda yakin untuk <strong
-                                                            style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                        pengadaan restock dengan No Series
-                                                        <strong>PGDRST30052025-11</strong>?
-                                                    </p>
+                                                    @if ($prs->status != 3)
+                                                        @if ($prs->status == 1)
+                                                            <form
+                                                                action="{{ route('manager.pengadaanrestock-nonaktif', $prs->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <div class="modal-footer justify-content-between">
+                                                                    <button class="btn" data-dismiss="modal"><i
+                                                                            class="flaticon-cancel-12"></i> Batal</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Yakin</button>
+                                                                </div>
+                                                            </form>
+                                                        @else
+                                                            <form
+                                                                action="{{ route('manager.pengadaanrestock-aktif', $prs->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <div class="modal-footer justify-content-between">
+                                                                    <button class="btn" data-dismiss="modal"><i
+                                                                            class="flaticon-cancel-12"></i> Batal</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Yakin</button>
+                                                                </div>
+                                                            </form>
+                                                        @endif
+                                                    @endif
                                                 </div>
-                                                <form action="" method="">
-                                                    @csrf
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button class="btn" data-dismiss="modal"><i
-                                                                class="flaticon-cancel-12"></i> Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Yakin</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -446,6 +517,38 @@
     <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         const minPicker = $("#min").flatpickr({
             dateFormat: "Y-m-d",
@@ -653,6 +756,15 @@
                 $('#list-container .row.px-3 input[type="number"]').css('border-color', '');
             }
 
+            // Fungsi untuk update satuan berdasarkan produk yang dipilih
+            function updateSatuan($select) {
+                const $row = $select.closest('.row.px-3');
+                const satuan = $select.find('option:selected').data('satuan') || 'Satuan';
+                // Capitalize huruf depan setiap kata
+                const capitalizedSatuan = satuan.replace(/\b\w/g, l => l.toUpperCase());
+                $row.find('#nama-satuan').text(capitalizedSatuan);
+            }
+
             // Tambah Produk
             $('.addProduk').off('click').one('click', function handleAddProduct() {
                 // Buat template baru dari template statis
@@ -690,6 +802,7 @@
                         $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
                             false);
                         updateRekap(); // Update rekap saat perubahan
+                        updateSatuan($(this)); // Update satuan berdasarkan pilihan
                     });
                 } catch (e) {
                     // Error ditangani tanpa logging
@@ -720,6 +833,7 @@
                 initialSelectpicker.on('changed.bs.select', function() {
                     initialInput.prop('disabled', false);
                     updateRekap(); // Update rekap saat perubahan
+                    updateSatuan($(this)); // Update satuan berdasarkan pilihan
                 });
 
                 // Hapus List Produk dengan event delegation
@@ -740,6 +854,7 @@
                 // Bind event listener global untuk semua selectpicker dan input quantity
                 $('#list-container').on('changed.bs.select', '.selectpicker', function() {
                     updateRekap();
+                    updateSatuan($(this)); // Update satuan saat perubahan
                 });
                 $('#list-container').on('input', 'input[type="number"]', function() {
                     updateRekap();

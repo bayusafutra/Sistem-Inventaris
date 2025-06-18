@@ -148,7 +148,7 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="inventaris-manager" data-parent="#accordionExample">
                     <li>
-                        <a href="{{ route('manager.pengadaan-restock') }}"> Pengadaan Restock </a>
+                        <a href="{{ Auth::user()->toko_id ? route('manager.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Pengadaan Restock</a>
                     </li>
                     <li>
                         <a href="{{ route('manager.restock') }}"> Restock </a>

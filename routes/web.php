@@ -3,11 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\PengadaanRestockController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
+use App\Models\PengadaanRestock;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -110,9 +112,10 @@ Route::get('/verify-staff/{token}', [ManagerController::class, 'verifyStaff'])->
 Route::post('/manager/staff/nonaktif/{id}', [ManagerController::class, 'nonaktif'])->name('manager.master-staffnonaktif')->middleware('auth');
 Route::post('/manager/staff/aktif/{id}', [ManagerController::class, 'aktif'])->name('manager.master-staffaktif')->middleware('auth');
 
-Route::get('/slugtoko/manager/pengadaan-restock', function () {
-    return view('toko.inflow.pengadaan-restock');
-})->name('manager.pengadaan-restock');
+Route::get('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'managerPengadaan'])->name('manager.pengadaan-restock')->middleware('auth');
+Route::post('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('manager.store-pengadaan-restock')->middleware('auth');
+Route::post('/manager/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('manager.pengadaanrestock-nonaktif')->middleware('auth');
+Route::post('/manager/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('manager.pengadaanrestock-aktif')->middleware('auth');
 
 Route::get('/slugtoko/manager/restock', function () {
     return view('toko.inflow.restock');

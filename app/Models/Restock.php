@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Toko;
 use App\Models\User;
-use App\Models\DetailPengadaanRestock;
+use App\Models\DetailRestock;
+use App\Models\GambarRestock;
 
-class PengadaanRestock extends Model
+class Restock extends Model
 {
-    /** @use HasFactory<\Database\Factories\PengadaanRestockFactory> */
+    /** @use HasFactory<\Database\Factories\RestockFactory> */
     use HasFactory;
     protected $guarded = ['id'];
 
@@ -24,8 +25,18 @@ class PengadaanRestock extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function pengadaan()
+    {
+        return $this->belongsTo(PengadaanRestock::class, 'pengadaan_id');
+    }
+
     public function detailpengadaan()
     {
-        return $this->hasMany(DetailPengadaanRestock::class, 'pengadaan_id');
+        return $this->hasMany(DetailRestock::class, 'restock_id');
+    }
+
+    public function gambar()
+    {
+        return $this->hasMany(GambarRestock::class, 'restock_id');
     }
 }
