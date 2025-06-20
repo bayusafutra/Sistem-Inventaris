@@ -6,6 +6,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PengadaanRestockController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RestockController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
@@ -117,9 +118,9 @@ Route::post('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::cl
 Route::post('/manager/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('manager.pengadaanrestock-nonaktif')->middleware('auth');
 Route::post('/manager/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('manager.pengadaanrestock-aktif')->middleware('auth');
 
-Route::get('/slugtoko/manager/restock', function () {
-    return view('toko.inflow.restock');
-})->name('manager.restock');
+Route::get('/{slug}/manager/restock', [RestockController::class, 'managerRestock'])->name('manager.restock')->middleware('auth');
+Route::post('/{slug}/manager/restock', [RestockController::class, 'storeRestock'])->name('manager.store-restock')->middleware('auth');
+Route::get('/pengadaan-detail/{no_series}', [RestockController::class, 'getPengadaanDetail'])->name('api.pengadaan-detail');
 
 Route::get('/slugtoko/manager/penjualan', function () {
     return view('toko.outflow.penjualan');

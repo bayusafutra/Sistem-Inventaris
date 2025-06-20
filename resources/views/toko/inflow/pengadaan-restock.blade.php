@@ -39,7 +39,7 @@
 
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a></li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Pengadaan Restock</span></li>
                             </ol>

@@ -13,6 +13,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/inflow/custom-restock.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
     <style>
         .form-group.mb-4 input[readonly] {
             color: #6c757d;
@@ -39,7 +42,8 @@
 
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
+                                </li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Restock</span></li>
                             </ol>
@@ -66,8 +70,9 @@
                                             id="min" placeholder="Pilih tanggal awal">
                                         <span class="clear-icon" id="clear-min">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
-                                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18">
                                                 </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -133,7 +138,9 @@
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <form id="addForm" action="#" method="">
+                                                <form id="addForm"
+                                                    action="{{ route('manager.store-restock', ['slug' => $toko->slug]) }}"
+                                                    method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
@@ -141,7 +148,8 @@
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>Tanggal dan
                                                                         Waktu</label>
-                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
+                                                                    <input id="dateTimeFlatpickr" value=""
+                                                                        name="tgl_restock"
                                                                         class="form-control flatpickr flatpickr-input active"
                                                                         type="text" placeholder="Select Date.."
                                                                         required>
@@ -151,8 +159,8 @@
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" value="PJGK62426" required
-                                                                        readonly>
+                                                                        name="noseries" value="{{ $noseries }}"
+                                                                        placeholder="No Series" required readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
@@ -160,13 +168,18 @@
                                                                     <label><span class="wajib">*</span>Penanggung
                                                                         Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" value="Bayu" required readonly>
+                                                                        name=""
+                                                                        value="{{ ucwords(auth()->user()->name) }}"
+                                                                        readonly>
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ auth()->user()->id }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
-                                                                <label for="">Catatan</label>
+                                                                <label>Catatan Restock</label>
                                                                 <div class="form-group mb-4">
-                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Restock"></textarea>
+                                                                    <textarea class="form-control" name="catatan" value="{{ old('catatan') }}" rows="4"
+                                                                        placeholder="Catatan Pengadaan"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -179,7 +192,8 @@
                                                                     <label class="custom-file-container__custom-file">
                                                                         <input type="file"
                                                                             class="custom-file-container__custom-file__custom-file-input"
-                                                                            multiple>
+                                                                            name="mySecondImage[]"
+                                                                            accept=".png,.jpg,.jpeg" multiple>
                                                                         <input type="hidden" name="MAX_FILE_SIZE"
                                                                             value="10485760" />
                                                                         <span
@@ -202,22 +216,21 @@
                                                                 </div>
                                                                 <label
                                                                     class="switch s-icons s-outline s-outline-dark mr-2">
-                                                                    <input type="checkbox" id="restockCheckbox">
+                                                                    <input type="checkbox" id="restockCheckbox"
+                                                                        name="restockCheckbox">
                                                                     <span class="slider round"></span>
                                                                 </label>
                                                             </div>
                                                             <div class="col-4 my-3 mr-3" id="pengadaanSelect"
                                                                 style="display: none; margin-left: auto;">
                                                                 <select class="selectpicker form-control"
-                                                                    data-live-search="true">
+                                                                    data-live-search="true" name="pengadaanSelect">
                                                                     <option value="" selected disabled>Pilih No
                                                                         Series Pengadaan</option>
-                                                                    <option value="PGDRST30052025-1107">PGDRST30052025-1107
-                                                                    </option>
-                                                                    <option value="PGDRST30052025-1108">PGDRST30052025-1108
-                                                                    </option>
-                                                                    <option value="PGDRST30052025-1109">PGDRST30052025-1109
-                                                                    </option>
+                                                                    @foreach ($pengadaanrestock as $pr)
+                                                                        <option value="{{ $pr->noseries }}">
+                                                                            {{ $pr->noseries }}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -234,8 +247,11 @@
                                                                             data-live-search="true" name="produk[]"
                                                                             required>
                                                                             <option selected disabled>Pilih Produk</option>
-                                                                            <option>Beras 10Kg</option>
-                                                                            <option>Gula 1Kg</option>
+                                                                            @foreach ($produk as $pr)
+                                                                                <option value="{{ $pr->id }}"
+                                                                                    data-satuan="{{ $pr->satuan->name ?? 'Satuan' }}">
+                                                                                    {{ ucwords($pr->name) }}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -243,12 +259,12 @@
                                                                     <div class="form-group mb-3">
                                                                         <div class="input-group">
                                                                             <input id="ga" type="number"
-                                                                                min="1"
+                                                                                min="1" name="quantity[]"
                                                                                 class="form-control list-item"
                                                                                 placeholder="Jumlah Satuan" required>
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text"
-                                                                                    id="basic-addon6">Karung</span>
+                                                                                    id="nama-satuan">Satuan</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -328,148 +344,153 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>RST02062025-1102</td>
-                                    <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y H:i') }}</td>
-                                    <td>PGDRST30052025-1107</td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#lihatbukti"
-                                            data-image='["{{ asset('assets/img/90x90.jpg') }}", "{{ asset('assets/img/300x300.jpg') }}"]'
-                                            title="Lihat Bukti">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-image table-cancel">
-                                                <rect x="3" y="3" width="18" height="18" rx="2"
-                                                    ry="2"></rect>
-                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                                <polyline points="21 15 16 10 5 21"></polyline>
-                                            </svg>
-                                        </button>
-                                        <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Restock">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-list table-cancel">
-                                                <line x1="8" y1="6" x2="21" y2="6">
-                                                </line>
-                                                <line x1="8" y1="12" x2="21" y2="12">
-                                                </line>
-                                                <line x1="8" y1="18" x2="21" y2="18">
-                                                </line>
-                                                <line x1="3" y1="6" x2="3.01" y2="6">
-                                                </line>
-                                                <line x1="3" y1="12" x2="3.01" y2="12">
-                                                </line>
-                                                <line x1="3" y1="18" x2="3.01" y2="18">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Lihat Bukti -->
-                                    <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
-                                        aria-labelledby="lihatbuktiLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto Restock
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p id="noImageMessage"
-                                                        style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
-                                                        Tidak ada bukti foto yang tersedia</p>
-                                                    <div class="text-center">
-                                                        <img id="buktiImage" src="" alt="Bukti Foto Restock"
-                                                            class="img-fluid" style="max-width: 100%; max-height: 70vh;">
+                                @foreach ($restock as $rst)
+                                    <tr>
+                                        <td>{{ $rst->noseries }}</td>
+                                        <td>{{ ucwords($rst->user->name) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($rst->tgl_restock)->translatedFormat('l, d F Y H:i') }}
+                                        </td>
+                                        <td>{{ $rst->pengadaan->noseries ?? '-' }}</td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal" data-target="#lihatbukti"
+                                                data-image='["{{ asset('assets/img/90x90.jpg') }}", "{{ asset('assets/img/300x300.jpg') }}"]'
+                                                title="Lihat Bukti">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-image table-cancel">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2"
+                                                        ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>
+                                            </button>
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#tabsModal-{{ $rst->id }}" title="Detail Restock">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-list table-cancel">
+                                                    <line x1="8" y1="6" x2="21" y2="6">
+                                                    </line>
+                                                    <line x1="8" y1="12" x2="21" y2="12">
+                                                    </line>
+                                                    <line x1="8" y1="18" x2="21" y2="18">
+                                                    </line>
+                                                    <line x1="3" y1="6" x2="3.01" y2="6">
+                                                    </line>
+                                                    <line x1="3" y1="12" x2="3.01" y2="12">
+                                                    </line>
+                                                    <line x1="3" y1="18" x2="3.01" y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Lihat Bukti -->
+                                        <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
+                                            aria-labelledby="lihatbuktiLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto
+                                                            Restock
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
                                                     </div>
-                                                    <div class="d-flex justify-content-center mt-3">
-                                                        <button id="prevImage" class="btn btn-outline-secondary mr-2"
-                                                            disabled>Sebelumnya</button>
-                                                        <button id="nextImage" class="btn btn-outline-secondary"
-                                                            disabled>Selanjutnya</button>
+                                                    <div class="modal-body">
+                                                        <p id="noImageMessage"
+                                                            style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
+                                                            Tidak ada bukti foto yang tersedia</p>
+                                                        <div class="text-center">
+                                                            <img id="buktiImage" src="" alt="Bukti Foto Restock"
+                                                                class="img-fluid"
+                                                                style="max-width: 100%; max-height: 70vh;">
+                                                        </div>
+                                                        <div class="d-flex justify-content-center mt-3">
+                                                            <button id="prevImage" class="btn btn-outline-secondary mr-2"
+                                                                disabled>Sebelumnya</button>
+                                                            <button id="nextImage" class="btn btn-outline-secondary"
+                                                                disabled>Selanjutnya</button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary"
-                                                        data-dismiss="modal">Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary"
+                                                            data-dismiss="modal">Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal Detail -->
-                                    <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Restock
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="contact-tab" data-toggle="tab"
-                                                                href="#contact" role="tab" aria-controls="contact"
-                                                                aria-selected="false">Catatan</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
-                                                                href="#staff" role="tab" aria-controls="staff"
-                                                                aria-selected="false">List Produk</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="tab-content" id="myTabContent">
-                                                        <div class="tab-pane fade show active" id="contact"
-                                                            role="tabpanel" aria-labelledby="contact-tab">
-                                                            <p class="modal-text">Pellentesque semper tortor id ligula
-                                                                ultrices suscipit. Donec viverra vulputate lectus non
-                                                                consectetur. Donec ac interdum lacus. Donec euismod nisi
-                                                                at justo molestie elementum. Vivamus vitae hendrerit
-                                                                neque. Orci varius natoque penatibus et magnis dis
-                                                                parturient montes, nascetur ridiculus mus.</p>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
-                                                            aria-labelledby="staff-tab">
-                                                            <div class="product-list">
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">1.</span>
-                                                                        <span class="product-name">Beras 5kg</span>
-                                                                        <span class="product-quantity">20 Karung</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">2.</span>
-                                                                        <span class="product-name">Gula 1kg</span>
-                                                                        <span class="product-quantity">20 Pcs</span>
-                                                                    </div>
+                                        <!-- Modal Detail -->
+                                        <div class="modal fade" id="tabsModal-{{ $rst->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="tabsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan
+                                                            Restock
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active"
+                                                                    id="contact-tab-{{ $rst->id }}"
+                                                                    data-toggle="tab" href="#contact-{{ $rst->id }}"
+                                                                    role="tab" aria-controls="contact"
+                                                                    aria-selected="false">Catatan</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="staff-tab-{{ $rst->id }}"
+                                                                    data-toggle="tab" href="#staff-{{ $rst->id }}"
+                                                                    role="tab" aria-controls="staff"
+                                                                    aria-selected="false">List Produk</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content" id="myTabContent">
+                                                            <div class="tab-pane fade show active"
+                                                                id="contact-{{ $rst->id }}" role="tabpanel"
+                                                                aria-labelledby="contact-tab-{{ $rst->id }}">
+                                                                <p class="modal-text">{{ $rst->catatan ?? '-' }}</p>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="staff-{{ $rst->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="staff-tab-{{ $rst->id }}">
+                                                                <div class="product-list">
+                                                                    @foreach ($rst->detailrestock as $index => $detail)
+                                                                        <div class="product-item">
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-center">
+                                                                                <span
+                                                                                    class="number-list">{{ $index + 1 }}.</span>
+                                                                                <span
+                                                                                    class="product-name">{{ ucwords($detail->produk->name) }}</span>
+                                                                                <span
+                                                                                    class="product-quantity">{{ $detail->total_unit }}
+                                                                                    {{ ucwords($detail->produk->satuan->name) }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" data-dismiss="modal"><i
-                                                            class="flaticon-cancel-12"></i> Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" data-dismiss="modal"><i
+                                                                class="flaticon-cancel-12"></i> Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -501,6 +522,385 @@
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
     <script src="{{ asset('plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 6000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Variabel untuk menyimpan value selectpicker
+            let selectedPengadaanValue = '';
+
+            // Template list produk pengadaan (statis, akan di-loop)
+            const pengadaanTemplate = `
+                <div class="row px-3">
+                    <div class="col-lg-1 no-list">
+                        <span></span>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="form-group mb-3">
+                            <div class="input-group">
+                                <input type="number" class="form-control" readonly>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Fungsi untuk update nomor list (manual dan pengadaan)
+            function updateListNumbers(container) {
+                $(container).find('.row.px-3').each(function(index) {
+                    $(this).find('.no-list span').text((index + 1) + '.');
+                });
+            }
+
+            // Fungsi untuk kapitalisasi huruf awal
+            function ucwords(str) {
+                return str.replace(/\b\w/g, letter => letter.toUpperCase());
+            }
+
+            // Event saat checkbox berubah
+            $('#restockCheckbox').on('change', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+
+                if ($(this).is(':checked')) {
+                    $pengadaanSelect.show();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
+                    });
+                    $select.selectpicker('refresh');
+
+                    // Sembunyikan list manual dan tombol tambah
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                } else {
+                    selectedPengadaanValue = '';
+                    $select.selectpicker('destroy');
+                    $select.val('');
+                    $pengadaanSelect.hide();
+
+                    // Kembalikan list manual
+                    $listContainer.show();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                }
+            });
+
+            // Event saat selectpicker pengadaan dipilih
+            $('#pengadaanSelect select').on('change', function() {
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+                var $listContainer = $('#list-container');
+                var selectedValue = $(this).val();
+
+                if (selectedValue && selectedValue !== '') {
+                    // Tampilkan spinner
+                    $listContainer.hide();
+                    $listProdukPengadaan.hide();
+                    $loadScreen.show();
+                    console.log('Showing load_screen:', $loadScreen.css('display'));
+
+                    // AJAX request ke endpoint untuk ambil detail pengadaan
+                    $.ajax({
+                        url: `/pengadaan-detail/${selectedValue}`, // Endpoint baru (buat di route/controller)
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            $loadScreen.hide();
+                            if (response.success && response.data) {
+                                $listProdukPengadaan.empty();
+
+                                // Loop data ke template
+                                response.data.forEach(function(item, index) {
+                                    var $template = $(pengadaanTemplate);
+                                    $template.find('.no-list span').text((index + 1) +
+                                        '.');
+                                    $template.find('.col-lg-6 input[type="text"]').val(
+                                        item.nama_produk);
+                                    $template.find('.col-lg-5 input[type="number"]')
+                                        .val(item.total_unit);
+                                    $template.find('.col-lg-5 .input-group-text').text(
+                                        ucwords(item.satuan));
+                                    $listProdukPengadaan.append($template);
+                                });
+
+                                // Tampilkan list produk pengadaan
+                                $listProdukPengadaan.show();
+                            } else {
+                                Snackbar.show({
+                                    text: 'Gagal memuat detail pengadaan.',
+                                    pos: 'bottom-left'
+                                });
+                            }
+                        },
+                        error: function() {
+                            $loadScreen.hide();
+                            Snackbar.show({
+                                text: 'Terjadi kesalahan saat memuat detail pengadaan.',
+                                pos: 'bottom-left'
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Event saat modal ditampilkan
+            $('#add').on('shown.bs.modal', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                var $listContainer = $('#list-container');
+                var $loadScreen = $('#load_screen');
+                var $listProdukPengadaan = $('#list-produk-pengadaan');
+
+                if ($checkbox.is(':checked')) {
+                    $pengadaanSelect.show();
+                    $listContainer.hide();
+                    $loadScreen.hide();
+                    $listProdukPengadaan.hide();
+                    $select.val(selectedPengadaanValue);
+                    $select.selectpicker({
+                        liveSearch: true
+                    });
+                    $select.selectpicker('refresh');
+
+                    // Cek apakah ada value yang dipilih sebelumnya
+                    if (selectedPengadaanValue && selectedPengadaanValue !== '') {
+                        $loadScreen.show();
+                        console.log('Showing load_screen:', $loadScreen.css('display'));
+                        $.ajax({
+                            url: `/pengadaan-detail/${selectedPengadaanValue}`, // Endpoint baru
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                $loadScreen.hide();
+                                if (response.success && response.data) {
+                                    $listProdukPengadaan.empty();
+
+                                    response.data.forEach(function(item, index) {
+                                        var $template = $(pengadaanTemplate);
+                                        $template.find('.no-list span').text((index +
+                                            1) + '.');
+                                        $template.find('.col-lg-6 input[type="text"]')
+                                            .val(item.nama_produk);
+                                        $template.find('.col-lg-5 input[type="number"]')
+                                            .val(item.total_unit);
+                                        $template.find('.col-lg-5 .input-group-text')
+                                            .text(ucwords(item.satuan));
+                                        $listProdukPengadaan.append($template);
+                                    });
+
+                                    $listProdukPengadaan.show();
+                                } else {
+                                    Snackbar.show({
+                                        text: 'Gagal memuat detail pengadaan.',
+                                        pos: 'bottom-left'
+                                    });
+                                }
+                            },
+                            error: function() {
+                                $loadScreen.hide();
+                                Snackbar.show({
+                                    text: 'Terjadi kesalahan saat memuat detail pengadaan.',
+                                    pos: 'bottom-left'
+                                });
+                            }
+                        });
+                    }
+                }
+
+                // Inisialisasi selectpicker dan update satuan untuk manual input
+                $('#list-container .selectpicker').selectpicker({
+                    liveSearch: true
+                }).on('changed.bs.select', function() {
+                    var $row = $(this).closest('.row.px-3');
+                    var satuan = $(this).find('option:selected').data('satuan') || 'Satuan';
+                    $row.find('.input-group-text').text(ucwords(satuan));
+                    var initialInput = $row.find('input[type="number"]');
+                    if ($(this).val() === '' || $(this).val() === null) {
+                        initialInput.prop('disabled', true);
+                    } else {
+                        initialInput.prop('disabled', false);
+                    }
+                });
+            });
+
+            $('#add').on('hidden.bs.modal', function() {
+                var $pengadaanSelect = $('#pengadaanSelect');
+                var $select = $pengadaanSelect.find('select');
+                var $checkbox = $('#restockCheckbox');
+                if ($checkbox.is(':checked')) {
+                    selectedPengadaanValue = $select.val() || '';
+                }
+                $select.selectpicker('destroy');
+                $pengadaanSelect.hide();
+            });
+
+            // Logika list produk manual (diperbarui untuk posisi tombol)
+            let listCounter = 1;
+            let $listContainer = $('#list-container');
+            const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
+            const initialTemplate = $('#list-item-produk.row.px-3').clone();
+            initialTemplate.find('.selectpicker').remove();
+            initialTemplate.find('.bootstrap-select').remove();
+
+            $('.addProduk').off('click').one('click', function handleAddProduct() {
+                var template = initialTemplate.clone();
+                template.removeAttr('id');
+                var uniqueId = 'list-produk-' + (++listCounter);
+                template.attr('id', uniqueId);
+                template.addClass('row px-3');
+                template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
+                template.find('select').val('');
+                template.find('input[type="number"]').val('').prop('disabled', true);
+                $('#list-container').append(template); // Tambah list baru
+                // Pindah tombol ke akhir
+                $('.add-s-produk').appendTo('#list-container');
+                updateListNumbers('#list-container');
+                try {
+                    var newSelectpicker = template.find('.selectpicker');
+                    newSelectpicker.selectpicker({
+                        liveSearch: true
+                    }).on('changed.bs.select', function() {
+                        var $row = $(this).closest('.row.px-3');
+                        var satuan = $(this).find('option:selected').data('satuan') || 'Satuan';
+                        $row.find('.input-group-text').text(ucwords(satuan));
+                        var initialInput = $row.find('input[type="number"]');
+                        if ($(this).val() === '' || $(this).val() === null) {
+                            initialInput.prop('disabled', true);
+                        } else {
+                            initialInput.prop('disabled', false);
+                        }
+                    });
+                } catch (e) {}
+                $('.addProduk').one('click', handleAddProduct);
+            });
+
+            $('#add').on('shown.bs.modal', function() {
+                $('#list-item-produk .selectpicker').selectpicker({
+                    liveSearch: true
+                });
+                var initialSelectpicker = $('#list-item-produk .selectpicker');
+                var initialInput = $('#list-item-produk input[type="number"]');
+                if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
+                    initialInput.prop('disabled', true);
+                }
+                initialSelectpicker.on('changed.bs.select', function() {
+                    var $row = $(this).closest('.row.px-3');
+                    var satuan = $(this).find('option:selected').data('satuan') || 'Satuan';
+                    $row.find('.input-group-text').text(ucwords(satuan));
+                    initialInput.prop('disabled', false);
+                });
+
+                $('#list-container').on('click', '.icon-delete button', function() {
+                    var listCount = $('.row.px-3').length;
+                    if (listCount <= 1) {
+                        Snackbar.show({
+                            text: 'Minimal harus ada 1 list produk!',
+                            pos: 'bottom-left'
+                        });
+                        return;
+                    }
+                    $(this).closest('.row.px-3').remove();
+                    // Pindah tombol ke akhir setelah hapus
+                    $('.add-s-produk').appendTo('#list-container');
+                    updateListNumbers('#list-container');
+                });
+            });
+
+            $('#addForm').on('submit', function(e) {
+                var isValid = true;
+
+                // Validasi selectpicker pengadaan
+                var $pengadaanSelect = $('#pengadaanSelect select');
+                if ($('#restockCheckbox').is(':checked') && ($pengadaanSelect.val() === '' ||
+                        $pengadaanSelect.val() === null)) {
+                    isValid = false;
+                    e.preventDefault();
+                    Snackbar.show({
+                        text: 'Silakan pilih nomor pengadaan sebelum simpan!',
+                        pos: 'bottom-left'
+                    });
+                    return;
+                }
+
+                // Validasi selectpicker berdasarkan status checkbox
+                if ($('#restockCheckbox').is(':checked')) {
+                    // Validasi list produk pengadaan
+                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.length && ($select.val() === '' || $select.val() === null)) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                } else {
+                    // Validasi list produk manual
+                    $('#list-container .row.px-3 .selectpicker').each(function() {
+                        var $select = $(this);
+                        if ($select.val() === '' || $select.val() === null) {
+                            isValid = false;
+                            return false;
+                        }
+                    });
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    Snackbar.show({
+                        text: 'Silakan pilih produk untuk semua list sebelum simpan!',
+                        pos: 'bottom-left'
+                    });
+                }
+            });
+
+            $('#add').on('hidden.bs.modal', function() {
+                listCounter = 1;
+            });
+        });
+    </script>
     <script>
         var secondUpload = new FileUploadWithPreview('mySecondImage')
         const minPicker = $("#min").flatpickr({
@@ -659,320 +1059,8 @@
             }
         });
 
-        $(document).ready(function() {
-            // Variabel untuk menyimpan value selectpicker
-            let selectedPengadaanValue = '';
-
-            // Dummy data untuk simulasi list produk dari pengadaan
-            const dummyPengadaanData = {
-                "PGDRST30052025-1107": [{
-                        produk: "Beras 10Kg",
-                        satuan: 5,
-                        satuanType: "Karung"
-                    },
-                    {
-                        produk: "Gula 1Kg",
-                        satuan: 10,
-                        satuanType: "Sak"
-                    }
-                ],
-                "PGDRST30052025-1108": [{
-                    produk: "Minyak 2L",
-                    satuan: 3,
-                    satuanType: "Botol"
-                }],
-                "PGDRST30052025-1109": [{
-                        produk: "Tepung 5Kg",
-                        satuan: 2,
-                        satuanType: "Karung"
-                    },
-                    {
-                        produk: "Garam 500g",
-                        satuan: 8,
-                        satuanType: "Pack"
-                    }
-                ]
-            };
-
-            // Template list produk pengadaan (statis, akan di-loop)
-            const pengadaanTemplate = `
-                <div class="row px-3">
-                    <div class="col-lg-1 no-list">
-                        <span></span>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group mb-3">
-                            <input type="text" class="form-control" name="produk[]" readonly>
-                        </div>
-                    </div>
-                    <div class="col-lg-5">
-                        <div class="form-group mb-3">
-                            <div class="input-group">
-                                <input type="number" class="form-control" readonly>
-                                <div class="input-group-append">
-                                    <span class="input-group-text"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Fungsi untuk update nomor list (manual dan pengadaan)
-            function updateListNumbers(container) {
-                $(container).find('.row.px-3').each(function(index) {
-                    $(this).find('.no-list span').text((index + 1) + '.');
-                });
-            }
-
-            // Event saat checkbox berubah
-            $('#restockCheckbox').on('change', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
-                var $listContainer = $('#list-container');
-                var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
-
-                if ($(this).is(':checked')) {
-                    $pengadaanSelect.show();
-                    $select.val(selectedPengadaanValue);
-                    $select.selectpicker({
-                        liveSearch: true
-                    });
-                    $select.selectpicker('refresh');
-
-                    // Sembunyikan list manual dan tombol tambah
-                    $listContainer.hide();
-                    $loadScreen.hide();
-                    $listProdukPengadaan.hide();
-                } else {
-                    selectedPengadaanValue = '';
-                    $select.selectpicker('destroy');
-                    $select.val('');
-                    $pengadaanSelect.hide();
-
-                    // Kembalikan list manual
-                    $listContainer.show();
-                    $loadScreen.hide();
-                    $listProdukPengadaan.hide();
-                }
-            });
-
-            // Event saat selectpicker pengadaan dipilih
-            $('#pengadaanSelect select').on('change', function() {
-                var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
-                var $listContainer = $('#list-container');
-                var selectedValue = $(this).val();
-
-                if (selectedValue && selectedValue !== '') {
-                    // Tampilkan spinner
-                    $listContainer.hide();
-                    $listProdukPengadaan.hide();
-                    $loadScreen.show();
-                    console.log('Showing load_screen:', $loadScreen.css('display'));
-                    // Simulasi loading data (1 detik delay)
-                    setTimeout(function() {
-                        $loadScreen.hide();
-
-                        // Ambil dummy data berdasarkan nomor series
-                        const data = dummyPengadaanData[selectedValue] || [];
-                        $listProdukPengadaan.empty();
-
-                        // Loop data ke template
-                        data.forEach(function(item, index) {
-                            var $template = $(pengadaanTemplate);
-                            $template.find('.no-list span').text((index + 1) + '.');
-                            $template.find('.col-lg-6 input[type="text"]').val(item.produk);
-                            $template.find('.col-lg-5 input[type="number"]').val(item
-                                .satuan);
-                            $template.find('.col-lg-5 .input-group-text').text(item
-                                .satuanType);
-                            $listProdukPengadaan.append($template);
-                        });
-
-                        // Tampilkan list produk pengadaan
-                        $listProdukPengadaan.show();
-                    }, 1000);
-                }
-            });
-
-            // Event saat modal ditampilkan
-            $('#add').on('shown.bs.modal', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
-                var $checkbox = $('#restockCheckbox');
-                var $listContainer = $('#list-container');
-                var $loadScreen = $('#load_screen');
-                var $listProdukPengadaan = $('#list-produk-pengadaan');
-
-                if ($checkbox.is(':checked')) {
-                    $pengadaanSelect.show();
-                    $listContainer.hide();
-                    $loadScreen.hide();
-                    $listProdukPengadaan.hide();
-                    $select.val(selectedPengadaanValue);
-                    $select.selectpicker({
-                        liveSearch: true
-                    });
-                    $select.selectpicker('refresh');
-
-                    // Cek apakah ada value yang dipilih sebelumnya
-                    if (selectedPengadaanValue && selectedPengadaanValue !== '') {
-                        $loadScreen.show();
-                        console.log('Showing load_screen:', $loadScreen.css('display'));
-                        setTimeout(function() {
-                            $loadScreen.hide();
-                            const data = dummyPengadaanData[selectedPengadaanValue] || [];
-                            $listProdukPengadaan.empty();
-
-                            data.forEach(function(item, index) {
-                                var $template = $(pengadaanTemplate);
-                                $template.find('.no-list span').text((index + 1) + '.');
-                                $template.find('.col-lg-6 input[type="text"]').val(item
-                                    .produk);
-                                $template.find('.col-lg-5 input[type="number"]').val(item
-                                    .satuan);
-                                $template.find('.col-lg-5 .input-group-text').text(item
-                                    .satuanType);
-                                $listProdukPengadaan.append($template);
-                            });
-
-                            $listProdukPengadaan.show();
-                        }, 1000);
-                    }
-                }
-            });
-
-            $('#add').on('hidden.bs.modal', function() {
-                var $pengadaanSelect = $('#pengadaanSelect');
-                var $select = $pengadaanSelect.find('select');
-                var $checkbox = $('#restockCheckbox');
-                if ($checkbox.is(':checked')) {
-                    selectedPengadaanValue = $select.val() || '';
-                }
-                $select.selectpicker('destroy');
-                $pengadaanSelect.hide();
-            });
-
-            // Logika list produk manual (diperbarui untuk posisi tombol)
-            let listCounter = 1;
-            let $listContainer = $('#list-container');
-            const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
-            const initialTemplate = $('#list-item-produk.row.px-3').clone();
-            initialTemplate.find('.selectpicker').remove();
-            initialTemplate.find('.bootstrap-select').remove();
-
-            $('.addProduk').off('click').one('click', function handleAddProduct() {
-                var template = initialTemplate.clone();
-                template.removeAttr('id');
-                var uniqueId = 'list-produk-' + (++listCounter);
-                template.attr('id', uniqueId);
-                template.addClass('row px-3');
-                template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
-                template.find('select').val('');
-                template.find('input[type="number"]').val('').prop('disabled', true);
-                $('#list-container').append(template); // Tambah list baru
-                // Pindah tombol ke akhir
-                $('.add-s-produk').appendTo('#list-container');
-                updateListNumbers('#list-container');
-                try {
-                    var newSelectpicker = template.find('.selectpicker');
-                    newSelectpicker.selectpicker({
-                        liveSearch: true
-                    });
-                    newSelectpicker.on('changed.bs.select', function() {
-                        $(this).closest('.row.px-3').find('input[type="number"]').prop('disabled',
-                            false);
-                    });
-                } catch (e) {}
-                $('.addProduk').one('click', handleAddProduct);
-            });
-
-            $('#add').on('shown.bs.modal', function() {
-                $('#list-item-produk .selectpicker').selectpicker({
-                    liveSearch: true
-                });
-                var initialSelectpicker = $('#list-item-produk .selectpicker');
-                var initialInput = $('#list-item-produk input[type="number"]');
-                if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
-                    initialInput.prop('disabled', true);
-                }
-                initialSelectpicker.on('changed.bs.select', function() {
-                    initialInput.prop('disabled', false);
-                });
-
-                $('#list-container').on('click', '.icon-delete button', function() {
-                    var listCount = $('.row.px-3').length;
-                    if (listCount <= 1) {
-                        Snackbar.show({
-                            text: 'Minimal harus ada 1 list produk!',
-                            pos: 'bottom-left'
-                        });
-                        return;
-                    }
-                    $(this).closest('.row.px-3').remove();
-                    // Pindah tombol ke akhir setelah hapus
-                    $('.add-s-produk').appendTo('#list-container');
-                    updateListNumbers('#list-container');
-                });
-            });
-
-            $('#addForm').on('submit', function(e) {
-                var isValid = true;
-
-                // Validasi selectpicker pengadaan
-                var $pengadaanSelect = $('#pengadaanSelect select');
-                if ($('#restockCheckbox').is(':checked') && ($pengadaanSelect.val() === '' ||
-                        $pengadaanSelect.val() === null)) {
-                    isValid = false;
-                    e.preventDefault();
-                    Snackbar.show({
-                        text: 'Silakan pilih nomor pengadaan sebelum simpan!',
-                        pos: 'bottom-left'
-                    });
-                    return; // Hentikan eksekusi kalau pengadaan invalid
-                }
-
-                // Validasi selectpicker berdasarkan status checkbox
-                if ($('#restockCheckbox').is(':checked')) {
-                    // Validasi list produk pengadaan
-                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
-                        var $select = $(this);
-                        if ($select.length && ($select.val() === '' || $select.val() === null)) {
-                            isValid = false;
-                            return false;
-                        }
-                    });
-                } else {
-                    // Validasi list produk manual
-                    $('#list-container .row.px-3 .selectpicker').each(function() {
-                        var $select = $(this);
-                        if ($select.val() === '' || $select.val() === null) {
-                            isValid = false;
-                            return false;
-                        }
-                    });
-                }
-
-                if (!isValid) {
-                    e.preventDefault();
-                    Snackbar.show({
-                        text: 'Silakan pilih produk untuk semua list sebelum simpan!',
-                        pos: 'bottom-left'
-                    });
-                }
-            });
-
-            $('#add').on('hidden.bs.modal', function() {
-                listCounter = 1;
-            });
-        });
-
         let currentImages = [];
         let currentImageIndex = 0;
-
-        // Event saat button "Lihat Bukti" diklik
         $('button[data-target="#lihatbukti"]').on('click', function() {
             // Ambil data-image (sudah array dari jQuery data())
             currentImages = $(this).data('image') || [];
@@ -1004,8 +1092,6 @@
                 $('#nextImage').hide();
             }
         });
-
-        // Event untuk tombol Sebelumnya
         $('#prevImage').on('click', function() {
             if (currentImageIndex > 0) {
                 currentImageIndex--;
@@ -1019,8 +1105,6 @@
                 }
             }
         });
-
-        // Event untuk tombol Selanjutnya
         $('#nextImage').on('click', function() {
             if (currentImageIndex < currentImages.length - 1) {
                 currentImageIndex++;
@@ -1034,8 +1118,6 @@
                 }
             }
         });
-
-        // Reset state saat modal ditutup
         $('#lihatbukti').on('hidden.bs.modal', function() {
             currentImages = [];
             currentImageIndex = 0;

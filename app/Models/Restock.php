@@ -30,7 +30,7 @@ class Restock extends Model
         return $this->belongsTo(PengadaanRestock::class, 'pengadaan_id');
     }
 
-    public function detailpengadaan()
+    public function detailrestock()
     {
         return $this->hasMany(DetailRestock::class, 'restock_id');
     }

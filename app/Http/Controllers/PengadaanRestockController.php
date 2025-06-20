@@ -125,7 +125,7 @@ class PengadaanRestockController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('manager.master-satuan-produk', $toko->slug)->withErrors([
+            return redirect()->route('manager.pengadaan-restock', $toko->slug)->withErrors([
                 'general' => 'Terjadi kesalahan saat menambahkan Produk: ' . $e->getMessage(),
             ])->with('showAlert', true);
         }

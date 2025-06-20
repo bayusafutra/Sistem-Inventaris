@@ -151,7 +151,7 @@
                         <a href="{{ Auth::user()->toko_id ? route('manager.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Pengadaan Restock</a>
                     </li>
                     <li>
-                        <a href="{{ route('manager.restock') }}"> Restock </a>
+                        <a href="{{ Auth::user()->toko_id ? route('manager.restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Restock</a>
                     </li>
                     <li>
                         <a href="{{ route('manager.penjualan') }}"> Penjualan </a>

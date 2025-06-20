@@ -300,6 +300,16 @@ h5 {
     box-sizing: border-box;
 }
 
+#list-container .row.px-3 .input-group-append,
+#list-container .row.px-3 .input-group-text {
+    min-width: 80px;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
 #load_screen {
     position: absolute;
     top: 0;
