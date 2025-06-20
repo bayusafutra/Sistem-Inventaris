@@ -12,6 +12,7 @@ use App\Models\DetailRestock;
 use App\Models\GambarRestock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class RestockController extends Controller
 {
@@ -28,15 +29,14 @@ class RestockController extends Controller
         $date = now()->format('dmY');
         $tokoId = $toko->id;
         $lastRestock = Restock::where('toko_id', $tokoId)
-            ->whereDate('created_at', now()->today())
             ->orderBy('id', 'desc')
             ->first();
-        $increment = $lastRestock ? (int)substr($lastRestock->noseries, -1) + 1 : 1;
+        $increment = $lastRestock ? $lastRestock->id + 1 : 1;
         $noseries = "RST{$date}{$tokoId}-{$increment}";
 
         $produk = Produk::where('toko_id', $toko->id)->where('isactive', 1)->get();
         $pengadaanrestock = PengadaanRestock::where('toko_id', $toko->id)->where('status', 1)->get();
-        $restock = Restock::where('toko_id', $toko->id)->get();
+        $restock = Restock::with('gambar')->where('toko_id', $toko->id)->get();
         return view('toko.inflow.restock', [
             'toko' => $toko,
             'noseries' => $noseries,

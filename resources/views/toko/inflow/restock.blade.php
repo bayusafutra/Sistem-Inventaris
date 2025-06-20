@@ -234,8 +234,6 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-
-                                                        <!-- Container untuk list produk manual dan tombol tambah -->
                                                         <div id="list-container">
                                                             <div id="list-item-produk" class="row px-3">
                                                                 <div class="col-lg-1 no-list">
@@ -261,7 +259,7 @@
                                                                             <input id="ga" type="number"
                                                                                 min="1" name="quantity[]"
                                                                                 class="form-control list-item"
-                                                                                placeholder="Jumlah Satuan" required>
+                                                                                placeholder="Jumlah Satuan">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text"
                                                                                     id="nama-satuan">Satuan</span>
@@ -352,8 +350,9 @@
                                         </td>
                                         <td>{{ $rst->pengadaan->noseries ?? '-' }}</td>
                                         <td class="text-center">
-                                            <button type="button" data-toggle="modal" data-target="#lihatbukti"
-                                                data-image='["{{ asset('assets/img/90x90.jpg') }}", "{{ asset('assets/img/300x300.jpg') }}"]'
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#lihatbukti-{{ $rst->id }}"
+                                                data-image="{{ json_encode($rst->gambar->map(function ($gb) {return asset('storage/' . $gb->path);})->toArray()) }}"
                                                 title="Lihat Bukti">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -387,14 +386,13 @@
                                             </button>
                                         </td>
                                         <!-- Modal Lihat Bukti -->
-                                        <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
-                                            aria-labelledby="lihatbuktiLabel" aria-hidden="true">
+                                        <div class="modal fade" id="lihatbukti-{{ $rst->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="lihatbuktiLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto
-                                                            Restock
-                                                        </h5>
+                                                            Restock</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                             <span aria-hidden="true">×</span>
@@ -410,10 +408,10 @@
                                                                 style="max-width: 100%; max-height: 70vh;">
                                                         </div>
                                                         <div class="d-flex justify-content-center mt-3">
-                                                            <button id="prevImage" class="btn btn-outline-secondary mr-2"
-                                                                disabled>Sebelumnya</button>
-                                                            <button id="nextImage" class="btn btn-outline-secondary"
-                                                                disabled>Selanjutnya</button>
+                                                            <button id="prevImage-{{ $rst->id }}"
+                                                                class="btn btn-outline-secondary mr-2">Sebelumnya</button>
+                                                            <button id="nextImage-{{ $rst->id }}"
+                                                                class="btn btn-outline-secondary">Selanjutnya</button>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -531,7 +529,7 @@
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 6000,
+                timer: 4000,
                 padding: '2em'
             });
 
@@ -611,8 +609,8 @@
                     });
                     $select.selectpicker('refresh');
 
-                    // Sembunyikan list manual dan tombol tambah
-                    $listContainer.hide();
+                    // Sembunyikan dan disable list manual
+                    $listContainer.hide().find('input, select').prop('disabled', true);
                     $loadScreen.hide();
                     $listProdukPengadaan.hide();
                 } else {
@@ -621,8 +619,8 @@
                     $select.val('');
                     $pengadaanSelect.hide();
 
-                    // Kembalikan list manual
-                    $listContainer.show();
+                    // Aktifkan kembali list manual
+                    $listContainer.show().find('input, select').prop('disabled', false);
                     $loadScreen.hide();
                     $listProdukPengadaan.hide();
                 }
@@ -644,7 +642,7 @@
 
                     // AJAX request ke endpoint untuk ambil detail pengadaan
                     $.ajax({
-                        url: `/pengadaan-detail/${selectedValue}`, // Endpoint baru (buat di route/controller)
+                        url: `/pengadaan-detail/${selectedValue}`,
                         method: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -652,13 +650,12 @@
                             if (response.success && response.data) {
                                 $listProdukPengadaan.empty();
 
-                                // Loop data ke template
                                 response.data.forEach(function(item, index) {
                                     var $template = $(pengadaanTemplate);
                                     $template.find('.no-list span').text((index + 1) +
                                         '.');
                                     $template.find('.col-lg-6 input[type="text"]').val(
-                                        item.nama_produk);
+                                        ucwords(item.nama_produk));
                                     $template.find('.col-lg-5 input[type="number"]')
                                         .val(item.total_unit);
                                     $template.find('.col-lg-5 .input-group-text').text(
@@ -666,7 +663,6 @@
                                     $listProdukPengadaan.append($template);
                                 });
 
-                                // Tampilkan list produk pengadaan
                                 $listProdukPengadaan.show();
                             } else {
                                 Snackbar.show({
@@ -697,7 +693,7 @@
 
                 if ($checkbox.is(':checked')) {
                     $pengadaanSelect.show();
-                    $listContainer.hide();
+                    $listContainer.hide().find('input, select').prop('disabled', true);
                     $loadScreen.hide();
                     $listProdukPengadaan.hide();
                     $select.val(selectedPengadaanValue);
@@ -706,12 +702,11 @@
                     });
                     $select.selectpicker('refresh');
 
-                    // Cek apakah ada value yang dipilih sebelumnya
                     if (selectedPengadaanValue && selectedPengadaanValue !== '') {
                         $loadScreen.show();
                         console.log('Showing load_screen:', $loadScreen.css('display'));
                         $.ajax({
-                            url: `/pengadaan-detail/${selectedPengadaanValue}`, // Endpoint baru
+                            url: `/pengadaan-detail/${selectedPengadaanValue}`,
                             method: 'GET',
                             dataType: 'json',
                             success: function(response) {
@@ -724,7 +719,7 @@
                                         $template.find('.no-list span').text((index +
                                             1) + '.');
                                         $template.find('.col-lg-6 input[type="text"]')
-                                            .val(item.nama_produk);
+                                            .val(ucwords(item.nama_produk));
                                         $template.find('.col-lg-5 input[type="number"]')
                                             .val(item.total_unit);
                                         $template.find('.col-lg-5 .input-group-text')
@@ -749,6 +744,8 @@
                             }
                         });
                     }
+                } else {
+                    $listContainer.show().find('input, select').prop('disabled', false);
                 }
 
                 // Inisialisasi selectpicker dan update satuan untuk manual input
@@ -760,7 +757,7 @@
                     $row.find('.input-group-text').text(ucwords(satuan));
                     var initialInput = $row.find('input[type="number"]');
                     if ($(this).val() === '' || $(this).val() === null) {
-                        initialInput.prop('disabled', true);
+                        initialInput.prop('disabled', true).val('');
                     } else {
                         initialInput.prop('disabled', false);
                     }
@@ -795,7 +792,7 @@
                 template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
                 template.find('select').val('');
                 template.find('input[type="number"]').val('').prop('disabled', true);
-                $('#list-container').append(template); // Tambah list baru
+                $('#list-container').append(template);
                 // Pindah tombol ke akhir
                 $('.add-s-produk').appendTo('#list-container');
                 updateListNumbers('#list-container');
@@ -809,7 +806,7 @@
                         $row.find('.input-group-text').text(ucwords(satuan));
                         var initialInput = $row.find('input[type="number"]');
                         if ($(this).val() === '' || $(this).val() === null) {
-                            initialInput.prop('disabled', true);
+                            initialInput.prop('disabled', true).val('');
                         } else {
                             initialInput.prop('disabled', false);
                         }
@@ -825,7 +822,7 @@
                 var initialSelectpicker = $('#list-item-produk .selectpicker');
                 var initialInput = $('#list-item-produk input[type="number"]');
                 if (initialSelectpicker.val() === '' || initialSelectpicker.val() === null) {
-                    initialInput.prop('disabled', true);
+                    initialInput.prop('disabled', true).val('');
                 }
                 initialSelectpicker.on('changed.bs.select', function() {
                     var $row = $(this).closest('.row.px-3');
@@ -844,7 +841,6 @@
                         return;
                     }
                     $(this).closest('.row.px-3').remove();
-                    // Pindah tombol ke akhir setelah hapus
                     $('.add-s-produk').appendTo('#list-container');
                     updateListNumbers('#list-container');
                 });
@@ -866,22 +862,37 @@
                     return;
                 }
 
-                // Validasi selectpicker berdasarkan status checkbox
+                // Validasi berdasarkan status checkbox
                 if ($('#restockCheckbox').is(':checked')) {
-                    // Validasi list produk pengadaan
-                    $('#list-produk-pengadaan .row.px-3 .selectpicker').each(function() {
-                        var $select = $(this);
-                        if ($select.length && ($select.val() === '' || $select.val() === null)) {
-                            isValid = false;
-                            return false;
-                        }
-                    });
+                    // Cek apakah pengadaan udah dimuat
+                    if ($('#list-produk-pengadaan .row.px-3').length === 0 && $pengadaanSelect.val()) {
+                        isValid = false;
+                        e.preventDefault();
+                        Snackbar.show({
+                            text: 'Data pengadaan belum dimuat, silakan pilih ulang nomor pengadaan.',
+                            pos: 'bottom-left'
+                        });
+                    }
                 } else {
                     // Validasi list produk manual
-                    $('#list-container .row.px-3 .selectpicker').each(function() {
-                        var $select = $(this);
-                        if ($select.val() === '' || $select.val() === null) {
+                    $('#list-container .row.px-3').each(function() {
+                        var $select = $(this).find('.selectpicker');
+                        var $quantity = $(this).find('input[type="number"]');
+                        if ($select.val() && $quantity.val() === '') {
                             isValid = false;
+                            e.preventDefault();
+                            Snackbar.show({
+                                text: 'Silakan isi jumlah satuan untuk produk yang dipilih.',
+                                pos: 'bottom-left'
+                            });
+                            return false;
+                        } else if ($select.val() === '' || $select.val() === null) {
+                            isValid = false;
+                            e.preventDefault();
+                            Snackbar.show({
+                                text: 'Silakan pilih produk untuk semua list sebelum simpan!',
+                                pos: 'bottom-left'
+                            });
                             return false;
                         }
                     });
@@ -889,10 +900,6 @@
 
                 if (!isValid) {
                     e.preventDefault();
-                    Snackbar.show({
-                        text: 'Silakan pilih produk untuk semua list sebelum simpan!',
-                        pos: 'bottom-left'
-                    });
                 }
             });
 
@@ -1058,74 +1065,81 @@
                 f2.close();
             }
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('button[data-target^="#lihatbukti"]').on('click', function() {
+                let modalId = $(this).data('target');
+                let $modal = $(modalId);
+                let rawImages = $(this).attr('data-image') || '[]';
+                let currentImages = JSON.parse(rawImages.replace(/'/g, '"'));
+                let currentImageIndex = 0;
 
-        let currentImages = [];
-        let currentImageIndex = 0;
-        $('button[data-target="#lihatbukti"]').on('click', function() {
-            // Ambil data-image (sudah array dari jQuery data())
-            currentImages = $(this).data('image') || [];
-            currentImageIndex = 0;
+                let $buktiImage = $modal.find('#buktiImage');
+                let $noImageMessage = $modal.find('#noImageMessage');
+                let restockId = modalId.replace('#lihatbukti-', '');
+                let $prevImage = $modal.find('#prevImage-' + restockId);
+                let $nextImage = $modal.find('#nextImage-' + restockId);
 
-            // Cek apakah ada gambar
-            if (currentImages && currentImages.length > 0) {
-                // Tampilkan gambar pertama
-                $('#buktiImage').attr('src', currentImages[0]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
-                $('#buktiImage').show();
-                $('#noImageMessage').hide();
+                if (currentImages && currentImages.length > 0) {
+                    $buktiImage.attr('src', currentImages[0]);
+                    $buktiImage.attr('alt', 'Bukti Foto Restock');
+                    $buktiImage.show();
+                    $noImageMessage.hide();
 
-                // Hide/show tombol navigasi berdasarkan jumlah gambar
-                if (currentImages.length > 1) {
-                    $('#prevImage').show();
-                    $('#nextImage').show();
-                    $('#nextImage').prop('disabled', false);
+                    if (currentImages.length > 1) {
+                        $prevImage.show();
+                        $nextImage.show();
+                    } else {
+                        $prevImage.hide();
+                        $nextImage.hide();
+                    }
+                    $prevImage.prop('disabled', true);
+                    $nextImage.prop('disabled', false);
                 } else {
-                    $('#prevImage').hide();
-                    $('#nextImage').hide();
+                    $buktiImage.attr('src', '');
+                    $buktiImage.hide();
+                    $noImageMessage.show();
+                    $prevImage.hide();
+                    $nextImage.hide();
                 }
-                $('#prevImage').prop('disabled', true); // Awalnya di gambar pertama
-            } else {
-                $('#buktiImage').attr('src', '');
-                $('#buktiImage').hide();
-                $('#noImageMessage').show();
-                $('#prevImage').hide();
-                $('#nextImage').hide();
-            }
-        });
-        $('#prevImage').on('click', function() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
 
-                // Update tombol
-                $('#nextImage').prop('disabled', false);
-                if (currentImageIndex === 0) {
-                    $('#prevImage').prop('disabled', true);
-                }
-            }
-        });
-        $('#nextImage').on('click', function() {
-            if (currentImageIndex < currentImages.length - 1) {
-                currentImageIndex++;
-                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
+                $prevImage.off('click').on('click', function() {
+                    if (currentImageIndex > 0) {
+                        currentImageIndex--;
+                        $buktiImage.attr('src', currentImages[currentImageIndex]);
+                        $buktiImage.attr('alt', 'Bukti Foto Restock');
+                        $nextImage.prop('disabled', false);
+                        if (currentImageIndex === 0) {
+                            $prevImage.prop('disabled', true);
+                        }
+                    }
+                });
 
-                // Update tombol
-                $('#prevImage').prop('disabled', false);
-                if (currentImageIndex === currentImages.length - 1) {
-                    $('#nextImage').prop('disabled', true);
-                }
-            }
-        });
-        $('#lihatbukti').on('hidden.bs.modal', function() {
-            currentImages = [];
-            currentImageIndex = 0;
-            $('#buktiImage').attr('src', '');
-            $('#buktiImage').hide();
-            $('#noImageMessage').show();
-            $('#prevImage').hide();
-            $('#nextImage').hide();
+                $nextImage.off('click').on('click', function() {
+                    if (currentImageIndex < currentImages.length - 1) {
+                        currentImageIndex++;
+                        $buktiImage.attr('src', currentImages[currentImageIndex]);
+                        $buktiImage.attr('alt', 'Bukti Foto Restock');
+                        $prevImage.prop('disabled', false);
+                        if (currentImageIndex === currentImages.length - 1) {
+                            $nextImage.prop('disabled', true);
+                        }
+                    }
+                });
+
+                $modal.on('hidden.bs.modal', function() {
+                    currentImages = [];
+                    currentImageIndex = 0;
+                    $buktiImage.attr('src', '');
+                    $buktiImage.hide();
+                    $noImageMessage.show();
+                    $prevImage.hide();
+                    $nextImage.hide();
+                    $prevImage.off('click');
+                    $nextImage.off('click');
+                });
+            });
         });
     </script>
 @endsection

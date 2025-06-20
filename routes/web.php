@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PengadaanRestockController;
+use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestockController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
 use App\Models\PengadaanRestock;
+use App\Models\Penjualan;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -122,9 +124,8 @@ Route::get('/{slug}/manager/restock', [RestockController::class, 'managerRestock
 Route::post('/{slug}/manager/restock', [RestockController::class, 'storeRestock'])->name('manager.store-restock')->middleware('auth');
 Route::get('/pengadaan-detail/{no_series}', [RestockController::class, 'getPengadaanDetail'])->name('api.pengadaan-detail');
 
-Route::get('/slugtoko/manager/penjualan', function () {
-    return view('toko.outflow.penjualan');
-})->name('manager.penjualan');
+Route::get('/{slug}/manager/penjualan', [PenjualanController::class, 'managerPenjualan'])->name('manager.penjualan')->middleware('auth');
+Route::post('/{slug}/manager/penjualan', [PenjualanController::class, 'storePenjualan'])->name('manager.store-penjualan')->middleware('auth');
 
 Route::get('/slugtoko/manager/expired', function () {
     return view('toko.outflow.expired');
