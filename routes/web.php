@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpiredController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PengadaanRestockController;
@@ -8,6 +10,8 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestockController;
+use App\Http\Controllers\ReturKonsumenController;
+use App\Http\Controllers\ReturSupplierController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
@@ -93,9 +97,7 @@ Route::post('/admin/user/aktif/{id}', [UserController::class, 'aktif'])->name('a
 // =========================================================================
 // =========================================================================
 
-Route::get('/slugtoko/manager/dashboard', function () {
-    return view('toko.manager.index');
-})->name('manager.dashboard');
+Route::get('/{slug}/manager/dashboard', [DashboardController::class, 'manager'])->name('manager.dashboard')->middleware('auth');
 
 Route::get('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'masterSatuan'])->name('manager.master-satuan-produk')->middleware('auth');
 Route::post('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'storeSatuan'])->name('manager.store-satuan')->middleware('auth');
@@ -115,21 +117,20 @@ Route::get('/verify-staff/{token}', [ManagerController::class, 'verifyStaff'])->
 Route::post('/manager/staff/nonaktif/{id}', [ManagerController::class, 'nonaktif'])->name('manager.master-staffnonaktif')->middleware('auth');
 Route::post('/manager/staff/aktif/{id}', [ManagerController::class, 'aktif'])->name('manager.master-staffaktif')->middleware('auth');
 
-Route::get('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'managerPengadaan'])->name('manager.pengadaan-restock')->middleware('auth');
-Route::post('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('manager.store-pengadaan-restock')->middleware('auth');
-Route::post('/manager/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('manager.pengadaanrestock-nonaktif')->middleware('auth');
-Route::post('/manager/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('manager.pengadaanrestock-aktif')->middleware('auth');
+Route::get('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('manager.pengadaan-restock')->middleware('auth');
+Route::post('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('store-pengadaan-restock')->middleware('auth');
+Route::post('/manager/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('pengadaanrestock-nonaktif')->middleware('auth');
+Route::post('/manager/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('pengadaanrestock-aktif')->middleware('auth');
 
-Route::get('/{slug}/manager/restock', [RestockController::class, 'managerRestock'])->name('manager.restock')->middleware('auth');
-Route::post('/{slug}/manager/restock', [RestockController::class, 'storeRestock'])->name('manager.store-restock')->middleware('auth');
+Route::get('/{slug}/manager/restock', [RestockController::class, 'indexRestock'])->name('manager.restock')->middleware('auth');
+Route::post('/{slug}/manager/restock', [RestockController::class, 'storeRestock'])->name('store-restock')->middleware('auth');
 Route::get('/pengadaan-detail/{no_series}', [RestockController::class, 'getPengadaanDetail'])->name('api.pengadaan-detail');
 
-Route::get('/{slug}/manager/penjualan', [PenjualanController::class, 'managerPenjualan'])->name('manager.penjualan')->middleware('auth');
-Route::post('/{slug}/manager/penjualan', [PenjualanController::class, 'storePenjualan'])->name('manager.store-penjualan')->middleware('auth');
+Route::get('/{slug}/manager/penjualan', [PenjualanController::class, 'indexPenjualan'])->name('manager.penjualan')->middleware('auth');
+Route::post('/{slug}/manager/penjualan', [PenjualanController::class, 'storePenjualan'])->name('store-penjualan')->middleware('auth');
 
-Route::get('/slugtoko/manager/expired', function () {
-    return view('toko.outflow.expired');
-})->name('manager.expired');
+Route::get('/{slug}/manager/expired', [ExpiredController::class, 'indexExpired'])->name('manager.expired')->middleware('auth');
+Route::post('/{slug}/manager/expired', [ExpiredController::class, 'storeExpired'])->name('store-expired')->middleware('auth');
 
 // =========================================================================
 // =========================================================================
@@ -138,21 +139,24 @@ Route::get('/slugtoko/staffgudang/dashboard', function () {
     return view('toko.st-gudang.index');
 })->name('stgudang.dashboard');
 
+Route::get('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('stgudang.pengadaan-restock')->middleware('auth');
+Route::post('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('store-pengadaan-restock')->middleware('auth');
+Route::post('/staffgudang/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('pengadaanrestock-nonaktif')->middleware('auth');
+Route::post('/staffgudang/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('pengadaanrestock-aktif')->middleware('auth');
+
+Route::get('/{slug}/staffgudang/restock', [RestockController::class, 'indexRestock'])->name('stgudang.restock')->middleware('auth');
+Route::post('/{slug}/staffgudang/restock', [RestockController::class, 'storeRestock'])->name('store-restock')->middleware('auth');
+Route::get('/pengadaan-detail/{no_series}', [RestockController::class, 'getPengadaanDetail'])->name('api.pengadaan-detail');
+
+Route::get('/{slug}/staffgudang/expired', [ExpiredController::class, 'indexExpired'])->name('stgudang.expired')->middleware('auth');
+Route::post('/{slug}/staffgudang/expired', [ExpiredController::class, 'storeExpired'])->name('store-expired')->middleware('auth');
+
 Route::get('/slugtoko/staffgudang/retur-supplier', function () {
     return view('toko.st-gudang.retur-supplier');
 })->name('stgudang.retur-supplier');
-
-Route::get('/slugtoko/staffgudang/pengadaan-restock', function () {
-    return view('toko.inflow.pengadaan-restock');
-})->name('stgudang.pengadaan-restock');
-
-Route::get('/slugtoko/staffgudang/restock', function () {
-    return view('toko.inflow.restock');
-})->name('stgudang.restock');
-
-Route::get('/slugtoko/staffgudang/expired', function () {
-    return view('toko.outflow.expired');
-})->name('stgudang.expired');
+Route::get('/{slug}/staffgudang/retur-supplier', [ReturSupplierController::class, 'indexRetur'])->name('stgudang.retur-supplier')->middleware('auth');
+Route::post('/{slug}/staffgudang/retur-supplier', [ReturSupplierController::class, 'storeRetur'])->name('store-retursupplier')->middleware('auth');
+Route::get('/restock-detail/{no_series}', [ReturSupplierController::class, 'getRestockDetail'])->name('api.restock-detail');
 
 // =========================================================================
 // =========================================================================
@@ -161,10 +165,9 @@ Route::get('/slugtoko/staffpenjualan/dashboard', function () {
     return view('toko.st-penjualan.index');
 })->name('stpenjualan.dashboard');
 
-Route::get('/slugtoko/staffpenjualan/retur-konsumen', function () {
-    return view('toko.st-penjualan.retur-konsumen');
-})->name('stpenjualan.retur-konsumen');
+Route::get('/{slug}/staffpenjualan/penjualan', [PenjualanController::class, 'indexPenjualan'])->name('stpenjualan.penjualan')->middleware('auth');
+Route::post('/{slug}/staffpenjualan/penjualan', [PenjualanController::class, 'storePenjualan'])->name('store-penjualan')->middleware('auth');
 
-Route::get('/slugtoko/staffpenjualan/penjualan', function () {
-    return view('toko.outflow.penjualan');
-})->name('stpenjualan.penjualan');
+Route::get('/{slug}/staffpenjualan/retur-konsumen', [ReturKonsumenController::class, 'indexRetur'])->name('stpenjualan.retur-konsumen')->middleware('auth');
+Route::post('/{slug}/staffpenjualan/retur-konsumen', [ReturKonsumenController::class, 'storeRetur'])->name('store-returkonsumen')->middleware('auth');
+Route::get('/penjualan-detail/{no_series}', [ReturKonsumenController::class, 'getPenjualanDetail'])->name('api.penjualan-detail');

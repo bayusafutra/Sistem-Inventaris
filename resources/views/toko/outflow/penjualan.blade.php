@@ -19,6 +19,10 @@
             font-weight: 700;
             font-size: 13px;
         }
+
+        .outline-badge-primary {
+            padding: 2.2px 35.5px;
+        }
     </style>
 @endsection
 @section('header')
@@ -39,7 +43,9 @@
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
+                                <li class="breadcrumb-item"><a
+                                        href="javascript:void(0);">{{ auth()->user()->roleuser == 3 ? 'Manager' : 'Staff Penjualan' }}</a>
+                                </li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Penjualan</span></li>
                             </ol>
                         </nav>
@@ -133,7 +139,7 @@
                                                     </button>
                                                 </div>
                                                 <form id="addForm"
-                                                    action="{{ route('manager.store-penjualan', ['slug' => $toko->slug]) }}"
+                                                    action="{{ route('store-penjualan', ['slug' => $toko->slug]) }}"
                                                     method="POST">
                                                     @csrf
                                                     <div class="modal-body">
@@ -283,7 +289,8 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Penjualan
+                                    <th>Tanggal Penjualan</th>
+                                    <th>Status Retur</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
@@ -293,6 +300,13 @@
                                         <td>{{ $pj->noseries }}</td>
                                         <td>{{ ucwords($pj->user->name) }}</td>
                                         <td>{{ \Carbon\Carbon::parse($pj->tgl_penjualan)->translatedFormat('l, d F Y H:i') }}
+                                        </td>
+                                        <td>
+                                            @if ($pj->status == 1)
+                                                <span class="badge outline-badge-primary"> Aktif </span>
+                                            @else
+                                                <span class="badge outline-badge-success"> Tidak Aktif </span>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             <button type="button" data-toggle="modal"
@@ -410,6 +424,7 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal Penjualan</th>
+                                    <th>Status Retur</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -466,85 +481,84 @@
         @endif
     </script>
     <script>
-        const minPicker = $("#min").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-min").toggle(!!dateStr);
-                $('#html5-extension').DataTable().draw();
+        $(document).ready(function() {
+            const minPicker = $("#min").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-min").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            const maxPicker = $("#max").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-max").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            function convertDateFormat(dateStr) {
+                if (!dateStr) return null;
+
+                // Ambil bagian tanggal sebelum waktu (abaikan hari dan waktu)
+                const parts = dateStr.split(', ')[1].split(' ');
+                if (parts.length < 3) return null;
+
+                const [day, monthName, year] = parts.slice(0, 3);
+
+                const months = {
+                    'Januari': '01',
+                    'Februari': '02',
+                    'Maret': '03',
+                    'April': '04',
+                    'Mei': '05',
+                    'Juni': '06',
+                    'Juli': '07',
+                    'Agustus': '08',
+                    'September': '09',
+                    'Oktober': '10',
+                    'November': '11',
+                    'Desember': '12'
+                };
+
+                const month = months[monthName];
+                if (!month) return null;
+
+                return `${year}-${month}-${day.padStart(2, '0')}`;
             }
-        });
 
-        const maxPicker = $("#max").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-max").toggle(!!dateStr);
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var min = $("#min").val();
+                var max = $("#max").val();
+                var dateStr = data[2];
+
+                var date = convertDateFormat(dateStr);
+                var dateObj = date ? new Date(date) : null;
+
+                var minDate = min ? new Date(min) : null;
+                var maxDate = max ? new Date(max) : null;
+
+                if (!minDate && !maxDate) return true;
+                if (minDate && !maxDate && dateObj) return dateObj >= minDate;
+                if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
+                if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
+                return false;
+            });
+
+            $("#clear-min").on("click", function() {
+                minPicker.clear();
+                $("#clear-min").hide();
                 $('#html5-extension').DataTable().draw();
-            }
-        });
+            });
 
-        function convertDateFormat(dateStr) {
-            if (!dateStr) return null;
-
-            const parts = dateStr.split(', ');
-            if (parts.length !== 2) return null;
-
-            const dateParts = parts[1].split(' ');
-            if (dateParts.length !== 3) return null;
-
-            const day = dateParts[0];
-            const monthName = dateParts[1];
-            const year = dateParts[2];
-
-            const months = {
-                'Januari': '01',
-                'Februari': '02',
-                'Maret': '03',
-                'April': '04',
-                'Mei': '05',
-                'Juni': '06',
-                'Juli': '07',
-                'Agustus': '08',
-                'September': '09',
-                'Oktober': '10',
-                'November': '11',
-                'Desember': '12'
-            };
-
-            const month = months[monthName];
-            if (!month) return null;
-
-            return `${year}-${month}-${day.padStart(2, '0')}`;
-        }
-
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $("#min").val();
-            var max = $("#max").val();
-            var dateStr = data[2];
-            var date = convertDateFormat(dateStr);
-
-            var dateObj = date ? new Date(date) : null;
-            var minDate = min ? new Date(min) : null;
-            var maxDate = max ? new Date(max) : null;
-
-            if (!minDate && !maxDate) return true;
-            if (minDate && !maxDate && dateObj) return dateObj >= minDate;
-            if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
-            if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
-            return false;
-        });
-
-        $("#clear-min").on("click", function() {
-            minPicker.clear();
-            $("#clear-min").hide();
-            $('#html5-extension').DataTable().draw();
-        });
-
-        $("#clear-max").on("click", function() {
-            maxPicker.clear();
-            $("#clear-max").hide();
-            $('#html5-extension').DataTable().draw();
+            $("#clear-max").on("click", function() {
+                maxPicker.clear();
+                $("#clear-max").hide();
+                $('#html5-extension').DataTable().draw();
+            });
         });
 
         $('#html5-extension').DataTable({
@@ -621,266 +635,6 @@
                 f2.close();
             }
         });
-
-        // $(document).ready(function() {
-        //     // Variabel counter untuk ID unik
-        //     let listCounter = 1;
-
-        //     // Pastikan container ada, jika tidak, tambah secara dinamis
-        //     let $listContainer = $('#list-container');
-        //     if ($listContainer.length === 0) {
-        //         $listContainer = $('<div id="list-container"></div>');
-        //         $('#list-item-produk').wrap($listContainer);
-        //     }
-
-        //     // Data dummy untuk produk dan satuan dengan stok
-        //     const dummyProducts = [{
-        //             name: "Beras 10Kg",
-        //             unit: "Karung",
-        //             stok: 10
-        //         },
-        //         {
-        //             name: "Gula 1Kg",
-        //             unit: "Sak",
-        //             stok: 15
-        //         },
-        //         {
-        //             name: "Minyak 2L",
-        //             unit: "Botol",
-        //             stok: 8
-        //         },
-        //         {
-        //             name: "Tepung 5Kg",
-        //             unit: "Karung",
-        //             stok: 12
-        //         },
-        //         {
-        //             name: "Garam 500g",
-        //             unit: "Pack",
-        //             stok: 20
-        //         },
-        //         {
-        //             name: "Mie Instan 40g",
-        //             unit: "Pcs",
-        //             stok: 30
-        //         }
-        //     ];
-
-        //     // Simpan HTML mentah dari elemen <select class="selectpicker"> asli
-        //     const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
-
-        //     // Simpan template statis tanpa selectpicker yang sudah diubah
-        //     const initialTemplate = $('#list-item-produk.row.px-3').clone();
-        //     initialTemplate.find('.selectpicker').remove();
-        //     initialTemplate.find('.bootstrap-select').remove();
-
-        //     // Fungsi untuk update nomor list
-        //     function updateListNumbers() {
-        //         $('.row.px-3').each(function(index) {
-        //             $(this).find('.no-list span').text((index + 1) + '.');
-        //         });
-        //     }
-
-        //     // Fungsi untuk populate selectpicker dengan data dummy
-        //     function populateSelectpicker($select) {
-        //         $select.empty();
-        //         $select.append('<option value="" selected disabled>Pilih Produk</option>');
-        //         dummyProducts.forEach(product => {
-        //             $select.append(`<option value="${product.name}">${product.name}</option>`);
-        //         });
-        //         $select.selectpicker('refresh');
-        //     }
-
-        //     // Fungsi untuk update rekap
-        //     function updateRekap() {
-        //         let totalProducts = new Set();
-        //         let totalUnits = 0;
-
-        //         $('#list-container .row.px-3 .selectpicker').each(function() {
-        //             const $select = $(this);
-        //             const productName = $select.val();
-        //             const $quantityInput = $select.closest('.row.px-3').find('input[type="number"]');
-        //             const quantity = parseInt($quantityInput.val()) || 0;
-
-        //             if (productName && productName !== '' && quantity > 0) {
-        //                 totalProducts.add(productName);
-        //                 totalUnits += quantity;
-        //             }
-        //         });
-
-        //         $('#total-products').text(totalProducts.size);
-        //         $('#total-units').text(totalUnits);
-
-        //         // Cek total stok lintas list
-        //         $('#list-container .row.px-3 .selectpicker').each(function() {
-        //             const $select = $(this);
-        //             const productName = $select.val();
-        //             const $quantityInput = $select.closest('.row.px-3').find('input[type="number"]');
-        //             const quantity = parseInt($quantityInput.val()) || 0;
-        //             if (productName && quantity > 0) {
-        //                 const product = dummyProducts.find(p => p.name === productName);
-        //                 const totalUsed = $('#list-container .row.px-3 .selectpicker').toArray()
-        //                     .filter($sel => $sel.value === productName)
-        //                     .reduce((sum, $sel) => sum + (parseInt($($sel).closest('.row.px-3').find(
-        //                         'input[type="number"]').val()) || 0), 0);
-        //                 if (totalUsed > product.stok) {
-        //                     $quantityInput.css('border-color', 'red');
-        //                     Snackbar.show({
-        //                         text: `Total ${productName} (${totalUsed} ${product.unit}) melebihi stok (${product.stok} ${product.unit})!`,
-        //                         pos: 'bottom-left'
-        //                     });
-        //                 } else {
-        //                     $quantityInput.css('border-color', '');
-        //                 }
-        //             }
-        //         });
-        //     }
-
-        //     // Tambah Produk
-        //     $('.addProduk').off('click').one('click', function handleAddProduct() {
-        //         var template = initialTemplate.clone();
-        //         template.removeAttr('id');
-        //         var uniqueId = 'list-produk-' + (++listCounter);
-        //         template.attr('id', uniqueId);
-        //         template.addClass('row px-3');
-        //         template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
-        //         var $newSelect = template.find('.selectpicker');
-        //         populateSelectpicker($newSelect);
-        //         $newSelect.val('');
-        //         template.find('input[type="number"]').val('').prop('disabled', true);
-        //         $('#list-container').append(template);
-        //         updateListNumbers();
-        //         try {
-        //             $newSelect.selectpicker({
-        //                 liveSearch: true
-        //             });
-        //             $newSelect.on('changed.bs.select', function() {
-        //                 var $row = $(this).closest('.row.px-3');
-        //                 var $quantityInput = $row.find('input[type="number"]');
-        //                 $quantityInput.prop('disabled', false);
-        //                 var selectedProduct = dummyProducts.find(p => p.name === $(this).val());
-        //                 if (selectedProduct) {
-        //                     $row.find('.input-group-text').text(selectedProduct.unit);
-        //                     $quantityInput.attr('max', selectedProduct.stok);
-        //                 }
-        //                 updateRekap();
-        //             });
-        //             template.find('input[type="number"]').on('input', function() {
-        //                 var $row = $(this).closest('.row.px-3');
-        //                 var $select = $row.find('.selectpicker');
-        //                 var selectedProduct = dummyProducts.find(p => p.name === $select.val());
-        //                 var maxStock = selectedProduct ? selectedProduct.stok : 0;
-        //                 var currentValue = parseInt($(this).val()) || 0;
-        //                 if (currentValue > maxStock) {
-        //                     $(this).val(maxStock);
-        //                     Snackbar.show({
-        //                         text: `Jumlah tidak boleh melebihi stok (${maxStock} ${selectedProduct.unit})!`,
-        //                         pos: 'bottom-left'
-        //                     });
-        //                 }
-        //                 updateRekap();
-        //             });
-        //         } catch (e) {}
-        //         $('.addProduk').one('click', handleAddProduct);
-        //     });
-
-        //     // Pastikan modal sudah terbuka untuk binding event hapus dan inisialisasi awal
-        //     $('#add').on('shown.bs.modal', function() {
-        //         var $initialSelect = $('#list-item-produk .selectpicker');
-        //         populateSelectpicker($initialSelect);
-        //         $initialSelect.selectpicker({
-        //             liveSearch: true
-        //         });
-        //         var initialInput = $('#list-item-produk input[type="number"]');
-        //         if ($initialSelect.val() === '' || $initialSelect.val() === null) {
-        //             initialInput.prop('disabled', true);
-        //         }
-        //         $initialSelect.on('changed.bs.select', function() {
-        //             initialInput.prop('disabled', false);
-        //             var selectedProduct = dummyProducts.find(p => p.name === $(this).val());
-        //             if (selectedProduct) {
-        //                 $(this).closest('.row.px-3').find('.input-group-text').text(selectedProduct
-        //                     .unit);
-        //                 initialInput.attr('max', selectedProduct.stok);
-        //             }
-        //             updateRekap();
-        //         });
-        //         initialInput.on('input', function() {
-        //             var $row = $(this).closest('.row.px-3');
-        //             var $select = $row.find('.selectpicker');
-        //             var selectedProduct = dummyProducts.find(p => p.name === $select.val());
-        //             var maxStock = selectedProduct ? selectedProduct.stok : 0;
-        //             var currentValue = parseInt($(this).val()) || 0;
-        //             if (currentValue > maxStock) {
-        //                 $(this).val(maxStock);
-        //                 Snackbar.show({
-        //                     text: `Jumlah tidak boleh melebihi stok (${maxStock} ${selectedProduct.unit})!`,
-        //                     pos: 'bottom-left'
-        //                 });
-        //             }
-        //             updateRekap();
-        //         });
-        //         $('#list-container').on('click', '.icon-delete button', function() {
-        //             var listCount = $('.row.px-3').length;
-        //             if (listCount <= 1) {
-        //                 Snackbar.show({
-        //                     text: 'Minimal harus ada 1 list produk!',
-        //                     pos: 'bottom-left'
-        //                 });
-        //                 return;
-        //             }
-        //             $(this).closest('.row.px-3').remove();
-        //             updateListNumbers();
-        //             updateRekap();
-        //         });
-        //     });
-
-        //     // Validasi form sebelum submit
-        //     $('#addForm').on('submit', function(e) {
-        //         let isValid = true;
-        //         const totalUsage = {};
-        //         $('#list-container .row.px-3 .selectpicker').each(function() {
-        //             const $select = $(this);
-        //             const productName = $select.val();
-        //             const $quantityInput = $select.closest('.row.px-3').find(
-        //                 'input[type="number"]');
-        //             const quantity = parseInt($quantityInput.val()) || 0;
-
-        //             if ($select.val() === '' || $select.val() === null) {
-        //                 isValid = false;
-        //                 return false;
-        //             }
-
-        //             if (!totalUsage[productName]) totalUsage[productName] = 0;
-        //             totalUsage[productName] += quantity;
-
-        //             const product = dummyProducts.find(p => p.name === productName);
-        //             if (totalUsage[productName] > product.stok) {
-        //                 isValid = false;
-        //                 $quantityInput.css('border-color', 'red');
-        //                 Snackbar.show({
-        //                     text: `Total ${productName} (${totalUsage[productName]} ${product.unit}) melebihi stok (${product.stok} ${product.unit})!`,
-        //                     pos: 'bottom-left'
-        //                 });
-        //                 return false;
-        //             }
-        //         });
-
-        //         if (!isValid) {
-        //             e.preventDefault();
-        //         } else {
-        //             $('#list-container .row.px-3 .selectpicker').each(function() {
-        //                 $(this).closest('.row.px-3').find('input[type="number"]').css(
-        //                     'border-color', '');
-        //             });
-        //         }
-        //     });
-
-        //     // Reset counter saat modal ditutup
-        //     $('#add').on('hidden.bs.modal', function() {
-        //         listCounter = 1;
-        //     });
-        // });
 
         $(document).ready(function() {
             // Variabel counter untuk ID unik
@@ -1067,7 +821,7 @@
                     const $select = $(this);
                     const productId = $select.val();
                     const $quantityInput = $select.closest('.row.px-3').find(
-                    'input[type="number"]');
+                        'input[type="number"]');
                     const quantity = parseInt($quantityInput.val()) || 0;
 
                     if ($select.val() === '' || $select.val() === null) {

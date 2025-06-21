@@ -9,13 +9,12 @@ use App\Models\Produk;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Toko;;
-
 use App\Models\DetailPenjualan;
 use Illuminate\Support\Facades\DB;
 
 class PenjualanController extends Controller
 {
-    public function managerPenjualan($slug)
+    public function indexPenjualan($slug)
     {
         $user = Auth::user();
         if (!$user->toko_id) {
@@ -48,7 +47,7 @@ class PenjualanController extends Controller
         $user = Auth::user();
         $toko = Toko::where('id', $user->toko_id)->first();
         if (!$toko || $toko->slug !== $slug) {
-            return redirect()->route('manager.penjualan', $toko->slug)->with('message', 'Slug tidak sesuai.');
+            return redirect()->back()->with('message', 'Slug tidak sesuai.');
         }
         $request->validate([
             'noseries' => 'required|string|max:255',
@@ -117,7 +116,7 @@ class PenjualanController extends Controller
                     $newStok = $produk->stok - $totalUnit;
                     if ($newStok < 0) {
                         DB::rollBack();
-                        return redirect()->route('manager.penjualan', $toko->slug)->withErrors([
+                        return redirect()->back()->withErrors([
                             'general' => "Stok produk '{$produk->nama}' tidak mencukupi untuk jumlah {$totalUnit}. Stok tersedia: {$produk->stok}.",
                         ])->with('showAlert', true);
                     }
@@ -128,13 +127,13 @@ class PenjualanController extends Controller
             // Commit transaksi
             DB::commit();
 
-            return redirect()->route('manager.penjualan', $toko->slug)->with([
+            return redirect()->back()->with([
                 'message' => 'Penjualan berhasil ditambahkan.',
                 'showAlert' => true,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('manager.penjualan', $toko->slug)->withErrors([
+            return redirect()->back()->withErrors([
                 'general' => 'Terjadi kesalahan saat menambahkan Penjualan: ' . $e->getMessage(),
             ])->with('showAlert', true);
         }

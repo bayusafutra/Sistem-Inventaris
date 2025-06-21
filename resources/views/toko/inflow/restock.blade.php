@@ -44,7 +44,9 @@
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
+                                <li class="breadcrumb-item"><a
+                                        href="javascript:void(0);">{{ auth()->user()->roleuser == 3 ? 'Manager' : 'Staff Gudang' }}</a>
+                                </li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Restock</span></li>
                             </ol>
                         </nav>
@@ -139,7 +141,7 @@
                                                     </button>
                                                 </div>
                                                 <form id="addForm"
-                                                    action="{{ route('manager.store-restock', ['slug' => $toko->slug]) }}"
+                                                    action="{{ route('store-restock', ['slug' => $toko->slug]) }}"
                                                     method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="modal-body">
@@ -176,10 +178,10 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
-                                                                <label>Catatan Restock</label>
+                                                                <label>Catatan</label>
                                                                 <div class="form-group mb-4">
                                                                     <textarea class="form-control" name="catatan" value="{{ old('catatan') }}" rows="4"
-                                                                        placeholder="Catatan Pengadaan"></textarea>
+                                                                        placeholder="Catatan Restock"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -475,7 +477,6 @@
                                                                             </div>
                                                                         </div>
                                                                     @endforeach
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -910,85 +911,84 @@
     </script>
     <script>
         var secondUpload = new FileUploadWithPreview('mySecondImage')
-        const minPicker = $("#min").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-min").toggle(!!dateStr);
-                $('#html5-extension').DataTable().draw();
+        $(document).ready(function() {
+            const minPicker = $("#min").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-min").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            const maxPicker = $("#max").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-max").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            function convertDateFormat(dateStr) {
+                if (!dateStr) return null;
+
+                // Ambil bagian tanggal sebelum waktu (abaikan hari dan waktu)
+                const parts = dateStr.split(', ')[1].split(' ');
+                if (parts.length < 3) return null;
+
+                const [day, monthName, year] = parts.slice(0, 3);
+
+                const months = {
+                    'Januari': '01',
+                    'Februari': '02',
+                    'Maret': '03',
+                    'April': '04',
+                    'Mei': '05',
+                    'Juni': '06',
+                    'Juli': '07',
+                    'Agustus': '08',
+                    'September': '09',
+                    'Oktober': '10',
+                    'November': '11',
+                    'Desember': '12'
+                };
+
+                const month = months[monthName];
+                if (!month) return null;
+
+                return `${year}-${month}-${day.padStart(2, '0')}`;
             }
-        });
 
-        const maxPicker = $("#max").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-max").toggle(!!dateStr);
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var min = $("#min").val();
+                var max = $("#max").val();
+                var dateStr = data[2];
+
+                var date = convertDateFormat(dateStr);
+                var dateObj = date ? new Date(date) : null;
+
+                var minDate = min ? new Date(min) : null;
+                var maxDate = max ? new Date(max) : null;
+
+                if (!minDate && !maxDate) return true;
+                if (minDate && !maxDate && dateObj) return dateObj >= minDate;
+                if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
+                if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
+                return false;
+            });
+
+            $("#clear-min").on("click", function() {
+                minPicker.clear();
+                $("#clear-min").hide();
                 $('#html5-extension').DataTable().draw();
-            }
-        });
+            });
 
-        function convertDateFormat(dateStr) {
-            if (!dateStr) return null;
-
-            const parts = dateStr.split(', ');
-            if (parts.length !== 2) return null;
-
-            const dateParts = parts[1].split(' ');
-            if (dateParts.length !== 3) return null;
-
-            const day = dateParts[0];
-            const monthName = dateParts[1];
-            const year = dateParts[2];
-
-            const months = {
-                'Januari': '01',
-                'Februari': '02',
-                'Maret': '03',
-                'April': '04',
-                'Mei': '05',
-                'Juni': '06',
-                'Juli': '07',
-                'Agustus': '08',
-                'September': '09',
-                'Oktober': '10',
-                'November': '11',
-                'Desember': '12'
-            };
-
-            const month = months[monthName];
-            if (!month) return null;
-
-            return `${year}-${month}-${day.padStart(2, '0')}`;
-        }
-
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $("#min").val();
-            var max = $("#max").val();
-            var dateStr = data[2];
-            var date = convertDateFormat(dateStr);
-
-            var dateObj = date ? new Date(date) : null;
-            var minDate = min ? new Date(min) : null;
-            var maxDate = max ? new Date(max) : null;
-
-            if (!minDate && !maxDate) return true;
-            if (minDate && !maxDate && dateObj) return dateObj >= minDate;
-            if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
-            if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
-            return false;
-        });
-
-        $("#clear-min").on("click", function() {
-            minPicker.clear();
-            $("#clear-min").hide();
-            $('#html5-extension').DataTable().draw();
-        });
-
-        $("#clear-max").on("click", function() {
-            maxPicker.clear();
-            $("#clear-max").hide();
-            $('#html5-extension').DataTable().draw();
+            $("#clear-max").on("click", function() {
+                maxPicker.clear();
+                $("#clear-max").hide();
+                $('#html5-extension').DataTable().draw();
+            });
         });
 
         $('#html5-extension').DataTable({

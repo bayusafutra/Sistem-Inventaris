@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class PengadaanRestockController extends Controller
 {
-    public function managerPengadaan($slug)
+    public function indexPengadaan($slug)
     {
         $user = Auth::user();
         if (!$user->toko_id) {
@@ -47,7 +47,7 @@ class PengadaanRestockController extends Controller
         $user = Auth::user();
         $toko = Toko::where('id', $user->toko_id)->first();
         if (!$toko || $toko->slug !== $slug) {
-            return redirect()->route('manager.pengadaan-restock', $toko->slug)->with('message', 'Slug tidak sesuai.');
+            return redirect()->back()->with('message', 'Slug tidak sesuai.');
         }
         $request->validate([
             'noseries' => 'required|string|max:255',
@@ -118,13 +118,13 @@ class PengadaanRestockController extends Controller
             // Commit transaksi
             DB::commit();
 
-            return redirect()->route('manager.pengadaan-restock', $toko->slug)->with([
+            return redirect()->back()->with([
                 'message' => 'Pengadaan Restock berhasil ditambahkan.',
                 'showAlert' => true,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('manager.pengadaan-restock', $toko->slug)->withErrors([
+            return redirect()->back()->withErrors([
                 'general' => 'Terjadi kesalahan saat menambahkan Pengadaan Restock: ' . $e->getMessage(),
             ])->with('showAlert', true);
         }

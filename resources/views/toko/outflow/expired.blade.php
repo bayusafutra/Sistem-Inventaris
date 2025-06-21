@@ -10,6 +10,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/outflow/custom-penjualan.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
+    <style>
+        .form-group.mb-4 input[readonly] {
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -22,14 +32,16 @@
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg></a>
-
             <ul class="navbar-nav flex-row">
                 <li>
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Manager</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
+                                </li>
+                                <li class="breadcrumb-item"><a
+                                        href="javascript:void(0);">{{ auth()->user()->roleuser == 3 ? 'Manager' : 'Staff Gudang' }}</a>
+                                </li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Expired</span></li>
                             </ol>
                         </nav>
@@ -57,7 +69,8 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
                                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="18" y1="6" x2="6" y2="18">
+                                                </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
                                                 </line>
                                             </svg>
@@ -121,16 +134,29 @@
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <form id="addForm" action="#" method="">
+                                                <form id="addForm"
+                                                    action="{{ route('store-expired', ['slug' => $toko->slug]) }}"
+                                                    method="POST">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group mb-4">
+                                                                    <label><span class="wajib">*</span>Tanggal dan
+                                                                        Waktu</label>
+                                                                    <input id="dateTimeFlatpickr" value=""
+                                                                        name="tgl_expired"
+                                                                        class="form-control flatpickr flatpickr-input active"
+                                                                        type="text" placeholder="Select Date.."
+                                                                        required>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" placeholder="No Series" required
-                                                                        readonly>
+                                                                        name="noseries" value="{{ $noseries }}"
+                                                                        placeholder="No Series" required readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
@@ -138,18 +164,11 @@
                                                                     <label><span class="wajib">*</span>Penanggung
                                                                         Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="" placeholder="Penanggung Jawab"
-                                                                        readonly required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <div class="form-group mb-4">
-                                                                    <label><span class="wajib">*</span>Tanggal dan
-                                                                        Waktu</label>
-                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
-                                                                        class="form-control flatpickr flatpickr-input active"
-                                                                        type="text" placeholder="Select Date.."
-                                                                        required>
+                                                                        name=""
+                                                                        value="{{ ucwords(auth()->user()->name) }}"
+                                                                        readonly>
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ auth()->user()->id }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -183,11 +202,16 @@
                                                             <div class="col-lg-5">
                                                                 <div class="form-group mb-3">
                                                                     <select class="selectpicker form-control"
-                                                                        data-live-search="true" required>
+                                                                        data-live-search="true" name="produk_id[]"
+                                                                        required>
                                                                         <option selected disabled>Pilih Produk
                                                                         </option>
-                                                                        <option>Beras 10Kg</option>
-                                                                        <option>Gula 1Kg</option>
+                                                                        @foreach ($produk as $pr)
+                                                                            <option value="{{ $pr->id }}"
+                                                                                data-stok="{{ $pr->stok }}"
+                                                                                data-satuan="{{ $pr->satuan->name ?? 'Satuan' }}">
+                                                                                {{ ucwords($pr->name) }}</option>
+                                                                        @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -196,10 +220,11 @@
                                                                     <div class="input-group">
                                                                         <input id="ga" type="number"
                                                                             min="1" class="form-control list-item"
-                                                                            placeholder="Jumlah Satuan" required>
+                                                                            placeholder="Jumlah Satuan" name="quantity[]"
+                                                                            required>
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text"
-                                                                                id="basic-addon6">Satuan</span>
+                                                                                id="nama-satuan">Satuan</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -265,114 +290,125 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>PGDRST30052025-1107</td>
-                                    <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y H:i') }}</td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Expired">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-list table-cancel">
-                                                <line x1="8" y1="6" x2="21" y2="6">
-                                                </line>
-                                                <line x1="8" y1="12" x2="21" y2="12">
-                                                </line>
-                                                <line x1="8" y1="18" x2="21" y2="18">
-                                                </line>
-                                                <line x1="3" y1="6" x2="3.01" y2="6">
-                                                </line>
-                                                <line x1="3" y1="12" x2="3.01" y2="12">
-                                                </line>
-                                                <line x1="3" y1="18" x2="3.01" y2="18">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Detail -->
-                                    <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Pendataan Expired
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="rekap-produk"
-                                                                data-toggle="tab" href="#rekaproduk" role="tab"
-                                                                aria-controls="rekaproduk" aria-selected="false">Rekap
-                                                                Produk</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
-                                                                href="#staff" role="tab" aria-controls="staff"
-                                                                aria-selected="false">List Produk</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="tab-content" id="myTabContent">
-                                                        <div class="tab-pane fade show active" id="rekaproduk"
-                                                            role="tabpanel" aria-labelledby="rekap-produk">
-                                                            <div class="col-12">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <div class="rekap-section-modal" id="tp">
-                                                                            <div class="rekap-label-modal text-center">
-                                                                                Total Produk</div>
-                                                                            <div class="rekap-value-modal text-center">2
+                                @foreach ($expired as $ex)
+                                    <tr>
+                                        <td>{{ $ex->noseries }}</td>
+                                        <td>{{ ucwords($ex->user->name) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($ex->tgl_expired)->translatedFormat('l, d F Y H:i') }}
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#tabsModal-{{ $ex->id }}" title="Detail Expired">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-list table-cancel">
+                                                    <line x1="8" y1="6" x2="21" y2="6">
+                                                    </line>
+                                                    <line x1="8" y1="12" x2="21" y2="12">
+                                                    </line>
+                                                    <line x1="8" y1="18" x2="21" y2="18">
+                                                    </line>
+                                                    <line x1="3" y1="6" x2="3.01" y2="6">
+                                                    </line>
+                                                    <line x1="3" y1="12" x2="3.01" y2="12">
+                                                    </line>
+                                                    <line x1="3" y1="18" x2="3.01" y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Detail -->
+                                        <div class="modal fade" id="tabsModal-{{ $ex->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="tabsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Pendataan
+                                                            Expired
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active"
+                                                                    id="rekap-produk-{{ $ex->id }}"
+                                                                    data-toggle="tab"
+                                                                    href="#rekaproduk-{{ $ex->id }}" role="tab"
+                                                                    aria-controls="rekaproduk" aria-selected="false">Rekap
+                                                                    Produk</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="staff-tab-{{ $ex->id }}"
+                                                                    data-toggle="tab" href="#staff-{{ $ex->id }}"
+                                                                    role="tab" aria-controls="staff"
+                                                                    aria-selected="false">List Produk</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content" id="myTabContent">
+                                                            <div class="tab-pane fade show active"
+                                                                id="rekaproduk-{{ $ex->id }}" role="tabpanel"
+                                                                aria-labelledby="rekap-produk-{{ $ex->id }}">
+                                                                <div class="col-12">
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <div class="rekap-section-modal"
+                                                                                id="tp">
+                                                                                <div class="rekap-label-modal text-center">
+                                                                                    Total Produk</div>
+                                                                                <div class="rekap-value-modal text-center">
+                                                                                    {{ $ex->total_produk }}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <div class="rekap-section-modal" id="tup">
-                                                                            <div class="rekap-label-modal text-center">
-                                                                                Total Unit Produk</div>
-                                                                            <div class="rekap-value-modal text-center">6
+                                                                        <div class="col-6">
+                                                                            <div class="rekap-section-modal"
+                                                                                id="tup">
+                                                                                <div class="rekap-label-modal text-center">
+                                                                                    Total Unit Produk</div>
+                                                                                <div class="rekap-value-modal text-center">
+                                                                                    {{ $ex->total_unit_produk }}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
-                                                            aria-labelledby="staff-tab">
-                                                            <div class="product-list">
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">1.</span>
-                                                                        <span class="product-name">Beras 5kg</span>
-                                                                        <span class="product-quantity">20 Karung</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">2.</span>
-                                                                        <span class="product-name">Gula 1kg</span>
-                                                                        <span class="product-quantity">20 Pcs</span>
-                                                                    </div>
+                                                            <div class="tab-pane fade" id="staff-{{ $ex->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="staff-tab-{{ $ex->id }}">
+                                                                <div class="product-list">
+                                                                    @foreach ($ex->detailexpired as $index => $detail)
+                                                                        <div class="product-item">
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-center">
+                                                                                <span
+                                                                                    class="number-list">{{ $index + 1 }}.</span>
+                                                                                <span
+                                                                                    class="product-name">{{ ucwords($detail->produk->name) }}</span>
+                                                                                <span
+                                                                                    class="product-quantity">{{ $detail->total_unit }}
+                                                                                    {{ ucwords($detail->produk->satuan->name) }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" data-dismiss="modal"><i
-                                                            class="flaticon-cancel-12"></i> Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" data-dismiss="modal"><i
+                                                                class="flaticon-cancel-12"></i> Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -402,86 +438,117 @@
     <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
     <script>
-        const minPicker = $("#min").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-min").toggle(!!dateStr);
-                $('#html5-extension').DataTable().draw();
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
+    <script>
+        $(document).ready(function() {
+            const minPicker = $("#min").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-min").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            const maxPicker = $("#max").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-max").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            function convertDateFormat(dateStr) {
+                if (!dateStr) return null;
+
+                // Ambil bagian tanggal sebelum waktu (abaikan hari dan waktu)
+                const parts = dateStr.split(', ')[1].split(' ');
+                if (parts.length < 3) return null;
+
+                const [day, monthName, year] = parts.slice(0, 3);
+
+                const months = {
+                    'Januari': '01',
+                    'Februari': '02',
+                    'Maret': '03',
+                    'April': '04',
+                    'Mei': '05',
+                    'Juni': '06',
+                    'Juli': '07',
+                    'Agustus': '08',
+                    'September': '09',
+                    'Oktober': '10',
+                    'November': '11',
+                    'Desember': '12'
+                };
+
+                const month = months[monthName];
+                if (!month) return null;
+
+                return `${year}-${month}-${day.padStart(2, '0')}`;
             }
-        });
 
-        const maxPicker = $("#max").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-max").toggle(!!dateStr);
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var min = $("#min").val();
+                var max = $("#max").val();
+                var dateStr = data[2];
+
+                var date = convertDateFormat(dateStr);
+                var dateObj = date ? new Date(date) : null;
+
+                var minDate = min ? new Date(min) : null;
+                var maxDate = max ? new Date(max) : null;
+
+                if (!minDate && !maxDate) return true;
+                if (minDate && !maxDate && dateObj) return dateObj >= minDate;
+                if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
+                if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
+                return false;
+            });
+
+            $("#clear-min").on("click", function() {
+                minPicker.clear();
+                $("#clear-min").hide();
                 $('#html5-extension').DataTable().draw();
-            }
-        });
+            });
 
-        function convertDateFormat(dateStr) {
-            if (!dateStr) return null;
-
-            const parts = dateStr.split(', ');
-            if (parts.length !== 2) return null;
-
-            const dateParts = parts[1].split(' ');
-            if (dateParts.length !== 3) return null;
-
-            const day = dateParts[0];
-            const monthName = dateParts[1];
-            const year = dateParts[2];
-
-            const months = {
-                'Januari': '01',
-                'Februari': '02',
-                'Maret': '03',
-                'April': '04',
-                'Mei': '05',
-                'Juni': '06',
-                'Juli': '07',
-                'Agustus': '08',
-                'September': '09',
-                'Oktober': '10',
-                'November': '11',
-                'Desember': '12'
-            };
-
-            const month = months[monthName];
-            if (!month) return null;
-
-            return `${year}-${month}-${day.padStart(2, '0')}`;
-        }
-
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $("#min").val();
-            var max = $("#max").val();
-            var dateStr = data[2];
-            var date = convertDateFormat(dateStr);
-
-            var dateObj = date ? new Date(date) : null;
-            var minDate = min ? new Date(min) : null;
-            var maxDate = max ? new Date(max) : null;
-
-            if (!minDate && !maxDate) return true;
-            if (minDate && !maxDate && dateObj) return dateObj >= minDate;
-            if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
-            if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
-            return false;
-        });
-
-        $("#clear-min").on("click", function() {
-            minPicker.clear();
-            $("#clear-min").hide();
-            $('#html5-extension').DataTable().draw();
-        });
-
-        $("#clear-max").on("click", function() {
-            maxPicker.clear();
-            $("#clear-max").hide();
-            $('#html5-extension').DataTable().draw();
+            $("#clear-max").on("click", function() {
+                maxPicker.clear();
+                $("#clear-max").hide();
+                $('#html5-extension').DataTable().draw();
+            });
         });
 
         $('#html5-extension').DataTable({
@@ -563,69 +630,32 @@
             // Variabel counter untuk ID unik
             let listCounter = 1;
 
-            // Pastikan container ada, jika tidak, tambah secara dinamis
+            // Pastikan container ada
             let $listContainer = $('#list-container');
             if ($listContainer.length === 0) {
                 $listContainer = $('<div id="list-container"></div>');
                 $('#list-item-produk').wrap($listContainer);
             }
 
-            // Data dummy untuk produk dan satuan dengan stok
-            const dummyProducts = [{
-                    name: "Beras 10Kg",
-                    unit: "Karung",
-                    stok: 10
-                },
-                {
-                    name: "Gula 1Kg",
-                    unit: "Sak",
-                    stok: 15
-                },
-                {
-                    name: "Minyak 2L",
-                    unit: "Botol",
-                    stok: 8
-                },
-                {
-                    name: "Tepung 5Kg",
-                    unit: "Karung",
-                    stok: 12
-                },
-                {
-                    name: "Garam 500g",
-                    unit: "Pack",
-                    stok: 20
-                },
-                {
-                    name: "Mie Instan 40g",
-                    unit: "Pcs",
-                    stok: 30
-                }
-            ];
-
             // Simpan HTML mentah dari elemen <select class="selectpicker"> asli
             const selectPickerHtml = $('#list-item-produk .selectpicker').prop('outerHTML');
 
-            // Simpan template statis tanpa selectpicker yang sudah diubah
+            // Simpan template statis
             const initialTemplate = $('#list-item-produk.row.px-3').clone();
             initialTemplate.find('.selectpicker').remove();
             initialTemplate.find('.bootstrap-select').remove();
+
+            // Fungsi untuk kapitalisasi huruf pertama (mirip ucwords)
+            function capitalizeFirstLetter(string) {
+                if (!string) return 'Satuan';
+                return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            }
 
             // Fungsi untuk update nomor list
             function updateListNumbers() {
                 $('.row.px-3').each(function(index) {
                     $(this).find('.no-list span').text((index + 1) + '.');
                 });
-            }
-
-            // Fungsi untuk populate selectpicker dengan data dummy
-            function populateSelectpicker($select) {
-                $select.empty();
-                $select.append('<option value="" selected disabled>Pilih Produk</option>');
-                dummyProducts.forEach(product => {
-                    $select.append(`<option value="${product.name}">${product.name}</option>`);
-                });
-                $select.selectpicker('refresh');
             }
 
             // Fungsi untuk update rekap
@@ -635,12 +665,12 @@
 
                 $('#list-container .row.px-3 .selectpicker').each(function() {
                     const $select = $(this);
-                    const productName = $select.val();
+                    const productId = $select.val();
                     const $quantityInput = $select.closest('.row.px-3').find('input[type="number"]');
                     const quantity = parseInt($quantityInput.val()) || 0;
 
-                    if (productName && productName !== '' && quantity > 0) {
-                        totalProducts.add(productName);
+                    if (productId && productId !== '' && quantity > 0) {
+                        totalProducts.add(productId);
                         totalUnits += quantity;
                     }
                 });
@@ -651,19 +681,20 @@
                 // Cek total stok lintas list
                 $('#list-container .row.px-3 .selectpicker').each(function() {
                     const $select = $(this);
-                    const productName = $select.val();
+                    const productId = $select.val();
                     const $quantityInput = $select.closest('.row.px-3').find('input[type="number"]');
                     const quantity = parseInt($quantityInput.val()) || 0;
-                    if (productName && quantity > 0) {
-                        const product = dummyProducts.find(p => p.name === productName);
+                    if (productId && quantity > 0) {
+                        const stok = parseInt($select.find('option:selected').data('stok')) || 0;
+                        const satuan = $select.find('option:selected').data('satuan') || 'Satuan';
                         const totalUsed = $('#list-container .row.px-3 .selectpicker').toArray()
-                            .filter($sel => $sel.value === productName)
+                            .filter($sel => $sel.value === productId)
                             .reduce((sum, $sel) => sum + (parseInt($($sel).closest('.row.px-3').find(
                                 'input[type="number"]').val()) || 0), 0);
-                        if (totalUsed > product.stok) {
+                        if (totalUsed > stok) {
                             $quantityInput.css('border-color', 'red');
                             Snackbar.show({
-                                text: `Total ${productName} (${totalUsed} ${product.unit}) melebihi stok (${product.stok} ${product.unit})!`,
+                                text: `Total ${$select.find('option:selected').text()} (${totalUsed} ${satuan}) melebihi stok (${stok} ${satuan})!`,
                                 pos: 'bottom-left'
                             });
                         } else {
@@ -682,7 +713,6 @@
                 template.addClass('row px-3');
                 template.find('.col-lg-5 .form-group.mb-3').first().html(selectPickerHtml);
                 var $newSelect = template.find('.selectpicker');
-                populateSelectpicker($newSelect);
                 $newSelect.val('');
                 template.find('input[type="number"]').val('').prop('disabled', true);
                 $('#list-container').append(template);
@@ -695,23 +725,24 @@
                         var $row = $(this).closest('.row.px-3');
                         var $quantityInput = $row.find('input[type="number"]');
                         $quantityInput.prop('disabled', false);
-                        var selectedProduct = dummyProducts.find(p => p.name === $(this).val());
-                        if (selectedProduct) {
-                            $row.find('.input-group-text').text(selectedProduct.unit);
-                            $quantityInput.attr('max', selectedProduct.stok);
-                        }
+                        var selectedOption = $(this).find('option:selected');
+                        var stok = parseInt(selectedOption.data('stok')) || 0;
+                        var satuan = selectedOption.data('satuan') || 'Satuan';
+                        $row.find('.input-group-text').text(capitalizeFirstLetter(satuan));
+                        $quantityInput.attr('max', stok);
                         updateRekap();
                     });
                     template.find('input[type="number"]').on('input', function() {
                         var $row = $(this).closest('.row.px-3');
                         var $select = $row.find('.selectpicker');
-                        var selectedProduct = dummyProducts.find(p => p.name === $select.val());
-                        var maxStock = selectedProduct ? selectedProduct.stok : 0;
+                        var selectedOption = $select.find('option:selected');
+                        var stok = parseInt(selectedOption.data('stok')) || 0;
+                        var satuan = selectedOption.data('satuan') || 'Satuan';
                         var currentValue = parseInt($(this).val()) || 0;
-                        if (currentValue > maxStock) {
-                            $(this).val(maxStock);
+                        if (currentValue > stok) {
+                            $(this).val(stok);
                             Snackbar.show({
-                                text: `Jumlah tidak boleh melebihi stok (${maxStock} ${selectedProduct.unit})!`,
+                                text: `Jumlah tidak boleh melebihi stok (${stok} ${capitalizeFirstLetter(satuan)})!`,
                                 pos: 'bottom-left'
                             });
                         }
@@ -721,10 +752,9 @@
                 $('.addProduk').one('click', handleAddProduct);
             });
 
-            // Pastikan modal sudah terbuka untuk binding event hapus dan inisialisasi awal
+            // Inisialisasi modal
             $('#add').on('shown.bs.modal', function() {
                 var $initialSelect = $('#list-item-produk .selectpicker');
-                populateSelectpicker($initialSelect);
                 $initialSelect.selectpicker({
                     liveSearch: true
                 });
@@ -734,24 +764,25 @@
                 }
                 $initialSelect.on('changed.bs.select', function() {
                     initialInput.prop('disabled', false);
-                    var selectedProduct = dummyProducts.find(p => p.name === $(this).val());
-                    if (selectedProduct) {
-                        $(this).closest('.row.px-3').find('.input-group-text').text(selectedProduct
-                            .unit);
-                        initialInput.attr('max', selectedProduct.stok);
-                    }
+                    var selectedOption = $(this).find('option:selected');
+                    var stok = parseInt(selectedOption.data('stok')) || 0;
+                    var satuan = selectedOption.data('satuan') || 'Satuan';
+                    $(this).closest('.row.px-3').find('.input-group-text').text(
+                        capitalizeFirstLetter(satuan));
+                    initialInput.attr('max', stok);
                     updateRekap();
                 });
                 initialInput.on('input', function() {
                     var $row = $(this).closest('.row.px-3');
                     var $select = $row.find('.selectpicker');
-                    var selectedProduct = dummyProducts.find(p => p.name === $select.val());
-                    var maxStock = selectedProduct ? selectedProduct.stok : 0;
+                    var selectedOption = $select.find('option:selected');
+                    var stok = parseInt(selectedOption.data('stok')) || 0;
+                    var satuan = selectedOption.data('satuan') || 'Satuan';
                     var currentValue = parseInt($(this).val()) || 0;
-                    if (currentValue > maxStock) {
-                        $(this).val(maxStock);
+                    if (currentValue > stok) {
+                        $(this).val(stok);
                         Snackbar.show({
-                            text: `Jumlah tidak boleh melebihi stok (${maxStock} ${selectedProduct.unit})!`,
+                            text: `Jumlah tidak boleh melebihi stok (${stok} ${capitalizeFirstLetter(satuan)})!`,
                             pos: 'bottom-left'
                         });
                     }
@@ -778,7 +809,7 @@
                 const totalUsage = {};
                 $('#list-container .row.px-3 .selectpicker').each(function() {
                     const $select = $(this);
-                    const productName = $select.val();
+                    const productId = $select.val();
                     const $quantityInput = $select.closest('.row.px-3').find(
                         'input[type="number"]');
                     const quantity = parseInt($quantityInput.val()) || 0;
@@ -788,15 +819,16 @@
                         return false;
                     }
 
-                    if (!totalUsage[productName]) totalUsage[productName] = 0;
-                    totalUsage[productName] += quantity;
+                    if (!totalUsage[productId]) totalUsage[productId] = 0;
+                    totalUsage[productId] += quantity;
 
-                    const product = dummyProducts.find(p => p.name === productName);
-                    if (totalUsage[productName] > product.stok) {
+                    const stok = parseInt($select.find('option:selected').data('stok')) || 0;
+                    const satuan = $select.find('option:selected').data('satuan') || 'Satuan';
+                    if (totalUsage[productId] > stok) {
                         isValid = false;
                         $quantityInput.css('border-color', 'red');
                         Snackbar.show({
-                            text: `Total ${productName} (${totalUsage[productName]} ${product.unit}) melebihi stok (${product.stok} ${product.unit})!`,
+                            text: `Total ${$select.find('option:selected').text()} (${totalUsage[productId]} ${capitalizeFirstLetter(satuan)}) melebihi stok (${stok} ${capitalizeFirstLetter(satuan)})!`,
                             pos: 'bottom-left'
                         });
                         return false;

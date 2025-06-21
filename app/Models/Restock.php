@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Toko;
 use App\Models\User;
+use App\Models\PengadaanRestock;
 use App\Models\DetailRestock;
 use App\Models\GambarRestock;
 

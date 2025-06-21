@@ -13,6 +13,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/loaders/custom-loader.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toko/outflow/custom-returkonsumen.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert2.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/sweetalerts/sweetalert.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/components/custom-sweetalert.css') }}" />
+    <style>
+        .form-group.mb-4 input[readonly] {
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
 @endsection
 @section('header')
     <div class="sub-header-container">
@@ -25,14 +35,13 @@
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg></a>
-
             <ul class="navbar-nav flex-row">
                 <li>
                     <div class="page-header">
-
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Nama Toko</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
+                                </li>
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">Staff Penjualan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Retur Konsumen</span></li>
                             </ol>
@@ -59,8 +68,9 @@
                                             id="min" placeholder="Pilih tanggal awal">
                                         <span class="clear-icon" id="clear-min">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
-                                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-x">
                                                 <line x1="18" y1="6" x2="6" y2="18">
                                                 </line>
                                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -126,15 +136,28 @@
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <form id="addForm" action="#" method="">
+                                                <form id="addForm"
+                                                    action="{{ route('store-returkonsumen', ['slug' => $toko->slug]) }}"
+                                                    method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="modal-body">
                                                         <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group mb-4">
+                                                                    <label><span class="wajib">*</span>Tanggal dan
+                                                                        Waktu</label>
+                                                                    <input id="dateTimeFlatpickr" value=""
+                                                                        name="tgl_retur"
+                                                                        class="form-control flatpickr flatpickr-input active"
+                                                                        type="text" placeholder="Select Date.."
+                                                                        required>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-6">
                                                                 <div class="form-group mb-4">
                                                                     <label><span class="wajib">*</span>No Series</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="no_series" value="RTKSM11062025-1105"
+                                                                        name="noseries" value="{{ $noseries }}"
                                                                         placeholder="No Series" required readonly>
                                                                 </div>
                                                             </div>
@@ -143,37 +166,32 @@
                                                                     <label><span class="wajib">*</span>Penanggung
                                                                         Jawab</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="penanggung_jawab" value="Bayu Safutra"
-                                                                        required readonly>
+                                                                        name=""
+                                                                        value="{{ ucwords(auth()->user()->name) }}"
+                                                                        readonly>
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ auth()->user()->id }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
+                                                                <label>Catatan</label>
                                                                 <div class="form-group mb-4">
-                                                                    <label><span class="wajib">*</span>Tanggal dan
-                                                                        Waktu</label>
-                                                                    <input id="dateTimeFlatpickr" value="2020-09-19 12:00"
-                                                                        class="form-control flatpickr flatpickr-input active"
-                                                                        type="text" placeholder="Select Date.."
-                                                                        required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <label for="">Catatan</label>
-                                                                <div class="form-group mb-4">
-                                                                    <textarea class="form-control" name="catatan" rows="4" placeholder="Catatan Retur Konsumen"></textarea>
+                                                                    <textarea class="form-control" name="catatan" value="{{ old('catatan') }}" rows="4"
+                                                                        placeholder="Catatan Retur Konsumen"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
                                                                 <div class="custom-file-container"
                                                                     data-upload-id="mySecondImage">
-                                                                    <label>Bukti Foto (bisa lebih dari 1) <a
+                                                                    <label>Foto Bukti Retur Konsumen (bisa lebih dari 1) <a
                                                                             href="javascript:void(0)"
                                                                             class="custom-file-container__image-clear"
                                                                             title="Clear Image">x</a></label>
                                                                     <label class="custom-file-container__custom-file">
                                                                         <input type="file"
                                                                             class="custom-file-container__custom-file__custom-file-input"
-                                                                            multiple>
+                                                                            name="mySecondImage[]"
+                                                                            accept=".png,.jpg,.jpeg" multiple>
                                                                         <input type="hidden" name="MAX_FILE_SIZE"
                                                                             value="10485760" />
                                                                         <span
@@ -192,15 +210,13 @@
                                                             <div class="col-lg-4 d-flex justify-content-end align-items-center"
                                                                 style="margin-left: auto" id="penjualanSelect">
                                                                 <select class="selectpicker form-control"
-                                                                    data-live-search="true">
+                                                                    data-live-search="true" name="penjualan">
                                                                     <option value="" selected disabled>Pilih No
                                                                         Series Penjualan</option>
-                                                                    <option value="PGDRST30052025-1107">PGDRST30052025-1107
-                                                                    </option>
-                                                                    <option value="PGDRST30052025-1108">PGDRST30052025-1108
-                                                                    </option>
-                                                                    <option value="PGDRST30052025-1109">PGDRST30052025-1109
-                                                                    </option>
+                                                                    @foreach ($penjualan as $pj)
+                                                                        <option value="{{ $pj->noseries }}">
+                                                                            {{ $pj->noseries }}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
                                                             <div class="col-lg-12 mt-5">
@@ -247,161 +263,164 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal & Waktu</th>
-                                    <th>Penjualan</th>
+                                    <th>No Series Penjualan</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>RST02062025-1102</td>
-                                    <td>Bayu Safutra</td>
-                                    <td>{{ \Carbon\Carbon::parse('2025/05/30')->translatedFormat('l, d F Y H:i') }}</td>
-                                    <td>PGDRST30052025-1107</td>
-                                    <td class="text-center">
-                                        <button type="button" data-toggle="modal" data-target="#lihatbukti"
-                                            data-image='["{{ asset('assets/img/90x90.jpg') }}", "{{ asset('assets/img/300x300.jpg') }}"]'
-                                            title="Lihat Bukti">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-image table-cancel">
-                                                <rect x="3" y="3" width="18" height="18" rx="2"
-                                                    ry="2"></rect>
-                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                                <polyline points="21 15 16 10 5 21"></polyline>
-                                            </svg>
-                                        </button>
-                                        <button type="button" data-toggle="modal" data-target="#tabsModal"
-                                            title="Detail Retur Konsumen">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-list table-cancel">
-                                                <line x1="8" y1="6" x2="21" y2="6">
-                                                </line>
-                                                <line x1="8" y1="12" x2="21" y2="12">
-                                                </line>
-                                                <line x1="8" y1="18" x2="21" y2="18">
-                                                </line>
-                                                <line x1="3" y1="6" x2="3.01" y2="6">
-                                                </line>
-                                                <line x1="3" y1="12" x2="3.01" y2="12">
-                                                </line>
-                                                <line x1="3" y1="18" x2="3.01" y2="18">
-                                                </line>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <!-- Modal Lihat Bukti -->
-                                    <div class="modal fade" id="lihatbukti" tabindex="-1" role="dialog"
-                                        aria-labelledby="lihatbuktiLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Retur
-                                                        Konsumen
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p id="noImageMessage"
-                                                        style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
-                                                        Tidak ada bukti foto yang tersedia</p>
-                                                    <div class="text-center">
-                                                        <img id="buktiImage" src="" alt="Bukti Foto Restock"
-                                                            class="img-fluid" style="max-width: 100%; max-height: 70vh;">
+                                @foreach ($returkonsumen as $rk)
+                                    <tr>
+                                        <td>{{ $rk->noseries }}</td>
+                                        <td>{{ ucwords($rk->user->name) }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($rk->tgl_retur)->translatedFormat('l, d F Y H:i') }}
+                                        </td>
+                                        <td>{{ $rk->penjualan->noseries }}</td>
+                                        <td class="text-center">
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#lihatbukti-{{ $rk->id }}"
+                                                data-image="{{ json_encode($rk->gambar->map(function ($gb) {return asset('storage/' . $gb->path);})->toArray()) }}"
+                                                title="Lihat Bukti">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-image table-cancel">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2"
+                                                        ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>
+                                            </button>
+                                            <button type="button" data-toggle="modal"
+                                                data-target="#tabsModal-{{ $rk->id }}"
+                                                title="Detail Retur Konsumen">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-list table-cancel">
+                                                    <line x1="8" y1="6" x2="21" y2="6">
+                                                    </line>
+                                                    <line x1="8" y1="12" x2="21" y2="12">
+                                                    </line>
+                                                    <line x1="8" y1="18" x2="21" y2="18">
+                                                    </line>
+                                                    <line x1="3" y1="6" x2="3.01" y2="6">
+                                                    </line>
+                                                    <line x1="3" y1="12" x2="3.01" y2="12">
+                                                    </line>
+                                                    <line x1="3" y1="18" x2="3.01" y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <!-- Modal Lihat Bukti -->
+                                        <div class="modal fade" id="lihatbukti-{{ $rk->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="lihatbuktiLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="lihatbuktiLabel">Lihat Bukti Foto
+                                                            Retur Konsumen</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
                                                     </div>
-                                                    <div class="d-flex justify-content-center mt-3">
-                                                        <button id="prevImage" class="btn btn-outline-secondary mr-2"
-                                                            disabled>Sebelumnya</button>
-                                                        <button id="nextImage" class="btn btn-outline-secondary"
-                                                            disabled>Selanjutnya</button>
+                                                    <div class="modal-body">
+                                                        <p id="noImageMessage"
+                                                            style="display: none; text-align: center; color: #4361ee; font-weight: 700;">
+                                                            Tidak ada bukti foto yang tersedia</p>
+                                                        <div class="text-center">
+                                                            <img id="buktiImage" src="" alt="Bukti Foto Restock"
+                                                                class="img-fluid"
+                                                                style="max-width: 100%; max-height: 70vh;">
+                                                        </div>
+                                                        <div class="d-flex justify-content-center mt-3">
+                                                            <button id="prevImage-{{ $rk->id }}"
+                                                                class="btn btn-outline-secondary mr-2">Sebelumnya</button>
+                                                            <button id="nextImage-{{ $rk->id }}"
+                                                                class="btn btn-outline-secondary">Selanjutnya</button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary"
-                                                        data-dismiss="modal">Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary"
+                                                            data-dismiss="modal">Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- Modal Detail -->
-                                    <div class="modal fade" id="tabsModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="tabsModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="tabsModalLabel">Detail Retur Konsumen
-                                                    </h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" id="contact-tab" data-toggle="tab"
-                                                                href="#contact" role="tab" aria-controls="contact"
-                                                                aria-selected="false">Catatan</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="staff-tab" data-toggle="tab"
-                                                                href="#staff" role="tab" aria-controls="staff"
-                                                                aria-selected="false">List Produk</a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="tab-content" id="myTabContent">
-                                                        <div class="tab-pane fade show active" id="contact"
-                                                            role="tabpanel" aria-labelledby="contact-tab">
-                                                            <p class="modal-text">Pellentesque semper tortor id ligula
-                                                                ultrices suscipit. Donec viverra vulputate lectus non
-                                                                consectetur. Donec ac interdum lacus. Donec euismod nisi
-                                                                at justo molestie elementum. Vivamus vitae hendrerit
-                                                                neque. Orci varius natoque penatibus et magnis dis
-                                                                parturient montes, nascetur ridiculus mus.</p>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="staff" role="tabpanel"
-                                                            aria-labelledby="staff-tab">
-                                                            <div class="product-list">
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">1.</span>
-                                                                        <span class="product-name">Beras 5kg</span>
-                                                                        <span class="product-quantity">20 Karung</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="product-item">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <span class="number-list">2.</span>
-                                                                        <span class="product-name">Gula 1kg</span>
-                                                                        <span class="product-quantity">20 Pcs</span>
-                                                                    </div>
+                                        <!-- Modal Detail -->
+                                        <div class="modal fade" id="tabsModal-{{ $rk->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="tabsModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Retur Konsumen
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active"
+                                                                    id="contact-tab-{{ $rk->id }}"
+                                                                    data-toggle="tab" href="#contact-{{ $rk->id }}"
+                                                                    role="tab" aria-controls="contact"
+                                                                    aria-selected="false">Catatan</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="staff-tab-{{ $rk->id }}"
+                                                                    data-toggle="tab" href="#staff-{{ $rk->id }}"
+                                                                    role="tab" aria-controls="staff"
+                                                                    aria-selected="false">List Produk</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content" id="myTabContent">
+                                                            <div class="tab-pane fade show active"
+                                                                id="contact-{{ $rk->id }}" role="tabpanel"
+                                                                aria-labelledby="contact-tab-{{ $rk->id }}">
+                                                                <p class="modal-text">{{ $rk->catatan ?? '-' }}</p>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="staff-{{ $rk->id }}"
+                                                                role="tabpanel"
+                                                                aria-labelledby="staff-tab-{{ $rk->id }}">
+                                                                <div class="product-list">
+                                                                    @foreach ($rk->detailreturkonsumen as $index => $detail)
+                                                                        <div class="product-item">
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-center">
+                                                                                <span
+                                                                                    class="number-list">{{ $index + 1 }}.</span>
+                                                                                <span
+                                                                                    class="product-name">{{ ucwords($detail->produk->name) }}</span>
+                                                                                <span
+                                                                                    class="product-quantity">{{ $detail->total_unit }}
+                                                                                    {{ ucwords($detail->produk->satuan->name) }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-primary" data-dismiss="modal"><i
-                                                            class="flaticon-cancel-12"></i> Tutup</button>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary" data-dismiss="modal"><i
+                                                                class="flaticon-cancel-12"></i> Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </tr>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal Pengadaan</th>
-                                    <th>Penjualan</th>
+                                    <th>No Series Penjualan</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -426,87 +445,118 @@
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
     <script src="{{ asset('plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    <script>
+        @if (session('showAlert'))
+            const toast = swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                padding: '2em'
+            });
+
+            @if ($errors->any())
+                toast({
+                    type: 'error',
+                    title: @if ($errors->has('general'))
+                        '{{ $errors->first('general') }}'
+                    @else
+                        '{{ $errors->first() }}'
+                    @endif ,
+                    padding: '2em',
+                });
+            @elseif (session('message'))
+                toast({
+                    type: 'success',
+                    title: '{{ session('message') }}',
+                    padding: '2em',
+                });
+            @endif
+        @endif
+    </script>
     <script>
         var secondUpload = new FileUploadWithPreview('mySecondImage')
-        const minPicker = $("#min").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-min").toggle(!!dateStr);
-                $('#html5-extension').DataTable().draw();
+        $(document).ready(function() {
+            const minPicker = $("#min").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-min").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            const maxPicker = $("#max").flatpickr({
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr) {
+                    $("#clear-max").toggle(!!dateStr);
+                    $('#html5-extension').DataTable().draw();
+                }
+            });
+
+            function convertDateFormat(dateStr) {
+                if (!dateStr) return null;
+
+                // Ambil bagian tanggal sebelum waktu (abaikan hari dan waktu)
+                const parts = dateStr.split(', ')[1].split(' ');
+                if (parts.length < 3) return null;
+
+                const [day, monthName, year] = parts.slice(0, 3);
+
+                const months = {
+                    'Januari': '01',
+                    'Februari': '02',
+                    'Maret': '03',
+                    'April': '04',
+                    'Mei': '05',
+                    'Juni': '06',
+                    'Juli': '07',
+                    'Agustus': '08',
+                    'September': '09',
+                    'Oktober': '10',
+                    'November': '11',
+                    'Desember': '12'
+                };
+
+                const month = months[monthName];
+                if (!month) return null;
+
+                return `${year}-${month}-${day.padStart(2, '0')}`;
             }
-        });
 
-        const maxPicker = $("#max").flatpickr({
-            dateFormat: "Y-m-d",
-            allowInput: true,
-            onChange: function(selectedDates, dateStr) {
-                $("#clear-max").toggle(!!dateStr);
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var min = $("#min").val();
+                var max = $("#max").val();
+                var dateStr = data[2];
+
+                var date = convertDateFormat(dateStr);
+                var dateObj = date ? new Date(date) : null;
+
+                var minDate = min ? new Date(min) : null;
+                var maxDate = max ? new Date(max) : null;
+
+                if (!minDate && !maxDate) return true;
+                if (minDate && !maxDate && dateObj) return dateObj >= minDate;
+                if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
+                if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
+                return false;
+            });
+
+            $("#clear-min").on("click", function() {
+                minPicker.clear();
+                $("#clear-min").hide();
                 $('#html5-extension').DataTable().draw();
-            }
-        });
+            });
 
-        function convertDateFormat(dateStr) {
-            if (!dateStr) return null;
-
-            const parts = dateStr.split(', ');
-            if (parts.length !== 2) return null;
-
-            const dateParts = parts[1].split(' ');
-            if (dateParts.length !== 3) return null;
-
-            const day = dateParts[0];
-            const monthName = dateParts[1];
-            const year = dateParts[2];
-
-            const months = {
-                'Januari': '01',
-                'Februari': '02',
-                'Maret': '03',
-                'April': '04',
-                'Mei': '05',
-                'Juni': '06',
-                'Juli': '07',
-                'Agustus': '08',
-                'September': '09',
-                'Oktober': '10',
-                'November': '11',
-                'Desember': '12'
-            };
-
-            const month = months[monthName];
-            if (!month) return null;
-
-            return `${year}-${month}-${day.padStart(2, '0')}`;
-        }
-
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $("#min").val();
-            var max = $("#max").val();
-            var dateStr = data[2];
-            var date = convertDateFormat(dateStr);
-
-            var dateObj = date ? new Date(date) : null;
-            var minDate = min ? new Date(min) : null;
-            var maxDate = max ? new Date(max) : null;
-
-            if (!minDate && !maxDate) return true;
-            if (minDate && !maxDate && dateObj) return dateObj >= minDate;
-            if (!minDate && maxDate && dateObj) return dateObj <= maxDate;
-            if (minDate && maxDate && dateObj) return dateObj >= minDate && dateObj <= maxDate;
-            return false;
-        });
-
-        $("#clear-min").on("click", function() {
-            minPicker.clear();
-            $("#clear-min").hide();
-            $('#html5-extension').DataTable().draw();
-        });
-
-        $("#clear-max").on("click", function() {
-            maxPicker.clear();
-            $("#clear-max").hide();
-            $('#html5-extension').DataTable().draw();
+            $("#clear-max").on("click", function() {
+                maxPicker.clear();
+                $("#clear-max").hide();
+                $('#html5-extension').DataTable().draw();
+            });
         });
 
         $('#html5-extension').DataTable({
@@ -585,46 +635,16 @@
         });
 
         $(document).ready(function() {
-            // Dummy data untuk simulasi list produk dari penjualan
-            const dummyPenjualanData = {
-                "PGDRST30052025-1107": [{
-                        produk: "Beras 10Kg",
-                        satuan: 5,
-                        satuanType: "Karung"
-                    },
-                    {
-                        produk: "Gula 1Kg",
-                        satuan: 10,
-                        satuanType: "Sak"
-                    },
-                    {
-                        produk: "Minyak 1L",
-                        satuan: 15,
-                        satuanType: "Botol"
-                    }
-                ],
-                "PGDRST30052025-1108": [{
-                    produk: "Minyak 2L",
-                    satuan: 3,
-                    satuanType: "Botol"
-                }],
-                "PGDRST30052025-1109": [{
-                        produk: "Tepung 5Kg",
-                        satuan: 2,
-                        satuanType: "Karung"
-                    },
-                    {
-                        produk: "Garam 500g",
-                        satuan: 8,
-                        satuanType: "Pack"
-                    }
-                ]
-            };
+            // Variabel counter untuk ID unik
+            let listCounter = 1;
 
-            // Objek untuk simpan state input
-            let inputState = {};
+            // Fungsi untuk kapitalisasi huruf pertama (mirip ucwords)
+            function capitalizeFirstLetter(string) {
+                if (!string) return '';
+                return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            }
 
-            // Template list produk penjualan (text statis + input)
+            // Template list produk penjualan
             const penjualanTemplate = `
                 <div class="row px-3 product-items">
                     <div class="col-lg-1 no-list">
@@ -640,7 +660,7 @@
                     <div class="col-lg-7">
                         <div class="form-group mb-3">
                             <div class="input-group">
-                                <input type="number" style="font-size: 15px" class="form-control jumlah-retur" min="1" placeholder="Jumlah Retur" required>
+                                <input type="number" style="font-size: 15px" class="form-control jumlah-retur" min="1" placeholder="Jumlah Retur" name="quantity[]" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text satuan-retur"></span>
                                 </div>
@@ -664,7 +684,7 @@
                 </div>
             `;
 
-            // Sembunyikan template awal dan hapus dari HTML statis
+            // Sembunyikan template awal
             $('#list-item-produk').remove();
 
             // Fungsi update nomor list
@@ -690,47 +710,54 @@
             $('#penjualanSelect select').on('change', function() {
                 const selectedValue = $(this).val();
                 const $listContainer = $('#list-container');
-                $listContainer.empty(); // Kosongkan list sebelum load data baru
+                $listContainer.empty();
+
                 if (selectedValue && selectedValue !== '') {
-                    const data = dummyPenjualanData[selectedValue] || [];
-                    data.forEach(item => {
-                        const $template = $(penjualanTemplate);
-                        $template.find('.nama-produk').text(item.produk);
-                        $template.find('.jumlah-produk').text(`${item.satuan}`);
-                        $template.find('.satuan-produk').text(item.satuanType);
-                        $template.find('.satuan-retur').text(item.satuanType);
-                        $template.find('.jumlah-retur').attr('max', item.satuan);
-                        $listContainer.append($template);
-                    });
-                    updateListNumbers();
-                    restoreInputValues(selectedValue); // Restore nilai input setelah load
-                    updateRekap(); // Update rekap setelah load data
-                }
-            });
-
-            // Fungsi simpan state input
-            function saveInputValues(selectedValue) {
-                const $listContainer = $('#list-container');
-                inputState[selectedValue] = {};
-                $listContainer.find('.product-items').each(function(index) {
-                    const $input = $(this).find('.jumlah-retur');
-                    inputState[selectedValue][index] = $input.val();
-                });
-            }
-
-            // Fungsi restore state input
-            function restoreInputValues(selectedValue) {
-                const $listContainer = $('#list-container');
-                if (inputState[selectedValue]) {
-                    $listContainer.find('.product-items').each(function(index) {
-                        const $input = $(this).find('.jumlah-retur');
-                        const savedValue = inputState[selectedValue][index];
-                        if (savedValue) {
-                            $input.val(savedValue);
+                    $.ajax({
+                        url: '{{ route('api.penjualan-detail', ':no_series') }}'.replace(
+                            ':no_series', selectedValue),
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.success) {
+                                const data = response.data;
+                                data.forEach(item => {
+                                    const $template = $(penjualanTemplate);
+                                    $template.find('input[name="id_produk[]"]').val(item
+                                        .produk_id);
+                                    $template.find('.nama-produk').text(
+                                        capitalizeFirstLetter(item.nama_produk));
+                                    $template.find('.jumlah-produk').text(
+                                        capitalizeFirstLetter(`${item.total_unit}`));
+                                    $template.find('.satuan-produk').text(
+                                        capitalizeFirstLetter(item.satuan));
+                                    $template.find('.satuan-retur').text(
+                                        capitalizeFirstLetter(item.satuan));
+                                    $template.find('.jumlah-retur').attr('max', item
+                                        .total_unit);
+                                    $listContainer.append($template);
+                                });
+                                updateListNumbers();
+                                updateRekap();
+                            } else {
+                                $listContainer.append(
+                                    '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Data penjualan tidak ditemukan!</div>'
+                                );
+                            }
+                        },
+                        error: function(xhr) {
+                            $listContainer.append(
+                                '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Terjadi kesalahan saat mengambil data!</div>'
+                            );
                         }
                     });
+                } else {
+                    $listContainer.append(
+                        '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Silahkan pilih no series penjualan terlebih dahulu!</div>'
+                    );
+                    $('#total-products').text('0');
+                    $('#total-units').text('0');
                 }
-            }
+            });
 
             // Event saat modal ditampilkan
             $('#add').on('shown.bs.modal', function() {
@@ -741,36 +768,56 @@
                 const selectedValue = $select.val();
                 const $listContainer = $('#list-container');
                 if (selectedValue && selectedValue !== '') {
-                    $listContainer.empty();
-                    const data = dummyPenjualanData[selectedValue] || [];
-                    data.forEach(item => {
-                        const $template = $(penjualanTemplate);
-                        $template.find('.nama-produk').text(item.produk);
-                        $template.find('.jumlah-produk').text(`${item.satuan}`);
-                        $template.find('.satuan-produk').text(item.satuanType);
-                        $template.find('.satuan-retur').text(item.satuanType);
-                        $template.find('.jumlah-retur').attr('max', item.satuan);
-                        $listContainer.append($template);
+                    $.ajax({
+                        url: '{{ route('api.penjualan-detail', ':no_series') }}'.replace(
+                            ':no_series', selectedValue),
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.success) {
+                                $listContainer.empty();
+                                const data = response.data;
+                                data.forEach(item => {
+                                    const $template = $(penjualanTemplate);
+                                    $template.find('input[name="id_produk[]"]').val(item
+                                        .produk_id);
+                                    $template.find('.nama-produk').text(
+                                        capitalizeFirstLetter(item.nama_produk));
+                                    $template.find('.jumlah-produk').text(
+                                        capitalizeFirstLetter(`${item.total_unit}`));
+                                    $template.find('.satuan-produk').text(
+                                        capitalizeFirstLetter(item.satuan));
+                                    $template.find('.satuan-retur').text(
+                                        capitalizeFirstLetter(item.satuan));
+                                    $template.find('.jumlah-retur').attr('max', item
+                                        .total_unit);
+                                    $listContainer.append($template);
+                                });
+                                updateListNumbers();
+                                updateRekap();
+                            } else {
+                                $listContainer.append(
+                                    '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Data penjualan tidak ditemukan!</div>'
+                                );
+                            }
+                        },
+                        error: function(xhr) {
+                            $listContainer.append(
+                                '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Terjadi kesalahan saat mengambil data!</div>'
+                            );
+                        }
                     });
-                    updateListNumbers();
-                    restoreInputValues(selectedValue); // Restore nilai input saat modal dibuka
-                    updateRekap(); // Update rekap setelah load data
                 } else {
                     $listContainer.empty().append(
                         '<div class="empty-text" style="text-align: center; padding: 20px; color: #b0131e; font-weight: 900; font-size: 17.5px;">Silahkan pilih no series penjualan terlebih dahulu!</div>'
                     );
                     $('#total-products').text('0');
-                    $('#total-units').text('0'); // Reset rekap kalau nggak ada pilihan
+                    $('#total-units').text('0');
                 }
             });
 
-            // Event saat modal ditutup
+            // Event saat modal ditutup (opsional simpan state)
             $('#add').on('hidden.bs.modal', function() {
-                const $select = $('#penjualanSelect select');
-                const selectedValue = $select.val();
-                if (selectedValue && selectedValue !== '') {
-                    saveInputValues(selectedValue); // Simpan nilai input sebelum modal tutup
-                }
+                // State bisa diabaikan karena data dari API
             });
 
             // Event klik delete item
@@ -785,7 +832,7 @@
                 }
                 $(this).closest('.product-items').remove();
                 updateListNumbers();
-                updateRekap(); // Update rekap setelah delete
+                updateRekap();
             });
 
             // Validasi jumlah retur
@@ -806,7 +853,7 @@
                         pos: 'bottom-left'
                     });
                 }
-                updateRekap(); // Update rekap saat input berubah
+                updateRekap();
             });
 
             // Validasi form sebelum submit
@@ -824,82 +871,81 @@
                 }
             });
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('button[data-target^="#lihatbukti"]').on('click', function() {
+                let modalId = $(this).data('target');
+                let $modal = $(modalId);
+                let rawImages = $(this).attr('data-image') || '[]';
+                let currentImages = JSON.parse(rawImages.replace(/'/g, '"'));
+                let currentImageIndex = 0;
 
-        let currentImages = [];
-        let currentImageIndex = 0;
+                let $buktiImage = $modal.find('#buktiImage');
+                let $noImageMessage = $modal.find('#noImageMessage');
+                let restockId = modalId.replace('#lihatbukti-', '');
+                let $prevImage = $modal.find('#prevImage-' + restockId);
+                let $nextImage = $modal.find('#nextImage-' + restockId);
 
-        // Event saat button "Lihat Bukti" diklik
-        $('button[data-target="#lihatbukti"]').on('click', function() {
-            // Ambil data-image (sudah array dari jQuery data())
-            currentImages = $(this).data('image') || [];
-            currentImageIndex = 0;
+                if (currentImages && currentImages.length > 0) {
+                    $buktiImage.attr('src', currentImages[0]);
+                    $buktiImage.attr('alt', 'Bukti Foto Restock');
+                    $buktiImage.show();
+                    $noImageMessage.hide();
 
-            // Cek apakah ada gambar
-            if (currentImages && currentImages.length > 0) {
-                // Tampilkan gambar pertama
-                $('#buktiImage').attr('src', currentImages[0]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
-                $('#buktiImage').show();
-                $('#noImageMessage').hide();
-
-                // Hide/show tombol navigasi berdasarkan jumlah gambar
-                if (currentImages.length > 1) {
-                    $('#prevImage').show();
-                    $('#nextImage').show();
-                    $('#nextImage').prop('disabled', false);
+                    if (currentImages.length > 1) {
+                        $prevImage.show();
+                        $nextImage.show();
+                    } else {
+                        $prevImage.hide();
+                        $nextImage.hide();
+                    }
+                    $prevImage.prop('disabled', true);
+                    $nextImage.prop('disabled', false);
                 } else {
-                    $('#prevImage').hide();
-                    $('#nextImage').hide();
+                    $buktiImage.attr('src', '');
+                    $buktiImage.hide();
+                    $noImageMessage.show();
+                    $prevImage.hide();
+                    $nextImage.hide();
                 }
-                $('#prevImage').prop('disabled', true); // Awalnya di gambar pertama
-            } else {
-                $('#buktiImage').attr('src', '');
-                $('#buktiImage').hide();
-                $('#noImageMessage').show();
-                $('#prevImage').hide();
-                $('#nextImage').hide();
-            }
-        });
 
-        // Event untuk tombol Sebelumnya
-        $('#prevImage').on('click', function() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
+                $prevImage.off('click').on('click', function() {
+                    if (currentImageIndex > 0) {
+                        currentImageIndex--;
+                        $buktiImage.attr('src', currentImages[currentImageIndex]);
+                        $buktiImage.attr('alt', 'Bukti Foto Restock');
+                        $nextImage.prop('disabled', false);
+                        if (currentImageIndex === 0) {
+                            $prevImage.prop('disabled', true);
+                        }
+                    }
+                });
 
-                // Update tombol
-                $('#nextImage').prop('disabled', false);
-                if (currentImageIndex === 0) {
-                    $('#prevImage').prop('disabled', true);
-                }
-            }
-        });
+                $nextImage.off('click').on('click', function() {
+                    if (currentImageIndex < currentImages.length - 1) {
+                        currentImageIndex++;
+                        $buktiImage.attr('src', currentImages[currentImageIndex]);
+                        $buktiImage.attr('alt', 'Bukti Foto Restock');
+                        $prevImage.prop('disabled', false);
+                        if (currentImageIndex === currentImages.length - 1) {
+                            $nextImage.prop('disabled', true);
+                        }
+                    }
+                });
 
-        // Event untuk tombol Selanjutnya
-        $('#nextImage').on('click', function() {
-            if (currentImageIndex < currentImages.length - 1) {
-                currentImageIndex++;
-                $('#buktiImage').attr('src', currentImages[currentImageIndex]);
-                $('#buktiImage').attr('alt', 'Bukti Foto Restock');
-
-                // Update tombol
-                $('#prevImage').prop('disabled', false);
-                if (currentImageIndex === currentImages.length - 1) {
-                    $('#nextImage').prop('disabled', true);
-                }
-            }
-        });
-
-        // Reset state saat modal ditutup
-        $('#lihatbukti').on('hidden.bs.modal', function() {
-            currentImages = [];
-            currentImageIndex = 0;
-            $('#buktiImage').attr('src', '');
-            $('#buktiImage').hide();
-            $('#noImageMessage').show();
-            $('#prevImage').hide();
-            $('#nextImage').hide();
+                $modal.on('hidden.bs.modal', function() {
+                    currentImages = [];
+                    currentImageIndex = 0;
+                    $buktiImage.attr('src', '');
+                    $buktiImage.hide();
+                    $noImageMessage.show();
+                    $prevImage.hide();
+                    $nextImage.hide();
+                    $prevImage.off('click');
+                    $nextImage.off('click');
+                });
+            });
         });
     </script>
 @endsection

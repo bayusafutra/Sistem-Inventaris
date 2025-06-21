@@ -11,12 +11,10 @@ use App\Models\PengadaanRestock;
 use App\Models\DetailRestock;
 use App\Models\GambarRestock;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class RestockController extends Controller
 {
-    public function managerRestock($slug)
+    public function indexRestock($slug)
     {
         $user = Auth::user();
         if (!$user->toko_id) {
@@ -51,7 +49,7 @@ class RestockController extends Controller
         $user = Auth::user();
         $toko = Toko::where('id', $user->toko_id)->first();
         if (!$toko || $toko->slug !== $slug) {
-            return redirect()->route('manager.restock', $toko->slug)->with('message', 'Slug tidak sesuai.');
+            return redirect()->back()->with('message', 'Slug tidak sesuai.');
         }
         $request->validate([
             'noseries' => 'required|string|max:255',
@@ -171,13 +169,13 @@ class RestockController extends Controller
             // Commit transaksi
             DB::commit();
 
-            return redirect()->route('manager.restock', $toko->slug)->with([
+            return redirect()->back()->with([
                 'message' => 'Restock berhasil ditambahkan.',
                 'showAlert' => true,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('manager.restock', $toko->slug)->withErrors([
+            return redirect()->back()->withErrors([
                 'general' => 'Terjadi kesalahan saat menambahkan restock: ' . $e->getMessage(),
             ])->with('showAlert', true);
         }
