@@ -21,8 +21,7 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Akun</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Profil Pengguna</span>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Beranda</span>
                                 </li>
                             </ol>
                         </nav>
@@ -55,31 +54,31 @@
                             <div class="simple--counter-container">
                                 <div class="counter-container">
                                     <div class="counter-content">
-                                        <h1 class="s-counter2 s-counter text-center">75</h1>
+                                        <h1 class="s-counter2 s-counter text-center">{{ $toko }}</h1>
                                     </div>
                                     <p class="s-counter-text text-center">TOKO</p>
                                 </div>
                                 <div class="counter-container">
                                     <div class="counter-content">
-                                        <h1 class="s-counter3 s-counter text-center">150</h1>
+                                        <h1 class="s-counter3 s-counter text-center">{{ $pengguna }}</h1>
                                     </div>
                                     <p class="s-counter-text text-center">PENGGUNA</p>
                                 </div>
                                 <div class="counter-container">
                                     <div class="counter-content">
-                                        <h1 class="s-counter4 s-counter text-center">230</h1>
+                                        <h1 class="s-counter4 s-counter text-center">{{ $produk }}</h1>
                                     </div>
                                     <p class="s-counter-text text-center">PRODUK</p>
                                 </div>
                                 <div class="counter-container">
                                     <div class="counter-content">
-                                        <h1 class="s-counter5 s-counter text-center">210</h1>
+                                        <h1 class="s-counter5 s-counter text-center">{{ $tmasuk }}</h1>
                                     </div>
                                     <p class="s-counter-text text-center">TRANSAKSI MASUK</p>
                                 </div>
                                 <div class="counter-container">
                                     <div class="counter-content">
-                                        <h1 class="s-counter6 s-counter text-center">200</h1>
+                                        <h1 class="s-counter6 s-counter text-center">{{ $tkeluar }}</h1>
                                     </div>
                                     <p class="s-counter-text text-center">TRANSAKSI KELUAR</p>
                                 </div>
@@ -111,7 +110,6 @@
                                         <circle cx="5" cy="12" r="1"></circle>
                                     </svg>
                                 </a>
-
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="uniqueVisitors">
                                     <a class="dropdown-item" href="javascript:void(0);">View</a>
                                     <a class="dropdown-item" href="javascript:void(0);">Update</a>
@@ -120,9 +118,8 @@
                             </div>
                         </div>
                         <div class="widget-content px-4">
-                            <div class="" id="revenueMonthly"></div>
+                            <div class="" id="grafik1"></div>
                         </div>
-
                         <div class="rating px-5 mb-3">
                             <h5>Penilaian Pengguna</h5>
                             <div id="userRatingCarousel" class="carousel slide" data-bs-ride="carousel"
@@ -213,7 +210,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="carousel-item">
                                         <div class="row">
                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
@@ -313,4 +309,229 @@
     <script src="{{ asset('plugins/apex/apexcharts.min.js') }}"></script>
     <script src="{{ asset('plugins/counter/jquery.countTo.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard/custom-home.js') }}"></script>
+    <script>
+        var options1 = {
+            chart: {
+                fontFamily: "Nunito, sans-serif",
+                height: 365,
+                type: "area",
+                zoom: {
+                    enabled: false,
+                },
+                dropShadow: {
+                    enabled: true,
+                    opacity: 0.2,
+                    blur: 10,
+                    left: -7,
+                    top: 22,
+                },
+                toolbar: {
+                    show: false,
+                },
+                events: {
+                    mounted: function(ctx, config) {
+                        const highest1 = ctx.getHighestValueInSeries(0);
+                        const highest2 = ctx.getHighestValueInSeries(1);
+
+                        ctx.addPointAnnotation({
+                            x: new Date(
+                                ctx.w.globals.seriesX[0][
+                                    ctx.w.globals.series[0].indexOf(highest1)
+                                ]
+                            ).getTime(),
+                            y: highest1,
+                            label: {
+                                style: {
+                                    cssClass: "d-none",
+                                },
+                            },
+                            customSVG: {
+                                SVG: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#2196f3" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>',
+                                cssClass: undefined,
+                                offsetX: -8,
+                                offsetY: 5,
+                            },
+                        });
+
+                        ctx.addPointAnnotation({
+                            x: new Date(
+                                ctx.w.globals.seriesX[1][
+                                    ctx.w.globals.series[1].indexOf(highest2)
+                                ]
+                            ).getTime(),
+                            y: highest2,
+                            label: {
+                                style: {
+                                    cssClass: "d-none",
+                                },
+                            },
+                            customSVG: {
+                                SVG: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#6d17cb" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>',
+                                cssClass: undefined,
+                                offsetX: -8,
+                                offsetY: 5,
+                            },
+                        });
+                    },
+                },
+            },
+            colors: ["#2196f3", "#6d17cb"],
+            dataLabels: {
+                enabled: false,
+            },
+            markers: {
+                discrete: [{
+                        seriesIndex: 0,
+                        dataPointIndex: 7,
+                        fillColor: "#000",
+                        strokeColor: "#000",
+                        size: 5,
+                    },
+                    {
+                        seriesIndex: 2,
+                        dataPointIndex: 11,
+                        fillColor: "#000",
+                        strokeColor: "#000",
+                        size: 4,
+                    },
+                ],
+            },
+            stroke: {
+                show: true,
+                curve: "smooth",
+                width: 2,
+                lineCap: "square",
+            },
+            series: [{
+                    name: "Pendaftar",
+                    data: @json($pendaftar),
+                },
+                {
+                    name: "Terverifikasi",
+                    data: @json($terverifikasi),
+                },
+            ],
+            labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
+            xaxis: {
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    show: false,
+                },
+                crosshairs: {
+                    show: true,
+                },
+                labels: {
+                    offsetX: 0,
+                    offsetY: 5,
+                    style: {
+                        fontSize: "12px",
+                        fontFamily: "Nunito, sans-serif",
+                        cssClass: "apexcharts-xaxis-title",
+                    },
+                },
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(value, index) {
+                        return value;
+                    },
+                    offsetX: -22,
+                    offsetY: 0,
+                    style: {
+                        fontSize: "12px",
+                        fontFamily: "Nunito, sans-serif",
+                        cssClass: "apexcharts-yaxis-title",
+                    },
+                },
+            },
+            grid: {
+                borderColor: "#e0e6ed",
+                strokeDashArray: 5,
+                xaxis: {
+                    lines: {
+                        show: true,
+                    },
+                },
+                yaxis: {
+                    lines: {
+                        show: false,
+                    },
+                },
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: -10,
+                },
+            },
+            legend: {
+                position: "top",
+                horizontalAlign: "right",
+                offsetY: 0,
+                fontSize: "16px",
+                fontFamily: "Nunito, sans-serif",
+                markers: {
+                    width: 10,
+                    height: 10,
+                    strokeWidth: 0,
+                    strokeColor: "#fff",
+                    fillColors: undefined,
+                    radius: 12,
+                    onClick: undefined,
+                    offsetX: 0,
+                    offsetY: 0,
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 20,
+                },
+            },
+            tooltip: {
+                theme: "dark",
+                marker: {
+                    show: true,
+                },
+                x: {
+                    show: false,
+                },
+            },
+            fill: {
+                type: "gradient",
+                gradient: {
+                    type: "vertical",
+                    shadeIntensity: 1,
+                    inverseColors: !1,
+                    opacityFrom: 0.28,
+                    opacityTo: 0.05,
+                    stops: [45, 100],
+                },
+            },
+            responsive: [{
+                breakpoint: 575,
+                options: {
+                    legend: {
+                        offsetY: 10,
+                    },
+                },
+            }, ],
+        };
+
+        var chart1 = new ApexCharts(document.querySelector("#grafik1"), options1);
+        chart1.render();
+    </script>
 @endsection

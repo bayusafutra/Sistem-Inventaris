@@ -51,7 +51,7 @@
                             <h5 class="">Stok Produk</h5>
                         </div>
                         <div class="widget-content">
-                            <div id="chart-2" class=""></div>
+                            <div id="grafik2" class=""></div>
                         </div>
                     </div>
                 </div>
@@ -71,12 +71,12 @@
                                     </svg>
                                 </div>
                                 <div class="w-content">
-                                    <span class="w-values">3,192</span>
-                                    <span class="w-numeric-titles">Pengadaan Produk</span>
+                                    <span class="w-values">{{ $jumlahrestock }}</span>
+                                    <span class="w-numeric-titles">Restock Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
-                                <div id="total-pengadaan"></div>
+                                <div id="grafik3"></div>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Produk <span class="summary-count">2.350 </span></h6>
+                                                <h6>Produk <span class="summary-count">{{ $jumlahproduk }}</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -123,7 +123,8 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Gudang <span class="summary-count">9</span></h6>
+                                                <h6>Staff Gudang <span class="summary-count">{{ $jumlahstgudang }}</span>
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
@@ -143,7 +144,8 @@
                                         </div>
                                         <div class="w-summary-details">
                                             <div class="w-summary-info">
-                                                <h6>Staff Penjualan <span class="summary-count">3</span></h6>
+                                                <h6>Staff Penjualan <span
+                                                        class="summary-count">{{ $jumlahstpenjualan }}</span></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -167,12 +169,12 @@
                                     </svg>
                                 </div>
                                 <div class="w-content">
-                                    <span class="w-value">3,192</span>
+                                    <span class="w-value">{{ $jumlahpenjualan }}</span>
                                     <span class="w-numeric-title">Penjualan Produk</span>
                                 </div>
                             </div>
                             <div class="w-chart">
-                                <div id="total-penjualan"></div>
+                                <div id="grafik4"></div>
                             </div>
                         </div>
                     </div>
@@ -191,89 +193,31 @@
                                                 <div class="th-content">Nama Produk</div>
                                             </th>
                                             <th>
-                                                <div class="th-content text-center">Satuan Produk</div>
+                                                <div class="th-content text-center">Stok Produk</div>
                                             </th>
                                             <th>
-                                                <div class="th-content text-center">Stok Produk</div>
+                                                <div class="th-content text-center">Satuan Produk</div>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="td-content product-name">
-                                                    <div class="align-self-center">
-                                                        <p class="prd-name">Beras 5Kg</p>
+                                        @foreach ($produkterendah as $pt)
+                                            <tr>
+                                                <td>
+                                                    <div class="td-content product-name">
+                                                        <div class="align-self-center">
+                                                            <p class="prd-name">{{ ucwords($pt->name) }}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">Karung</div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">5</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="td-content product-name">
-                                                    <div class="align-self-center">
-                                                        <p class="prd-name">Minyak Goreng 1L</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">Botol</div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">3</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="td-content product-name">
-                                                    <div class="align-self-center">
-                                                        <p class="prd-name">Gula Pasir 1Kg</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">Sak</div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">7</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="td-content product-name">
-                                                    <div class="align-self-center">
-                                                        <p class="prd-name">Kecap Manis 500ml</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">Botol</div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">2</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="td-content product-name">
-                                                    <div class="align-self-center">
-                                                        <p class="prd-name">Kopi Bubuk 250gr</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">Paket</div>
-                                            </td>
-                                            <td>
-                                                <div class="td-content text-center">4</div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td>
+                                                    <div class="td-content text-center">{{ $pt->stok }}</div>
+                                                </td>
+                                                <td>
+                                                    <div class="td-content text-center">{{ ucwords($pt->satuan->name) }}</div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -512,5 +456,207 @@
 
         var chart1 = new ApexCharts(document.querySelector("#grafik1"), options1);
         chart1.render();
+    </script>
+    <script>
+        var options = {
+            chart: {
+                type: "donut",
+                width: 397,
+            },
+            colors: ["#2196f3", "#e2a03f", "#8738a7", "#f7dc6f", "#CB0404"],
+            dataLabels: {
+                enabled: false,
+            },
+            legend: {
+                position: "bottom",
+                horizontalAlign: "center",
+                fontSize: "14px",
+                markers: {
+                    width: 10,
+                    height: 10,
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 8,
+                },
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: "50%",
+                        background: "transparent",
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: "17px",
+                                fontFamily: "Nunito, sans-serif",
+                                color: undefined,
+                                offsetY: -10,
+                            },
+                            value: {
+                                show: true,
+                                fontSize: "26px",
+                                fontFamily: "Nunito, sans-serif",
+                                color: "20",
+                                offsetY: 16,
+                                formatter: function(val) {
+                                    return val;
+                                },
+                            },
+                            total: {
+                                show: true,
+                                showAlways: true,
+                                label: "Total",
+                                color: "#888ea8",
+                                formatter: function(w) {
+                                    return w.globals.seriesTotals.reduce(function(a, b) {
+                                        return a + b;
+                                    }, 0);
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            stroke: {
+                show: true,
+                width: 2,
+            },
+            series: @json($stockSeries),
+            labels: @json($stockLabels),
+            responsive: [{
+                    breakpoint: 1599,
+                    options: {
+                        chart: {
+                            width: "350px",
+                            height: "400px",
+                        },
+                        legend: {
+                            position: "bottom",
+                        },
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    size: "85%",
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    breakpoint: 1439,
+                    options: {
+                        chart: {
+                            width: "350px",
+                            height: "390px",
+                        },
+                        legend: {
+                            position: "bottom",
+                        },
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    size: "65%",
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+
+        var chart = new ApexCharts(document.querySelector("#grafik2"), options);
+        chart.render();
+    </script>
+    <script>
+        var options3 = {
+            chart: {
+                id: "restock",
+                type: "area",
+                height: 315,
+                sparkline: {
+                    enabled: true,
+                },
+            },
+            stroke: {
+                curve: "smooth",
+                width: 2,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Restock",
+                data: @json($restockSeries), // Ganti dengan data dari controller
+            }, ],
+            labels: @json($restockLabels), // Ganti dengan label dari controller
+            yaxis: {
+                min: 0,
+            },
+            grid: {
+                padding: {
+                    top: 125,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                },
+            },
+            tooltip: {
+                x: {
+                    show: false,
+                },
+                theme: "dark",
+            },
+            colors: ["#27548A"],
+        };
+
+        var d_2C_2 = new ApexCharts(document.querySelector("#grafik3"), options3);
+        d_2C_2.render();
+    </script>
+    <script>
+        var options4 = {
+            chart: {
+                id: "sales",
+                type: "area",
+                height: 315,
+                sparkline: {
+                    enabled: true,
+                },
+            },
+            stroke: {
+                curve: "smooth",
+                width: 2,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Penjualan",
+                data: @json($salesSeries),
+            }, ],
+            labels: @json($salesLabels),
+            yaxis: {
+                min: 0,
+            },
+            grid: {
+                padding: {
+                    top: 125,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                },
+            },
+            tooltip: {
+                x: {
+                    show: false,
+                },
+                theme: "dark",
+            },
+            colors: ["#e7515a"],
+        };
+
+        var d_2C_4 = new ApexCharts(document.querySelector("#grafik4"), options4);
+        d_2C_4.render();
     </script>
 @endsection

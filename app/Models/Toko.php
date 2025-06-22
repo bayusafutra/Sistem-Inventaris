@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\SatuanProduk;
 use App\Models\Produk;
+use App\Models\Restock;
+use App\Models\Penjualan;
 use App\Models\PengadaanRestock;
 
 class Toko extends Model
@@ -34,5 +36,15 @@ class Toko extends Model
     public function pengadaan()
     {
         return $this->hasMany(PengadaanRestock::class, 'toko_id');
+    }
+
+    public function restock()
+    {
+        return $this->hasMany(Restock::class, 'toko_id');
+    }
+
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class, 'toko_id');
     }
 }

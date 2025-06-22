@@ -50,8 +50,8 @@ class AuthController extends Controller
             1 => redirect()->route('admin.dashboard'),
             2 => redirect()->route('home'),
             3 => redirect()->route('manager.dashboard', ['slug' => Auth::user()->toko->slug]),
-            4 => redirect()->route('stgudang.dashboard'),
-            5 => redirect()->route('stpenjualan.dashboard'),
+            4 => redirect()->route('stgudang.dashboard', ['slug' => Auth::user()->toko->slug]),
+            5 => redirect()->route('stpenjualan.dashboard', ['slug' => Auth::user()->toko->slug]),
             default => redirect()->route('home')->with('error', 'Role tidak dikenali.'),
         };
     }

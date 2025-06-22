@@ -5,7 +5,9 @@
         <ul class="list-unstyled menu-categories" id="accordionExample">
             @if (auth()->user()->roleuser == 1)
                 <li class="menu">
-                    <a href="{{ route('admin.dashboard') }}" aria-expanded="false" class="dropdown-toggle">
+                    <a href="{{ route('admin.dashboard') }}"
+                        {{ request()->routeIs('admin.dashboard') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -18,7 +20,9 @@
                     </a>
                 </li>
                 <li class="menu">
-                    <a href="{{ route('admin.verifikasi-toko') }}" aria-expanded="false" class="dropdown-toggle">
+                    <a href="{{ route('admin.verifikasi-toko') }}"
+                        {{ request()->routeIs('admin.verifikasi-toko') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -32,14 +36,16 @@
                     </a>
                 </li>
                 <li class="menu">
-                    <a href="#master-admin" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <a href="#master-admin" data-toggle="collapse"
+                        {{ request()->routeIs('admin.master-toko', 'admin.master-pengguna') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-database">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                stroke-linejoin="round" class="feather feather-layers">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
                             </svg>
                             <span>Master</span>
                         </div>
@@ -51,19 +57,22 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled" id="master-admin" data-parent="#accordionExample">
-                        <li>
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('admin.master-toko', 'admin.master-pengguna') ? 'show' : '' }}"
+                        id="master-admin" data-parent="#accordionExample">
+                        <li class="{{ request()->routeIs('admin.master-toko') ? 'active' : '' }}">
                             <a href="{{ route('admin.master-toko') }}"> Toko </a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('admin.master-pengguna') ? 'active' : '' }}">
                             <a href="{{ route('admin.master-pengguna') }}"> Pengguna </a>
                         </li>
                     </ul>
                 </li>
             @elseif (auth()->user()->roleuser == 2)
                 <li class="menu">
-                    <a href="{{ route('home') }}" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
+                    <a href="{{ route('home') }}"
+                        {{ request()->routeIs('home') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-home">
@@ -74,16 +83,18 @@
                         </div>
                     </a>
                 </li>
+
                 <li class="menu">
-                    <a href="{{ route('pendaftaran-toko') }}" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
+                    <a href="{{ route('pendaftaran-toko') }}"
+                        {{ request()->routeIs('pendaftaran-toko') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-briefcase">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2">
                                 </rect>
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16">
-                                </path>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                             </svg>
                             <span>Pendaftaran Toko</span>
                         </div>
@@ -92,8 +103,9 @@
             @elseif (auth()->user()->roleuser == 3)
                 <li class="menu">
                     <a href="{{ Auth::user()->toko_id ? route('manager.dashboard', ['slug' => Auth::user()->toko->slug]) : '#' }}"
-                        aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
+                        {{ request()->routeIs('manager.dashboard') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
@@ -105,14 +117,16 @@
                     </a>
                 </li>
                 <li class="menu">
-                    <a href="#master-manager" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
+                    <a href="#master-manager" data-toggle="collapse"
+                        {{ request()->routeIs('manager.master-staff', 'manager.master-satuan-produk', 'manager.master-produk') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
+                        class="dropdown-toggle">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-database">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
                             </svg>
                             <span>Master</span>
                         </div>
@@ -124,26 +138,28 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled" id="master-manager" data-parent="#accordionExample">
-                        <li>
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('manager.master-staff', 'manager.master-satuan-produk', 'manager.master-produk') ? 'show' : '' }}"
+                        id="master-manager" data-parent="#accordionExample">
+                        <li class="{{ request()->routeIs('manager.master-staff') ? 'active' : '' }}">
                             <a
                                 href="{{ Auth::user()->toko_id ? route('manager.master-staff', ['slug' => Auth::user()->toko->slug]) : '#' }}">Staff</a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('manager.master-satuan-produk') ? 'active' : '' }}">
                             <a
                                 href="{{ Auth::user()->toko_id ? route('manager.master-satuan-produk', ['slug' => Auth::user()->toko->slug]) : '#' }}">Satuan
                                 Produk</a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('manager.master-produk') ? 'active' : '' }}">
                             <a
                                 href="{{ Auth::user()->toko_id ? route('manager.master-produk', ['slug' => Auth::user()->toko->slug]) : '#' }}">Produk</a>
                         </li>
                     </ul>
                 </li>
                 <li class="menu">
-                    <a href="#inventaris-manager" data-toggle="collapse" aria-expanded="false"
+                    <a href="#inventaris-manager" data-toggle="collapse"
+                        {{ request()->routeIs('manager.pengadaan-restock', 'manager.restock', 'manager.penjualan', 'manager.expired') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}
                         class="dropdown-toggle">
-                        <div class="">
+                        <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-package">
@@ -164,34 +180,32 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled" id="inventaris-manager"
-                        data-parent="#accordionExample">
-                        <li>
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('manager.pengadaan-restock', 'manager.restock', 'manager.penjualan', 'manager.expired') ? 'show' : '' }}"
+                        id="inventaris-manager" data-parent="#accordionExample">
+                        <li class="{{ request()->routeIs('manager.pengadaan-restock') ? 'active' : '' }}">
                             <a
                                 href="{{ Auth::user()->toko_id ? route('manager.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Pengadaan
-                                Restock
-                            </a>
+                                Restock</a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('manager.restock') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('manager.restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Restock
-                            </a>
+                                href="{{ Auth::user()->toko_id ? route('manager.restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Restock</a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('manager.penjualan') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('manager.penjualan', ['slug' => Auth::user()->toko->slug]) : '#' }}">Penjualan
-                            </a>
+                                href="{{ Auth::user()->toko_id ? route('manager.penjualan', ['slug' => Auth::user()->toko->slug]) : '#' }}">Penjualan</a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('manager.expired') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('manager.expired', ['slug' => Auth::user()->toko->slug]) : '#' }}">Expired
-                            </a>
+                                href="{{ Auth::user()->toko_id ? route('manager.expired', ['slug' => Auth::user()->toko->slug]) : '#' }}">Expired</a>
                         </li>
                     </ul>
                 </li>
             @elseif (auth()->user()->roleuser == 4)
                 <li class="menu">
-                    <a href="{{ route('stgudang.dashboard') }}" aria-expanded="false" class="dropdown-toggle">
+                    <a href="{{ Auth::user()->toko_id ? route('stgudang.dashboard', ['slug' => Auth::user()->toko->slug]) : '#' }}"
+                        class="dropdown-toggle"
+                        {{ request()->routeIs('stgudang.dashboard') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}>
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -203,9 +217,10 @@
                         </div>
                     </a>
                 </li>
+
                 <li class="menu">
-                    <a href="#inventaris-stgudang" data-toggle="collapse" aria-expanded="false"
-                        class="dropdown-toggle">
+                    <a href="#inventaris-stgudang" class="dropdown-toggle" data-toggle="collapse"
+                        {{ request()->routeIs('stgudang.pengadaan-restock', 'stgudang.expired', 'stgudang.retur-supplier') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}>
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -227,32 +242,33 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled" id="inventaris-stgudang"
-                        data-parent="#accordionExample">
-                        <li>
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('stgudang.pengadaan-restock', 'stgudang.expired', 'stgudang.retur-supplier') ? 'show' : '' }}"
+                        id="inventaris-stgudang" data-parent="#accordionExample">
+                        <li class="{{ request()->routeIs('stgudang.pengadaan-restock') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('stgudang.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">Pengadaan
-                                Restock
+                                href="{{ Auth::user()->toko_id ? route('stgudang.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Pengadaan Restock
                             </a>
                         </li>
-                        <li>
-                        </li>
-                        <li>
+                        <li class="{{ request()->routeIs('stgudang.expired') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('stgudang.expired', ['slug' => Auth::user()->toko->slug]) : '#' }}">Expired
+                                href="{{ Auth::user()->toko_id ? route('stgudang.expired', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Expired
                             </a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('stgudang.retur-supplier') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('stgudang.retur-supplier', ['slug' => Auth::user()->toko->slug]) : '#' }}">Retur
-                                Supplier
+                                href="{{ Auth::user()->toko_id ? route('stgudang.retur-supplier', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Retur Supplier
                             </a>
                         </li>
                     </ul>
                 </li>
             @elseif (auth()->user()->roleuser == 5)
                 <li class="menu">
-                    <a href="{{ route('stpenjualan.dashboard') }}" aria-expanded="false" class="dropdown-toggle">
+                    <a href="{{ Auth::user()->toko_id ? route('stpenjualan.dashboard', ['slug' => Auth::user()->toko->slug]) : '#' }}"
+                        class="dropdown-toggle"
+                        {{ request()->routeIs('stpenjualan.dashboard') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}>
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -264,9 +280,10 @@
                         </div>
                     </a>
                 </li>
+
                 <li class="menu">
-                    <a href="#inventaris-stpenjualan" data-toggle="collapse" aria-expanded="false"
-                        class="dropdown-toggle">
+                    <a href="#inventaris-stpenjualan" class="dropdown-toggle" data-toggle="collapse"
+                        {{ request()->routeIs('stpenjualan.penjualan', 'stpenjualan.retur-konsumen') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}>
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -288,24 +305,25 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled" id="inventaris-stpenjualan"
-                        data-parent="#accordionExample">
-                        <li>
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('stpenjualan.penjualan', 'stpenjualan.retur-konsumen') ? 'show' : '' }}"
+                        id="inventaris-stpenjualan" data-parent="#accordionExample">
+                        <li class="{{ request()->routeIs('stpenjualan.penjualan') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('stpenjualan.penjualan', ['slug' => Auth::user()->toko->slug]) : '#' }}">Penjualan
+                                href="{{ Auth::user()->toko_id ? route('stpenjualan.penjualan', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Penjualan
                             </a>
                         </li>
-                        <li>
+                        <li class="{{ request()->routeIs('stpenjualan.retur-konsumen') ? 'active' : '' }}">
                             <a
-                                href="{{ Auth::user()->toko_id ? route('stpenjualan.retur-konsumen', ['slug' => Auth::user()->toko->slug]) : '#' }}">Retur
-                                Konsumen
+                                href="{{ Auth::user()->toko_id ? route('stpenjualan.retur-konsumen', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Retur Konsumen
                             </a>
                         </li>
                     </ul>
                 </li>
             @endif
 
-            <li class="menu">
+            {{-- <li class="menu">
                 <a href="#users" data-toggle="collapse" data-active="true" aria-expanded="true"
                     class="dropdown-toggle">
                     <div class="">
@@ -335,7 +353,7 @@
                         <a href="user_account_setting.html"> Account Settings </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
         </ul>
     </nav>
 </div>

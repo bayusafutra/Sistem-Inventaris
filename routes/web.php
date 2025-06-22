@@ -15,8 +15,6 @@ use App\Http\Controllers\ReturSupplierController;
 use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
-use App\Models\PengadaanRestock;
-use App\Models\Penjualan;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -60,9 +58,7 @@ Route::post('/ubah-password', [AuthController::class, 'updatePassword'])->name('
 Route::get('/profil', [ProfileController::class, 'index'])->name('profil')->middleware('auth');
 Route::post('/profil', [ProfileController::class, 'editprofile'])->name('editprofil')->middleware('auth');
 
-Route::get('/home', function () {
-    return view('general.index');
-})->name('home')->middleware('auth');
+Route::get('/home', [DashboardController::class, 'home'])->name('home')->middleware('auth');
 
 Route::get('/pendaftaran-toko', [TokoController::class, 'daftarToko'])->name('pendaftaran-toko')->middleware('auth');
 Route::post('/store-toko', [TokoController::class, 'store'])->name('store-toko')->middleware('auth');
@@ -78,9 +74,7 @@ Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts
 // =========================================================================
 // =========================================================================
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.index');
-})->name('admin.dashboard')->middleware('auth');
+Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard')->middleware('auth');
 
 Route::get('/admin/verifikasi-pendaftaran', [TokoController::class, 'verifToko'])->name('admin.verifikasi-toko')->middleware('auth');
 Route::post('/admin/toko/approve/{id}', [TokoController::class, 'approve'])->name('toko.approve')->middleware('auth');
@@ -135,9 +129,7 @@ Route::post('/{slug}/manager/expired', [ExpiredController::class, 'storeExpired'
 // =========================================================================
 // =========================================================================
 
-Route::get('/slugtoko/staffgudang/dashboard', function () {
-    return view('toko.st-gudang.index');
-})->name('stgudang.dashboard');
+Route::get('/{slug}/staffgudang/dashboard', [DashboardController::class, 'stgudang'])->name('stgudang.dashboard')->middleware('auth');
 
 Route::get('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('stgudang.pengadaan-restock')->middleware('auth');
 Route::post('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('store-pengadaan-restock')->middleware('auth');
@@ -161,9 +153,7 @@ Route::get('/restock-detail/{no_series}', [ReturSupplierController::class, 'getR
 // =========================================================================
 // =========================================================================
 
-Route::get('/slugtoko/staffpenjualan/dashboard', function () {
-    return view('toko.st-penjualan.index');
-})->name('stpenjualan.dashboard');
+Route::get('/{slug}/staffpenjualan/dashboard', [DashboardController::class, 'stpenjualan'])->name('stpenjualan.dashboard')->middleware('auth');
 
 Route::get('/{slug}/staffpenjualan/penjualan', [PenjualanController::class, 'indexPenjualan'])->name('stpenjualan.penjualan')->middleware('auth');
 Route::post('/{slug}/staffpenjualan/penjualan', [PenjualanController::class, 'storePenjualan'])->name('store-penjualan')->middleware('auth');
