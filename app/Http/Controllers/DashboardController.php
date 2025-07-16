@@ -263,7 +263,7 @@ class DashboardController extends Controller
         })->with('restock')->get();
 
         foreach ($restocks as $detail) {
-            $month = Carbon::parse($detail->restock->tgl_pengadaan)->month;
+            $month = Carbon::parse($detail->restock->tgl_restock)->month;
             $inflowData[$month] += $detail->total_unit;
         }
 
@@ -444,7 +444,7 @@ class DashboardController extends Controller
         })->with('restock')->get();
 
         foreach ($restocks as $detail) {
-            $month = Carbon::parse($detail->restock->tgl_pengadaan)->month;
+            $month = Carbon::parse($detail->restock->tgl_restock)->month;
             $inflowData[$month] += $detail->total_unit;
         }
 

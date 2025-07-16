@@ -28,4 +28,9 @@ class PengadaanRestock extends Model
     {
         return $this->hasMany(DetailPengadaanRestock::class, 'pengadaan_id');
     }
+
+    public function restock()
+    {
+        return $this->hasOne(Restock::class, 'pengadaan_id');
+    }
 }

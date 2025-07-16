@@ -263,7 +263,7 @@
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
                                     <th>Tanggal & Waktu</th>
-                                    <th>No Series Penjualan</th>
+                                    <th>No Series Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>

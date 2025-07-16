@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('status')->default(1); //1 = verif; 2 = aktif; 3 = non-aktif
             $table->string('name');
             $table->string('jenis_usaha');
-            $table->string('alamat');
+            $table->text('alamat');
             $table->string('provinsi');
             $table->string('kota');
             $table->string('kecamatan');

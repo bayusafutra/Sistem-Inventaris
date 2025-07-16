@@ -15,16 +15,16 @@ class TambahUserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'David Dasilva',
-            'toko_id' => 1,
-            'panggilan' => 'David',
-            'email' => 'davidasilva@gmail.com',
+            'name' => 'Testing User',
+            'toko_id' => null,
+            'panggilan' => 'user',
+            'email' => 'user@gmail.com',
             'password' => Hash::make('password'),
             'googleid' => null,
-            'roleuser' => 5,
+            'roleuser' => 2,
             'jk' => true,
-            'tgl_lahir' => '2002-05-03',
-            'notelp' => '08123456789',
+            'tgl_lahir' => '2001-07-07',
+            'notelp' => '0987262826',
             'gambar' => null,
             'email_verified_at' => now(),
             'isactive' => true,

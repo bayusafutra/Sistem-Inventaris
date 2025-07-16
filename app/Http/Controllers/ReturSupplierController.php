@@ -17,10 +17,10 @@ class ReturSupplierController extends Controller
     public function indexRetur($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3, 4])) {
             return $this->redirectBasedOnRole();
         }
-        $toko = Toko::where('id', $user->toko_id)->first();
+        $toko = Toko::where('id', $user->toko_id)->where('status', 2)->first();
         if (!$toko || $toko->slug !== $slug) {
             return $this->redirectBasedOnRole();
         }

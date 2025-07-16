@@ -336,7 +336,7 @@
                                             </button>
                                             <button type="button" data-toggle="modal"
                                                 data-target="#standardModal-{{ $prs->id }}"
-                                                title="non-Aktif Pengadaan Restock">
+                                                title="Aksi">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -453,7 +453,7 @@
                                                         @else
                                                             <p class="modal-text">Pengadaan Restock ini telah digunakan
                                                                 pada Restock <strong
-                                                                    style="font-weight: bolder; color: black">RST180620251-12</strong>
+                                                                    style="font-weight: bolder; color: black">{{ $prs->restock->noseries }}</strong>
                                                             </p>
                                                         @endif
                                                     </div>
@@ -482,6 +482,12 @@
                                                                 </div>
                                                             </form>
                                                         @endif
+                                                    @else
+                                                        <div class="modal-footer justify-content-end">
+                                                            <button data-dismiss="modal"
+                                                                class="btn btn-primary">Tutup
+                                                            </button>
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>

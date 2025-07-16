@@ -12,7 +12,7 @@ class SatuanProdukController extends Controller
     public function masterSatuan($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3])) {
             return $this->redirectBasedOnRole();
         }
         $toko = Toko::where('id', $user->toko_id)->first();

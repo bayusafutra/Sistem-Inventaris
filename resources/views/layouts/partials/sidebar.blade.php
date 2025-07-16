@@ -217,7 +217,6 @@
                         </div>
                     </a>
                 </li>
-
                 <li class="menu">
                     <a href="#inventaris-stgudang" class="dropdown-toggle" data-toggle="collapse"
                         {{ request()->routeIs('stgudang.pengadaan-restock', 'stgudang.expired', 'stgudang.retur-supplier') ? 'data-active=true aria-expanded=true' : 'aria-expanded=false' }}>
@@ -242,12 +241,18 @@
                             </svg>
                         </div>
                     </a>
-                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('stgudang.pengadaan-restock', 'stgudang.expired', 'stgudang.retur-supplier') ? 'show' : '' }}"
+                    <ul class="collapse submenu list-unstyled {{ request()->routeIs('stgudang.pengadaan-restock', 'stgudang.restock', 'stgudang.expired', 'stgudang.retur-supplier') ? 'show' : '' }}"
                         id="inventaris-stgudang" data-parent="#accordionExample">
                         <li class="{{ request()->routeIs('stgudang.pengadaan-restock') ? 'active' : '' }}">
                             <a
                                 href="{{ Auth::user()->toko_id ? route('stgudang.pengadaan-restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">
                                 Pengadaan Restock
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('stgudang.restock') ? 'active' : '' }}">
+                            <a
+                                href="{{ Auth::user()->toko_id ? route('stgudang.restock', ['slug' => Auth::user()->toko->slug]) : '#' }}">
+                                Restock
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('stgudang.expired') ? 'active' : '' }}">

@@ -16,7 +16,6 @@ use App\Http\Controllers\SatuanProdukController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,20 +61,15 @@ Route::get('/home', [DashboardController::class, 'home'])->name('home')->middlew
 
 Route::get('/pendaftaran-toko', [TokoController::class, 'daftarToko'])->name('pendaftaran-toko')->middleware('auth');
 Route::post('/store-toko', [TokoController::class, 'store'])->name('store-toko')->middleware('auth');
-Route::get('/get-provinces', [TokoController::class, 'getProvinces'])->middleware('auth');
-Route::get('/get-cities/{provId}', [TokoController::class, 'getCities'])->middleware('auth');
-Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts'])->middleware('auth');
-Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts'])->middleware('auth');
-
-// Route::middleware(['auth', 'role:2'])->group(function () {
-// });
-
+Route::get('/get-provinces', [TokoController::class, 'getProvinces']);
+Route::get('/get-cities/{provId}', [TokoController::class, 'getCities']);
+Route::get('/get-districts/{cityId}', [TokoController::class, 'getDistricts']);
+Route::get('/get-subdistricts/{disId}', [TokoController::class, 'getSubdistricts']);
 
 // =========================================================================
 // =========================================================================
 
 Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard')->middleware('auth');
-
 Route::get('/admin/verifikasi-pendaftaran', [TokoController::class, 'verifToko'])->name('admin.verifikasi-toko')->middleware('auth');
 Route::post('/admin/toko/approve/{id}', [TokoController::class, 'approve'])->name('toko.approve')->middleware('auth');
 Route::post('/admin/toko/reject/{id}', [TokoController::class, 'reject'])->name('toko.reject')->middleware('auth');

@@ -15,14 +15,14 @@ class ManagerController extends Controller
     public function masterStaff($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3])) {
             return $this->redirectBasedOnRole();
         }
         $toko = Toko::where('id', $user->toko_id)->first();
         if (!$toko || $toko->slug !== $slug) {
             return $this->redirectBasedOnRole();
         }
-        $staff = $user->toko->user()->where('roleuser', 4)->orWhere('roleuser', 5)->get();
+        $staff = $user->toko->user()->whereIn('roleuser', [4, 5])->get();
         return view('toko.manager.staff', [
             'toko' => $toko,
             'staff' => $staff,

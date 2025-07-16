@@ -9,6 +9,7 @@ use App\Models\Produk;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Toko;;
+
 use App\Models\DetailExpired;
 use Illuminate\Support\Facades\DB;
 
@@ -17,10 +18,11 @@ class ExpiredController extends Controller
     public function indexExpired($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3, 4])) {
             return $this->redirectBasedOnRole();
         }
-        $toko = Toko::where('id', $user->toko_id)->first();
+
+        $toko = Toko::where('id', $user->toko_id)->where('status', 2)->first();
         if (!$toko || $toko->slug !== $slug) {
             return $this->redirectBasedOnRole();
         }

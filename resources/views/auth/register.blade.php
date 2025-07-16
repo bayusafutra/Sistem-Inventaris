@@ -16,8 +16,9 @@
     <link rel="stylesheet" type="text/css" href="assets/css/forms/theme-checkbox-radio.css">
     <link rel="stylesheet" type="text/css" href="assets/css/forms/switches.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
 </head>
-
 <body class="form">
     <div class="form-container outer">
         <div class="form-form">
@@ -86,8 +87,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-
-                                <div id="password-confirm-field" class="field-wrapper input mb-2">
+                                <div id="password-confirm-field" class="field-wrapper input">
                                     <div class="d-flex justify-content-between">
                                         <label for="password-confirm">ULANGI PASSWORD</label>
                                     </div>
@@ -111,28 +111,127 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <div class="division d-flex align-items-center">
+                                    <div class="col-4 px-0">
+                                        <hr>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <span>DETAIL TOKO</span>
+                                    </div>
+                                    <div class="col-4 px-0">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="degree2">Nama Toko</label>
+                                            <input type="text" class="form-control mb-4" id="degree2"
+                                                placeholder="Nama Toko" value="" name="name" required>
+                                            @error('name')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-groupp">
+                                                    <label for="degree3">Jenis Usaha</label>
+                                                    <select class="form-control basic" name="jenis_usaha" required>
+                                                        <option disabled selected>Pilih Jenis Usaha...
+                                                        </option>
+                                                        <option value="Grosir Sembako">Grosir Sembako
+                                                        </option>
+                                                        <option value="Grosir Makanan & Jajan">Grosir
+                                                            Makanan &
+                                                            Jajan</option>
+                                                        <option value="Grosir Pakaian">Grosir Pakaian
+                                                        </option>
+                                                        <option value="Elektronik">Elektronik</option>
+                                                        <option value="Obat-obatan">Obat-obatan</option>
+                                                        <option value="Material (Bangunan)">Material
+                                                            (Bangunan)
+                                                        </option>
+                                                        <option value="Kosmetik">Kosmetik</option>
+                                                    </select>
+                                                    @error('jenis_usaha')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="degree4">Alamat</label>
+                                                    <input type="text" class="form-control" id="degree4"
+                                                        placeholder="Alamat Toko" value="" name="alamat"
+                                                        required>
+                                                    @error('alamat')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Provinsi</label>
+                                        <select class="selectpicker form-control mb-4" id="provinsi"
+                                            name="provinsi" data-live-search="true" required>
+                                            <option value="" selected disabled>Pilih Provinsi
+                                            </option>
+                                        </select>
+                                        @error('provinsi')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Kota</label>
+                                        <select class="selectpicker form-control mb-4" id="kota"
+                                            name="kota" data-live-search="true" disabled>
+                                            <option value="" selected disabled>Pilih
+                                                Kota</option>
+                                        </select>
+                                        @error('kota')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Kecamatan</label>
+                                        <select class="selectpicker form-control mb-4" id="kecamatan"
+                                            name="kecamatan" data-live-search="true" disabled>
+                                            <option value="" selected disabled>Pilih
+                                                Kecamatan
+                                            </option>
+                                        </select>
+                                        @error('kecamatan')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Kelurahan</label>
+                                        <select class="selectpicker form-control mb-4" id="kelurahan"
+                                            name="kelurahan" data-live-search="true" disabled>
+                                            <option value="" selected disabled>Pilih
+                                                Kelurahan
+                                            </option>
+                                        </select>
+                                        @error('kelurahan')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="">Deskripsi Toko</label>
+                                        <textarea class="form-control" placeholder="Jelaskkan secara singkat deskripsi toko Anda" name="deskripsi"
+                                            rows="4"></textarea>
+                                        @error('deskripsi')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="d-sm-flex justify-content-between">
                                     <div class="field-wrapper mb-2">
-                                        <button type="submit" class="btn btn-primary" value="">Daftar</button>
+                                        <button type="submit" class="btn btn-primary">Daftar</button>
                                     </div>
-                                </div>
-                                <div class="division d-flex align-items-center">
-                                    <div class="col-5 px-0">
-                                        <hr>
-                                    </div>
-                                    <div class="col-2 text-center">
-                                        <span>atau</span>
-                                    </div>
-                                    <div class="col-5 px-0">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="social">
-                                    <a href="{{ route('google.login') }}" class="btn social-google">
-                                        <img src="/assets/icons/icon-google.svg" class="img-fluid google-icon"
-                                            alt="">
-                                        <span class="brand-name">Daftar dengan Google</span>
-                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -152,6 +251,10 @@
     <script src="assets/js/authentication/form-2.js"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    <script src="{{ asset('plugins/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/custom-select2.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
+    <script src="{{ asset('assets/js/scrollspyNav.js') }}"></script>
     <script>
         @if (session('message'))
             $(document).ready(function() {
@@ -165,6 +268,132 @@
                 });
             });
         @endif
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Load provinces on page load
+            $.get('/get-provinces', function(data) {
+                let $provinsi = $('#provinsi');
+                $provinsi.empty();
+                $provinsi.append('<option value="" selected disabled>Pilih Provinsi</option>');
+                $.each(data, function(index, province) {
+                    $provinsi.append('<option value="' + province.prov_id + '">' + province
+                        .prov_name + '</option>');
+                });
+                $provinsi.selectpicker('refresh');
+            });
+
+            // Load cities when province changes
+            $('#provinsi').on('change', function() {
+                let provId = $(this).val();
+                if (provId) {
+                    $.get('/get-cities/' + provId, function(data) {
+                        let $kota = $('#kota');
+                        $kota.prop('disabled', false);
+                        $kota.empty();
+                        $kota.append(
+                            '<option value="" selected disabled>Pilih Kota</option>');
+                        $.each(data, function(index, city) {
+                            $kota.append('<option value="' + city.city_id + '">' + city
+                                .city_name + '</option>');
+                        });
+                        $kota.selectpicker('refresh');
+                        $('#kecamatan').prop('disabled', true).selectpicker('refresh');
+                        $('#kelurahan').prop('disabled', true).selectpicker('refresh');
+                    });
+                } else {
+                    $('#kota').prop('disabled', true).selectpicker('refresh');
+                }
+            });
+
+            // Load districts when city changes
+            $('#kota').on('change', function() {
+                let cityId = $(this).val();
+                if (cityId) {
+                    $.get('/get-districts/' + cityId, function(data) {
+                        let $kecamatan = $('#kecamatan');
+                        $kecamatan.prop('disabled', false);
+                        $kecamatan.empty();
+                        $kecamatan.append(
+                            '<option value="" selected disabled>Pilih Kecamatan</option>');
+                        $.each(data, function(index, district) {
+                            $kecamatan.append('<option value="' + district.dis_id + '">' +
+                                district.dis_name + '</option>');
+                        });
+                        $kecamatan.selectpicker('refresh');
+                        $('#kelurahan').prop('disabled', true).selectpicker('refresh');
+                    });
+                } else {
+                    $('#kecamatan').prop('disabled', true).selectpicker('refresh');
+                }
+            });
+
+            // Load subdistricts when district changes
+            $('#kecamatan').on('change', function() {
+                let disId = $(this).val();
+                if (disId) {
+                    $.get('/get-subdistricts/' + disId, function(data) {
+                        let $kelurahan = $('#kelurahan');
+                        $kelurahan.prop('disabled', false);
+                        $kelurahan.empty();
+                        $kelurahan.append(
+                            '<option value="" selected disabled>Pilih Kelurahan</option>');
+                        $.each(data, function(index, subdistrict) {
+                            $kelurahan.append('<option value="' + subdistrict.subdis_id +
+                                '">' + subdistrict.subdis_name + '</option>');
+                        });
+                        $kelurahan.selectpicker('refresh');
+                    });
+                } else {
+                    $('#kelurahan').prop('disabled', true).selectpicker('refresh');
+                }
+            });
+
+            @if (session('showAlert'))
+                const toast = swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    padding: '2em'
+                });
+
+                @if ($errors->any())
+                    toast({
+                        type: 'error',
+                        title: @if ($errors->has('general'))
+                            '{{ $errors->first('general') }}'
+                        @else
+                            '{{ $errors->first() }}'
+                        @endif ,
+                        padding: '2em',
+                    });
+                @elseif (session('message'))
+                    toast({
+                        type: 'success',
+                        title: '{{ session('message') }}',
+                        padding: '2em',
+                    });
+                @endif
+            @endif
+
+            $('#work-experience').on('submit', function() {
+                if ($('.text-danger').length > 0) {
+                    const toast = swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        padding: '2em'
+                    });
+                    toast({
+                        type: 'error',
+                        title: $('.text-danger').first().text(),
+                        padding: '2em',
+                    });
+                }
+            });
+        });
     </script>
 
 </body>

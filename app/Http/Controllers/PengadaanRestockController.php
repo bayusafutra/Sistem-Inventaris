@@ -18,10 +18,10 @@ class PengadaanRestockController extends Controller
     public function indexPengadaan($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3, 4])) {
             return $this->redirectBasedOnRole();
         }
-        $toko = Toko::where('id', $user->toko_id)->first();
+        $toko = Toko::where('id', $user->toko_id)->where('status', 2)->first();
         if (!$toko || $toko->slug !== $slug) {
             return $this->redirectBasedOnRole();
         }
@@ -54,8 +54,8 @@ class PengadaanRestockController extends Controller
             'noseries' => 'required|string|max:255',
             'tgl_pengadaan' => 'required|date',
             'catatan' => 'nullable',
-            'produk_id.*' => 'required|exists:produks,id', // Pastikan produk ada
-            'quantity.*' => 'required|integer|min:1', // Minimal 1 unit
+            'produk_id.*' => 'required|exists:produks,id',
+            'quantity.*' => 'required|integer|min:1',
         ]);
         try {
             // Mulai transaksi database
