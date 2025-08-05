@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->string('googleid')->nullable();
-            $table->integer('roleuser')->default(2); // 1=admin, 2=user umum, 3=manager, 4=staff gudang, 5=staff penjualan
+            $table->integer('roleuser')->default(3); // 1=admin, 2=user umum, 3=manager, 4=staff gudang, 5=staff penjualan
             $table->boolean('jk')->nullable();
             $table->date('tgl_lahir')->nullable();
             $table->string('notelp')->nullable();

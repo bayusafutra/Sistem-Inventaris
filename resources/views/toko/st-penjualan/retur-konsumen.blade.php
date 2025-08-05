@@ -42,7 +42,7 @@
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Staff Penjualan</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">{{ auth()->user()->roleuser == 3 ? 'Manager' : 'Staff Penjualan' }}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><span>Retur Konsumen</span></li>
                             </ol>
                         </nav>

@@ -120,13 +120,13 @@ class PengadaanRestockController extends Controller
             DB::commit();
 
             return redirect()->back()->with([
-                'message' => 'Pengadaan Restock berhasil ditambahkan.',
+                'message' => 'Permintaan Restock berhasil ditambahkan.',
                 'showAlert' => true,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors([
-                'general' => 'Terjadi kesalahan saat menambahkan Pengadaan Restock: ' . $e->getMessage(),
+                'general' => 'Terjadi kesalahan saat menambahkan Permintaan Restock: ' . $e->getMessage(),
             ])->with('showAlert', true);
         }
     }
@@ -152,7 +152,7 @@ class PengadaanRestockController extends Controller
         ]);
 
         return redirect()->back()->with([
-            'message' => 'Status pengadaan restock telah di-NonAktifkan.',
+            'message' => 'Status permintaan restock telah di-NonAktifkan.',
             'showAlert' => true,
         ]);
     }
@@ -165,7 +165,7 @@ class PengadaanRestockController extends Controller
         ]);
 
         return redirect()->back()->with([
-            'message' => 'Status pengadaan restock telah diAktifkan.',
+            'message' => 'Status permintaan restock telah diAktifkan.',
             'showAlert' => true,
         ]);
     }

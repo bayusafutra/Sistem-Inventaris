@@ -86,6 +86,7 @@ Route::post('/admin/user/aktif/{id}', [UserController::class, 'aktif'])->name('a
 // =========================================================================
 
 Route::get('/{slug}/manager/dashboard', [DashboardController::class, 'manager'])->name('manager.dashboard')->middleware('auth');
+Route::get('/{slug}/manager/informasi-toko', [TokoController::class, 'informasiToko'])->name('informasi-toko')->middleware('auth');
 
 Route::get('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'masterSatuan'])->name('manager.master-satuan-produk')->middleware('auth');
 Route::post('/{slug}/manager/master/satuan-produk', [SatuanProdukController::class, 'storeSatuan'])->name('manager.store-satuan')->middleware('auth');
@@ -105,14 +106,15 @@ Route::get('/verify-staff/{token}', [ManagerController::class, 'verifyStaff'])->
 Route::post('/manager/staff/nonaktif/{id}', [ManagerController::class, 'nonaktif'])->name('manager.master-staffnonaktif')->middleware('auth');
 Route::post('/manager/staff/aktif/{id}', [ManagerController::class, 'aktif'])->name('manager.master-staffaktif')->middleware('auth');
 
-Route::get('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('manager.pengadaan-restock')->middleware('auth');
+Route::get('/{slug}/manager/permintaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('manager.pengadaan-restock')->middleware('auth');
 Route::post('/{slug}/manager/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('store-pengadaan-restock')->middleware('auth');
 Route::post('/manager/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('pengadaanrestock-nonaktif')->middleware('auth');
 Route::post('/manager/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('pengadaanrestock-aktif')->middleware('auth');
-
 Route::get('/{slug}/manager/restock', [RestockController::class, 'indexRestock'])->name('manager.restock')->middleware('auth');
 Route::post('/{slug}/manager/restock', [RestockController::class, 'storeRestock'])->name('store-restock')->middleware('auth');
 Route::get('/pengadaan-detail/{no_series}', [RestockController::class, 'getPengadaanDetail'])->name('api.pengadaan-detail');
+Route::post('/manager/restock/approve/{id}', [RestockController::class, 'approve'])->name('restock.approve')->middleware('auth');
+Route::post('/manager/restock/reject/{id}', [RestockController::class, 'reject'])->name('restock.reject')->middleware('auth');
 
 Route::get('/{slug}/manager/penjualan', [PenjualanController::class, 'indexPenjualan'])->name('manager.penjualan')->middleware('auth');
 Route::post('/{slug}/manager/penjualan', [PenjualanController::class, 'storePenjualan'])->name('store-penjualan')->middleware('auth');
@@ -120,12 +122,15 @@ Route::post('/{slug}/manager/penjualan', [PenjualanController::class, 'storePenj
 Route::get('/{slug}/manager/expired', [ExpiredController::class, 'indexExpired'])->name('manager.expired')->middleware('auth');
 Route::post('/{slug}/manager/expired', [ExpiredController::class, 'storeExpired'])->name('store-expired')->middleware('auth');
 
+Route::post('/manager/retursupplier/approve/{id}', [ReturSupplierController::class, 'approve'])->name('retursupplier.approve')->middleware('auth');
+Route::post('/manager/retursupplier/reject/{id}', [ReturSupplierController::class, 'reject'])->name('retursupplier.reject')->middleware('auth');
+
 // =========================================================================
 // =========================================================================
 
 Route::get('/{slug}/staffgudang/dashboard', [DashboardController::class, 'stgudang'])->name('stgudang.dashboard')->middleware('auth');
 
-Route::get('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('stgudang.pengadaan-restock')->middleware('auth');
+Route::get('/{slug}/staffgudang/permintaan-restock', [PengadaanRestockController::class, 'indexPengadaan'])->name('stgudang.pengadaan-restock')->middleware('auth');
 Route::post('/{slug}/staffgudang/pengadaan-restock', [PengadaanRestockController::class, 'storePengadaan'])->name('store-pengadaan-restock')->middleware('auth');
 Route::post('/staffgudang/pengadaan-restock/nonaktif/{id}', [PengadaanRestockController::class, 'nonaktif'])->name('pengadaanrestock-nonaktif')->middleware('auth');
 Route::post('/staffgudang/pengadaan-restock/aktif/{id}', [PengadaanRestockController::class, 'aktif'])->name('pengadaanrestock-aktif')->middleware('auth');

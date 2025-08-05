@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ResetPasswordEmail;
 use App\Models\User;
+use App\Models\Toko;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -25,6 +26,9 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
             if ($user->isactive) {
+                if ($user->toko->status == 1) {
+                    return redirect()->route('informasi-toko', ['slug' => Auth::user()->toko->slug]);
+                }
                 return $this->redirectBasedOnRole();
             } else {
                 Auth::logout();
@@ -62,6 +66,23 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
+            'nametoko' => 'required|string|max:255|unique:tokos,name',
+            'jenis_usaha' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'provinsi' => 'required|string|max:255',
+            'kota' => 'required|string|max:255',
+            'kecamatan' => 'required|string|max:255',
+            'kelurahan' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ],  [
+            'nametoko.required' => 'Nama toko wajib diisi.',
+            'name.unique' => 'Nama toko sudah terdaftar.',
+            'jenis_usaha.required' => 'Jenis usaha wajib diisi.',
+            'alamat.required' => 'Alamat wajib diisi.',
+            'provinsi.required' => 'Provinsi wajib diisi.',
+            'kota.required' => 'Kota/Kabupaten wajib diisi.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kelurahan.required' => 'Kelurahan wajib diisi.',
         ]);
 
         $user = User::create([
@@ -69,16 +90,35 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
         $token = Str::uuid()->toString();
-        \DB::table('email_verifications')->insert([
+        DB::table('email_verifications')->insert([
             'user_id' => $user->id,
             'token' => $token,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
         Mail::to($user->email)->send(new VerificationEmail($user, $token));
+
+        $provName = DB::table('ec_provinces')->where('prov_id', $request->provinsi)->value('prov_name');
+        $cityName = DB::table('ec_cities')->where('city_id', $request->kota)->value('city_name');
+        $districtName = DB::table('ec_districts')->where('dis_id', $request->kecamatan)->value('dis_name');
+        $subdistrictName = DB::table('ec_subdistricts')->where('subdis_id', $request->kelurahan)->value('subdis_name');
+
+        $toko = Toko::create([
+            'name' => $request->nametoko,
+            'jenis_usaha' => $request->jenis_usaha,
+            'alamat' => $request->alamat,
+            'provinsi' => $provName,
+            'kota' => $cityName,
+            'kecamatan' => $districtName,
+            'kelurahan' => $subdistrictName,
+            'deskripsi' => $request->deskripsi,
+            'slug' => Str::slug($request->name) . '-' . Str::random(5),
+            'tgl_pendaftaran' => now(),
+            'isactive' => false,
+        ]);
+        $user->toko_id = $toko->id;
+        $user->save();
         return redirect()->route('login')->with('register', [
             'message' => 'Silakan cek email untuk verifikasi akun Anda.',
             'type' => 'info'
@@ -130,7 +170,7 @@ class AuthController extends Controller
             ]);
 
             Mail::to($user->email)->send(new ResetPasswordEmail($user, $token));
-        }else {
+        } else {
             return redirect()->route('lupa-password')->with('error', [
                 'message' => 'Email tidak ditemukan pada sistem',
                 'type' => 'erorr'

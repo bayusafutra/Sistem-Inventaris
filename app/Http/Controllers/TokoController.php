@@ -25,6 +25,23 @@ class TokoController extends Controller
         ]);
     }
 
+    public function informasiToko($slug)
+    {
+        $user = Auth::user();
+        if (!in_array($user->roleuser, [3])) {
+            return $this->redirectBasedOnRole();
+        }
+        $toko = Toko::where('id', $user->toko_id)->first();
+        if (!$toko || $toko->slug !== $slug) {
+            return $this->redirectBasedOnRole();
+        }
+        
+        $toko = auth()->user()->toko;
+        return view('toko.manager.informasiToko', [
+            'toko' => $toko,
+        ]);
+    }
+
     private function redirectBasedOnRole()
     {
         $role = auth()->user()->roleuser;
@@ -41,7 +58,7 @@ class TokoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:tokos,name',
+            'nametoko' => 'required|string|max:255|unique:tokos,name',
             'jenis_usaha' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
             'provinsi' => 'required|string|max:255',
@@ -50,7 +67,7 @@ class TokoController extends Controller
             'kelurahan' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
         ], [
-            'name.required' => 'Nama toko wajib diisi.',
+            'nametoko.required' => 'Nama toko wajib diisi.',
             'name.unique' => 'Nama toko sudah terdaftar.',
             'jenis_usaha.required' => 'Jenis usaha wajib diisi.',
             'alamat.required' => 'Alamat wajib diisi.',
@@ -67,7 +84,7 @@ class TokoController extends Controller
             $subdistrictName = DB::table('ec_subdistricts')->where('subdis_id', $request->kelurahan)->value('subdis_name');
 
             $toko = Toko::create([
-                'name' => $request->name,
+                'name' => $request->nametoko,
                 'jenis_usaha' => $request->jenis_usaha,
                 'alamat' => $request->alamat,
                 'provinsi' => $provName,

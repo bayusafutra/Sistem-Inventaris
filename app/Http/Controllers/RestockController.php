@@ -69,16 +69,14 @@ class RestockController extends Controller
                 'toko_id' => $toko->id,
                 'user_id' => $request->user_id,
                 'pengadaan_id' => $request->has('restockCheckbox') ? $idpengadaan->id : null,
-                'status' => 1,
+                'status' => auth()->user()->roleuser == 3 ? 1 : 3,
                 'tgl_restock' => $request->tgl_restock,
                 'catatan' => $request->catatan,
             ]);
-
             // Handle list produk (manual atau via pengadaan)
             $details = [];
             $totalProduk = 0;
             $totalUnitProduk = 0;
-
             if ($request->has('restockCheckbox')) {
                 // Ambil data dari pengadaan restock
                 $pengadaan = PengadaanRestock::where('noseries', $request->input('pengadaanSelect'))->first();
@@ -97,12 +95,14 @@ class RestockController extends Controller
                             'updated_at' => now(),
                         ];
                         // Akumulasikan stok produk
-                        $produk = Produk::find($detail->produk_id);
-                        if ($produk) {
-                            $produk->increment('stok', $detail->total_unit);
+                        if (auth()->user()->roleuser == 3) {
+                            $produk = Produk::find($detail->produk_id);
+                            if ($produk) {
+                                $produk->increment('stok', $detail->total_unit);
+                            }
+                            $totalProduk++;
+                            $totalUnitProduk += $detail->total_unit;
                         }
-                        $totalProduk++;
-                        $totalUnitProduk += $detail->total_unit;
                     }
                 }
             } else {
@@ -134,12 +134,14 @@ class RestockController extends Controller
                         'updated_at' => now(),
                     ];
                     // Akumulasikan stok produk
-                    $produk = Produk::find($produkId);
-                    if ($produk) {
-                        $produk->increment('stok', $totalUnit);
+                    if (auth()->user()->roleuser == 3) {
+                        $produk = Produk::find($produkId);
+                        if ($produk) {
+                            $produk->increment('stok', $totalUnit);
+                        }
+                        $totalProduk++;
+                        $totalUnitProduk += $totalUnit;
                     }
-                    $totalProduk++;
-                    $totalUnitProduk += $totalUnit;
                 }
             }
 
@@ -156,7 +158,7 @@ class RestockController extends Controller
             // Handle multiple image upload
             if ($request->hasFile('mySecondImage')) {
                 foreach ($request->file('mySecondImage') as $image) {
-                    $path = $image->store('restock_images', 'public'); // Simpan di storage/app/public/restock_images
+                    $path = $image->store('restock_images', 'public');
                     GambarRestock::create([
                         'restock_id' => $restock->id,
                         'path' => $path,
@@ -214,5 +216,33 @@ class RestockController extends Controller
             5 => redirect()->route('stpenjualan.dashboard', ['slug' => Auth::user()->toko->slug]),
             default => redirect()->route('home')->with('error', 'Role tidak dikenali.'),
         };
+    }
+
+    public function approve($id)
+    {
+        $restock = Restock::findOrFail($id);
+        $restock->update([
+            'status' => 1,
+        ]);
+        foreach ($restock->detailrestock as $detail){
+            $produk = Produk::find($detail->produk_id);
+            $produk->increment('stok', $detail->total_unit);
+        }
+        return redirect()->back()->with([
+            'message' => 'Validasi restock telah disetujui.',
+            'showAlert' => true,
+        ]);
+    }
+
+    public function reject($id)
+    {
+        $restock = Restock::findOrFail($id);
+        $restock->update([
+            'status' => 4,
+        ]);
+        return redirect()->back()->with([
+            'message' => 'Validasi restock telah ditolak.',
+            'showAlert' => true,
+        ]);
     }
 }

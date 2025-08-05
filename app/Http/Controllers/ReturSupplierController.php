@@ -79,6 +79,7 @@ class ReturSupplierController extends Controller
                 'restock_id' => $idrestock->id,
                 'tgl_retur' => $request->tgl_retur,
                 'catatan' => $request->catatan,
+                'status' => auth()->user()->roleuser == 3 ? 0 : 1,
             ]);
 
             // Ambil data detail penjualan untuk validasi
@@ -115,13 +116,15 @@ class ReturSupplierController extends Controller
                     $totalUnits += $quantity;
 
                     // Kurangi stok produk
-                    $produk = Produk::find($produkId);
-                    if ($produk) {
-                        $newStok = $produk->stok - $quantity;
-                        if ($newStok < 0) {
-                            throw new \Exception("Stok produk '{$produk->name}' tidak mencukupi setelah retur. Stok tersisa: {$produk->stok}.");
+                    if(auth()->user()->roleuser == 3) {
+                        $produk = Produk::find($produkId);
+                        if ($produk) {
+                            $newStok = $produk->stok - $quantity;
+                            if ($newStok < 0) {
+                                throw new \Exception("Stok produk '{$produk->name}' tidak mencukupi setelah retur. Stok tersisa: {$produk->stok}.");
+                            }
+                            $produk->update(['stok' => $newStok]);
                         }
-                        $produk->update(['stok' => $newStok]);
                     }
                 }
             }
@@ -194,5 +197,34 @@ class ReturSupplierController extends Controller
             5 => redirect()->route('stpenjualan.dashboard', ['slug' => Auth::user()->toko->slug]),
             default => redirect()->route('home')->with('error', 'Role tidak dikenali.'),
         };
+    }
+
+    public function approve($id)
+    {
+        $retur = ReturSupplier::findOrFail($id);
+        $retur->update([
+            'status' => 0,
+        ]);
+        foreach ($retur->detailretursupplier as $detail){
+            $produk = Produk::find($detail->produk_id);
+            $newStok = $produk->stok - $detail->total_unit;
+            $produk->update(['stok' => $newStok]);
+        }
+        return redirect()->back()->with([
+            'message' => 'Validasi retur supplier telah disetujui.',
+            'showAlert' => true,
+        ]);
+    }
+
+    public function reject($id)
+    {
+        $retur = ReturSupplier::findOrFail($id);
+        $retur->update([
+            'status' => 2,
+        ]);
+        return redirect()->back()->with([
+            'message' => 'Validasi retur supplier telah ditolak.',
+            'showAlert' => true,
+        ]);
     }
 }

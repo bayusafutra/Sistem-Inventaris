@@ -27,16 +27,10 @@ class GoogleController extends Controller
                     $existingUser->update(['googleid' => $googleUser->getId()]);
                     Auth::login($existingUser);
                 } else {
-                    $newUser = User::create([
-                        'name' => $googleUser->getName(),
-                        'email' => $googleUser->getEmail(),
-                        'googleid' => $googleUser->getId(),
-                        'email_verified_at' => Carbon::now(),
-                        'roleuser' => 2,
-                        'isactive' => true,
+                    return redirect()->route('login')->with('error', [
+                        'message' => 'Akun email Anda belum terdaftar.',
+                        'type' => 'error'
                     ]);
-                    Auth::login($newUser);
-                    return redirect()->route('home');
                 }
             }
             return $this->redirectBasedOnRole();

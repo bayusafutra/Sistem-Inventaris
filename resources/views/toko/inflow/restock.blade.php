@@ -35,11 +35,9 @@
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg></a>
-
             <ul class="navbar-nav flex-row">
                 <li>
                     <div class="page-header">
-
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="javascript:void(0);">{{ ucwords($toko->name) }}</a>
@@ -214,7 +212,7 @@
                                                             <div
                                                                 class="col-lg-9 d-flex justify-content-end align-items-center">
                                                                 <div class="via-pr mr-3">
-                                                                    <strong>Melalui Pengadaan Restock?</strong>
+                                                                    <strong>Melalui Permintaan Restock?</strong>
                                                                 </div>
                                                                 <label
                                                                     class="switch s-icons s-outline s-outline-dark mr-2">
@@ -228,7 +226,7 @@
                                                                 <select class="selectpicker form-control"
                                                                     data-live-search="true" name="pengadaanSelect">
                                                                     <option value="" selected disabled>Pilih No
-                                                                        Series Pengadaan</option>
+                                                                        Series Permintaan</option>
                                                                     @foreach ($pengadaanrestock as $pr)
                                                                         <option value="{{ $pr->noseries }}">
                                                                             {{ $pr->noseries }}</option>
@@ -338,8 +336,9 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
+                                    <th class="d-none">Raw Date</th>
                                     <th>Tanggal & Waktu</th>
-                                    <th>Pengadaan Restock</th>
+                                    <th>Permintaan Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </thead>
@@ -348,6 +347,8 @@
                                     <tr>
                                         <td>{{ $rst->noseries }}</td>
                                         <td>{{ ucwords($rst->user->name) }}</td>
+                                        <td class="d-none">
+                                            {{ \Carbon\Carbon::parse($rst->tgl_restock)->format('Y-m-d H:i:s') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($rst->tgl_restock)->translatedFormat('l, d F Y H:i') }}
                                         </td>
                                         <td>{{ $rst->pengadaan->noseries ?? '-' }}</td>
@@ -386,6 +387,22 @@
                                                     </line>
                                                 </svg>
                                             </button>
+                                            @if ($rst->status == 3 && auth()->user()->roleuser == 3)
+                                                <button type="button" data-toggle="modal"
+                                                    data-target="#standardModal-{{ $rst->id }}"
+                                                    title="Validasi Restock">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="feather feather-clipboard table-cancel">
+                                                        <path
+                                                            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                                        </path>
+                                                        <rect x="8" y="2" width="8" height="4" rx="1"
+                                                            ry="1"></rect>
+                                                    </svg>
+                                                </button>
+                                            @endif
                                         </td>
                                         <!-- Modal Lihat Bukti -->
                                         <div class="modal fade" id="lihatbukti-{{ $rst->id }}" tabindex="-1"
@@ -429,7 +446,7 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail
                                                             Restock
                                                         </h5>
                                                         <button type="button" class="close" data-dismiss="modal"
@@ -488,6 +505,53 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="modal fade modal-notification" id="standardModal-{{ $rst->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="standardModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document"
+                                                id="standardModalLabel">
+                                                <div class="modal-content">
+                                                    <div class="modal-body text-center">
+                                                        <div class="icon-content">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-bell">
+                                                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9">
+                                                                </path>
+                                                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                                            </svg>
+                                                        </div>
+                                                        <p class="modal-text">Apakah anda yakin untuk memvalidasi transaksi
+                                                            restock <strong>{{ ucwords($rst->noseries) }}</strong> ini?
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <div class="tutup">
+                                                            <button class="btn" data-dismiss="modal"><i
+                                                                    class="flaticon-cancel-12"></i>Batal</button>
+                                                        </div>
+                                                        <div class="verif">
+                                                            <div class="row pr-3">
+                                                                <form action="{{ route('restock.reject', $rst->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-danger mx-3"
+                                                                        data-id="{{ $rst->id }}">Tolak</button>
+                                                                </form>
+                                                                <form action="{{ route('restock.approve', $rst->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-primary"
+                                                                        data-id="{{ $rst->id }}">Yakin</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -495,8 +559,9 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Pengadaan</th>
-                                    <th>Pengadaan Restock</th>
+                                    <th class="d-none">Raw Date</th>
+                                    <th>Tanggal Restock</th>
+                                    <th>Permintaan Restock</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
                             </tfoot>
@@ -1026,7 +1091,15 @@
             },
             "stripeClasses": [],
             "lengthMenu": [10, 20, 25, 50, 100],
-            "pageLength": 10
+            "pageLength": 10,
+            "order": [
+                [2, "desc"]
+            ], // Sort awal berdasarkan kolom "Raw Date" (index 2) secara descending
+            "columnDefs": [{
+                    "visible": false,
+                    "targets": 2
+                }, // Sembunyikan kolom "Raw Date"
+            ]
         });
 
         var f2 = flatpickr(document.getElementById('dateTimeFlatpickr'), {

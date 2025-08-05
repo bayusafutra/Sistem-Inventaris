@@ -42,7 +42,7 @@
                                 <li class="breadcrumb-item"><a
                                         href="javascript:void(0);">{{ auth()->user()->roleuser == 3 ? 'Manager' : 'Staff Gudang' }}</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>Pengadaan Restock</span></li>
+                                <li class="breadcrumb-item active" aria-current="page"><span>Permintaan Restock</span></li>
                             </ol>
                         </nav>
                     </div>
@@ -61,7 +61,7 @@
                             <div class="col-lg-8">
                                 <div class="form-group row">
                                     <label for="min" class="col-sm-3 col-form-label col-form-label-sm">Tanggal
-                                        Pengadaan:</label>
+                                        Permintaan:</label>
                                     <div class="col-sm-4 position-relative">
                                         <input type="text" class="form-control form-control-sm flatpickr" name="min"
                                             id="min" placeholder="Pilih tanggal awal">
@@ -116,7 +116,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalCenterTitle">Tambah Data
-                                                        Pengadaan Restock
+                                                        Permintaan Restock
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -172,10 +172,10 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
-                                                                <label>Catatan Pengadaan</label>
+                                                                <label>Catatan Permintaan</label>
                                                                 <div class="form-group mb-2">
                                                                     <textarea class="form-control" name="catatan" value="{{ old('catatan') }}" rows="4"
-                                                                        placeholder="Catatan Pengadaan"></textarea>
+                                                                        placeholder="Catatan Permintaan"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
@@ -291,7 +291,7 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Pengadaan</th>
+                                    <th>Tanggal Permintaan</th>
                                     <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>
@@ -315,7 +315,7 @@
                                         <td class="text-center">
                                             <button type="button" data-toggle="modal"
                                                 data-target="#tabsModal-{{ $prs->id }}"
-                                                title="Detail Pengadaan Restock">
+                                                title="Detail Permintaan Restock">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -357,7 +357,7 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Pengadaan
+                                                        <h5 class="modal-title" id="tabsModalLabel">Detail Permintaan
                                                             Restock
                                                         </h5>
                                                         <button type="button" class="close" data-dismiss="modal"
@@ -440,18 +440,18 @@
                                                             @if ($prs->status == 1)
                                                                 <p class="modal-text">Apakah anda yakin untuk <strong
                                                                         style="font-weight: bolder; color: black">MENONAKTIFKAN</strong>
-                                                                    pengadaan restock dengan No Series
+                                                                    permintaan restock dengan No Series
                                                                     <strong>{{ $prs->noseries }}</strong>?
                                                                 </p>
                                                             @else
                                                                 <p class="modal-text">Apakah anda yakin untuk <strong
                                                                         style="font-weight: bolder; color: black">MENGAKTIFKAN</strong>
-                                                                    pengadaan restock dengan No Series
+                                                                    permintaan restock dengan No Series
                                                                     <strong>{{ $prs->noseries }}</strong>?
                                                                 </p>
                                                             @endif
                                                         @else
-                                                            <p class="modal-text">Pengadaan Restock ini telah digunakan
+                                                            <p class="modal-text">Permintaan Restock ini telah digunakan
                                                                 pada Restock <strong
                                                                     style="font-weight: bolder; color: black">{{ $prs->restock->noseries }}</strong>
                                                             </p>
@@ -499,7 +499,7 @@
                                 <tr>
                                     <th>No Series</th>
                                     <th>Penanggung Jawab</th>
-                                    <th>Tanggal Pengadaan</th>
+                                    <th>Tanggal Permintaan</th>
                                     <th>Status</th>
                                     <th class="text-center dt-no-sorting">Aksi</th>
                                 </tr>

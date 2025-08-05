@@ -17,7 +17,7 @@ class ReturKonsumenController extends Controller
     public function indexRetur($slug)
     {
         $user = Auth::user();
-        if (!$user->toko_id || !in_array($user->roleuser, [5])) {
+        if (!$user->toko_id || !in_array($user->roleuser, [3,5])) {
             return $this->redirectBasedOnRole();
         }
         $toko = Toko::where('id', $user->toko_id)->where('status', 2)->first();
